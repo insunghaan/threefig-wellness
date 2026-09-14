@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "3FIG — The skin wellness ring",
   description:
     "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+  openGraph: {
+    title: "3FIG — The skin wellness ring",
+    description:
+      "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+  },
   other: {
     "codex-preview": "development",
   },

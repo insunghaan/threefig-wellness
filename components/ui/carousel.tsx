@@ -51,6 +51,7 @@ function Carousel({
   children,
   ...props
 }: React.ComponentProps<"div"> & CarouselProps) {
+  const isLoop = Boolean(opts?.loop)
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -58,21 +59,40 @@ function Carousel({
     },
     plugins
   )
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
-  const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [canScrollPrev, setCanScrollPrev] = React.useState(isLoop)
+  const [canScrollNext, setCanScrollNext] = React.useState(isLoop)
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return
-    setCanScrollPrev(api.canScrollPrev())
-    setCanScrollNext(api.canScrollNext())
-  }, [])
+  const onSelect = React.useCallback(
+    (api: CarouselApi) => {
+      if (!api) return
+      if (opts?.loop) {
+        const snapCount = api.scrollSnapList().length
+        setCanScrollPrev(snapCount > 1)
+        setCanScrollNext(snapCount > 1)
+      } else {
+        setCanScrollPrev(api.canScrollPrev())
+        setCanScrollNext(api.canScrollNext())
+      }
+    },
+    [opts?.loop]
+  )
 
   const scrollPrev = React.useCallback(() => {
-    api?.scrollPrev()
+    if (!api) return
+    const autoScroll = api.plugins()?.autoScroll
+    if (autoScroll && typeof autoScroll.stop === "function") {
+      autoScroll.stop()
+    }
+    api.scrollPrev()
   }, [api])
 
   const scrollNext = React.useCallback(() => {
-    api?.scrollNext()
+    if (!api) return
+    const autoScroll = api.plugins()?.autoScroll
+    if (autoScroll && typeof autoScroll.stop === "function") {
+      autoScroll.stop()
+    }
+    api.scrollNext()
   }, [api])
 
   const handleKeyDown = React.useCallback(
@@ -98,9 +118,14 @@ function Carousel({
     onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)
+    api.on("resize", onSelect)
+    api.on("slidesChanged", onSelect)
 
     return () => {
-      api?.off("select", onSelect)
+      api.off("reInit", onSelect)
+      api.off("select", onSelect)
+      api.off("resize", onSelect)
+      api.off("slidesChanged", onSelect)
     }
   }, [api, onSelect])
 
@@ -119,8 +144,9 @@ function Carousel({
       }}
     >
       <div
-        onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        className={cn("relative outline-none", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -181,6 +207,7 @@ function CarouselPrevious({
 
   return (
     <Button
+      type="button"
       data-slot="carousel-previous"
       variant={variant}
       size={size}
@@ -211,6 +238,7 @@ function CarouselNext({
 
   return (
     <Button
+      type="button"
       data-slot="carousel-next"
       variant={variant}
       size={size}

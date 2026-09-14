@@ -1,9 +1,8 @@
-import { env } from "cloudflare:workers";
 import { ApiError, boundedBody, database, failure, json } from "@/lib/threefig/records-server";
 import { acknowledgedEmails, hasWaitlistCredential } from "@/lib/threefig/waitlist-sync";
 
 async function authorize(request: Request) {
-  if (!await hasWaitlistCredential(request.headers.get("authorization"), env.THREEFIG_WAITLIST_SYNC_TOKEN))
+  if (!await hasWaitlistCredential(request.headers.get("authorization"), process.env.THREEFIG_WAITLIST_SYNC_TOKEN))
     throw new ApiError(401, "Unauthorized.");
 }
 
