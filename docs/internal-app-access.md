@@ -1,8 +1,8 @@
 # Public prototype and private data access
 
-The public landing remains at `/`. The iOS app prototype at `/app` and all its subpages are publicly viewable by link without sign-in. The landing has no new navigation link to the prototype. Prototype pages retain noindex metadata.
+The public landing remains at `/`. The internal iOS app prototype at `/app` and all its subpages are protected against public access and require an authorized account on the server-side `THREEFIG_INTERNAL_USER_IDS` allowlist. Anonymous requests are redirected to sign-in; non-members are redirected to `/app-access`.
 
-`/design`, `/api/records` and `/api/skin` still require an account on the server-side `THREEFIG_INTERNAL_USER_IDS` allowlist. The value is a comma-separated list of exact Site-scoped authenticated user IDs stored as a production secret. Missing configuration denies personal storage access. Sites authenticates visitors and supplies trusted identity headers. Anonymous design-page requests go to sign-in; non-members go to `/app-access`. Private APIs return 401 for anonymous requests and 403 for non-members. Workspace account IDs are not interchangeable with Site-scoped sign-in IDs.
+`/app`, `/design`, `/api/records` and `/api/skin` require an account on the server-side `THREEFIG_INTERNAL_USER_IDS` allowlist. The value is a comma-separated list of exact Site-scoped authenticated user IDs stored as a production secret. Missing configuration denies personal storage access. Sites authenticates visitors and supplies trusted identity headers. Anonymous design and app prototype requests go to sign-in; non-members go to `/app-access`. Private APIs return 401 for anonymous requests and 403 for non-members. Workspace account IDs are not interchangeable with Site-scoped sign-in IDs.
 
 Public visitors can use the existing session-based prototype interactions and sample screens. Private record lists show empty states for visitors without access, and saving explains that an authorized account is needed. No anonymous fallback identity or shared health record store is used. Existing account records and photos are never included in the public prototype response.
 

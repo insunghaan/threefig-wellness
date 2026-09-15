@@ -7,14 +7,9 @@ if (!['localhost', '127.0.0.1'].includes(new URL(base).hostname)) throw new Erro
 const identity = (id) => ({ 'oai-authenticated-user-id': id, 'oai-authenticated-user-email': `${id}@example.test` });
 const get = (path, id, extra = {}) => fetch(base + path, { redirect: 'manual', headers: { ...(id ? identity(id) : {}), ...extra } });
 
-test('landing and prototype are public while design and personal APIs remain private', async () => {
+test('landing is public while prototype, design and personal APIs remain private', async () => {
   assert.equal((await get('/')).status, 200);
-  for (const path of ['/app', '/app/today', '/app/age', '/app/rhythm', '/app/you', '/app/skin/history', '/app/skin/capture']) {
-    const response = await get(path);
-    assert.equal(response.status, 200, path);
-    assert.match(await response.text(), /noindex/);
-  }
-  for (const path of ['/design']) {
+  for (const path of ['/app', '/app/today', '/app/age', '/app/rhythm', '/app/you', '/app/skin/history', '/app/skin/capture', '/design']) {
     const response = await get(path);
     assert.ok([302, 303, 307].includes(response.status), `${path}: ${response.status}`);
     assert.match(response.headers.get('location'), /^\/signin-with-chatgpt\?/);
@@ -24,11 +19,8 @@ test('landing and prototype are public while design and personal APIs remain pri
   }
 });
 
-test('signed-in visitors can browse the prototype but cannot read private records', async () => {
-  for (const path of ['/app', '/app/you', '/app/skin/capture']) {
-    assert.equal((await get(path, 'outside-visitor')).status, 200, path);
-  }
-  for (const path of ['/design']) {
+test('unauthorized signed-in visitors are redirected to /app-access and cannot access prototype or private records', async () => {
+  for (const path of ['/app', '/app/you', '/app/skin/capture', '/design']) {
     const response = await get(path, 'outside-visitor');
     assert.ok([302, 303, 307].includes(response.status), path);
     assert.equal(response.headers.get('location'), '/app-access', path);

@@ -1,5 +1,6 @@
-import { ApiError, boundedBody, database, failure, json } from "@/lib/threefig/records-server";
+import { ApiError, boundedBody, failure, json } from "@/lib/threefig/records-server";
 import { acknowledgedEmails, hasWaitlistCredential } from "@/lib/threefig/waitlist-sync";
+import { getUndeliveredWaitlist, markWaitlistDelivered } from "@/lib/threefig/firestore-waitlist";
 
 async function authorize(request: Request) {
   if (!await hasWaitlistCredential(request.headers.get("authorization"), process.env.THREEFIG_WAITLIST_SYNC_TOKEN))
@@ -9,10 +10,8 @@ async function authorize(request: Request) {
 export async function GET(request: Request) {
   try {
     await authorize(request);
-    const records = await database().prepare(
-      "SELECT email, source, consent_version, created_at FROM waitlist_signups WHERE delivered_at IS NULL ORDER BY created_at, email LIMIT 25",
-    ).all();
-    return json({ records: records.results });
+    const records = await getUndeliveredWaitlist(25);
+    return json({ records });
   } catch (error) { return failure(error); }
 }
 
@@ -27,9 +26,7 @@ export async function POST(request: Request) {
     }
     const emails = acknowledgedEmails(body);
     if (!emails) throw new ApiError(400, "Invalid acknowledgement.");
-    const result = await database().prepare(
-      `UPDATE waitlist_signups SET delivered_at = ? WHERE delivered_at IS NULL AND email IN (${emails.map(() => "?").join(",")})`,
-    ).bind(new Date().toISOString(), ...emails).run();
-    return json({ acknowledged: result.meta.changes });
+    const acknowledged = await markWaitlistDelivered(emails, new Date().toISOString());
+    return json({ acknowledged });
   } catch (error) { return failure(error); }
 }

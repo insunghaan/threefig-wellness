@@ -243,15 +243,46 @@ export function userId(request: Request) {
   return id;
 }
 export function checkWrite(request: Request) {
-  const origin = request.headers.get("origin");
-  if (
-    (origin && origin !== new URL(request.url).origin) ||
-    request.headers.get("sec-fetch-site") === "cross-site"
-  )
+  if (request.headers.get("sec-fetch-site") === "cross-site") {
     throw new ApiError(
       403,
       "This request could not be verified. Reload and try again.",
     );
+  }
+
+  const origin = request.headers.get("origin");
+  if (origin) {
+    const host =
+      request.headers.get("x-forwarded-host") ||
+      request.headers.get("host") ||
+      new URL(request.url).host;
+
+    try {
+      const originUrl = new URL(origin);
+      const originHost = originUrl.host;
+      const requestHostname = host.split(":")[0];
+      const originHostname = originUrl.hostname;
+
+      const isSameHost = originHost === host || originHostname === requestHostname;
+      const isLoopback =
+        (originHostname === "localhost" || originHostname === "127.0.0.1") &&
+        (requestHostname === "localhost" || requestHostname === "127.0.0.1");
+      const isDirectMatch = origin === new URL(request.url).origin;
+
+      if (!isSameHost && !isLoopback && !isDirectMatch) {
+        throw new ApiError(
+          403,
+          "This request could not be verified. Reload and try again.",
+        );
+      }
+    } catch (err) {
+      if (err instanceof ApiError) throw err;
+      throw new ApiError(
+        403,
+        "This request could not be verified. Reload and try again.",
+      );
+    }
+  }
 }
 export const json = (data: unknown, status = 200) =>
   Response.json(data, {

@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "WaitlistSignup": {
+      "title": "Waitlist Signup",
+      "description": "A user email submission for early access to the 3FIG skin wellness ring",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address"
+        },
+        "source": {
+          "type": "string",
+          "description": "Submission source channel, e.g. landing"
+        },
+        "consent_version": {
+          "type": "string",
+          "description": "Consent terms version date"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the signup was submitted"
+        },
+        "delivered_at": {
+          "type": "string",
+          "description": "Timestamp when the signup was processed and synced to Google Sheets"
+        }
+      },
+      "required": ["email", "source", "consent_version", "created_at"]
+    }
+  },
+  "firestore": {
+    "/waitlist_signups/{signupId}": {
+      "schema": "WaitlistSignup",
+      "description": "Secure server-side storage for waitlist signups. Client writes and reads are blocked."
+    }
+  }
+}

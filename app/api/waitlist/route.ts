@@ -2,10 +2,10 @@ import {
   ApiError,
   boundedBody,
   checkWrite,
-  database,
   failure,
   json,
 } from "@/lib/threefig/records-server";
+import { saveWaitlistSignup } from "@/lib/threefig/firestore-waitlist";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -34,12 +34,7 @@ export async function POST(request: Request) {
       throw new ApiError(400, "Enter a valid email address.");
     }
 
-    await database()
-      .prepare(
-        "INSERT INTO waitlist_signups (email, source, consent_version, created_at) VALUES (?, ?, ?, ?) ON CONFLICT(email) DO NOTHING",
-      )
-      .bind(email, "landing", "2026-09-10", new Date().toISOString())
-      .run();
+    await saveWaitlistSignup(email, "landing", "2026-09-10");
 
     return json({ message: "You’re in. Welcome to the 3FIG launch list." }, 201);
   } catch (error) {
