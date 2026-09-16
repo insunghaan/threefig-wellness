@@ -7,21 +7,27 @@ import { reflections } from "@/lib/threefig/reflections";
 export function ReflectionCarousel() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sidePadding, setSidePadding] = useState(0);
+  const [sidePadding, setSidePadding] = useState<number | null>(null);
 
   const isPointerDownRef = useRef(false);
   const startXRef = useRef(0);
   const startScrollLeftRef = useRef(0);
 
-  // Compute side padding so that the active card is centered in the viewport
+  // Compute left padding so that the first slide aligns with the left edge of .skin-shell
   useEffect(() => {
     const updatePadding = () => {
       const viewport = viewportRef.current;
       if (!viewport) return;
-      const firstSlide = viewport.querySelector<HTMLElement>(".skin-reflection-slide");
-      if (!firstSlide) return;
-      const pad = Math.max(0, (viewport.clientWidth - firstSlide.clientWidth) / 2);
-      setSidePadding(pad);
+      const section = viewport.closest("section");
+      const shell = section?.querySelector(".skin-shell") as HTMLElement | null;
+      if (shell) {
+        const shellRect = shell.getBoundingClientRect();
+        const viewportRect = viewport.getBoundingClientRect();
+        const leftOffset = Math.round(shellRect.left - viewportRect.left);
+        if (leftOffset > 0) {
+          setSidePadding(leftOffset);
+        }
+      }
     };
 
     updatePadding();
@@ -29,30 +35,34 @@ export function ReflectionCarousel() {
     return () => window.removeEventListener("resize", updatePadding);
   }, []);
 
-  // Center the selected slide using its offsetLeft and width
-  const goToSlide = useCallback((index: number, behavior: ScrollBehavior = "smooth") => {
-    const count = reflections.length;
-    if (count === 0) return;
-    const nextIndex = ((index % count) + count) % count;
-    setCurrentIndex(nextIndex);
+  // Scroll so that the selected slide aligns with the exact left offset
+  const goToSlide = useCallback(
+    (index: number, behavior: ScrollBehavior = "smooth") => {
+      const count = reflections.length;
+      if (count === 0) return;
+      const nextIndex = ((index % count) + count) % count;
+      setCurrentIndex(nextIndex);
 
-    const viewport = viewportRef.current;
-    if (!viewport) return;
+      const viewport = viewportRef.current;
+      if (!viewport) return;
 
-    const slides = viewport.querySelectorAll<HTMLElement>(".skin-reflection-slide");
-    const slide = slides[nextIndex];
-    if (!slide) return;
+      const slides = viewport.querySelectorAll<HTMLElement>(".skin-reflection-slide");
+      const slide = slides[nextIndex];
+      const firstSlide = slides[0];
+      if (!slide || !firstSlide) return;
 
-    const targetLeft = slide.offsetLeft - (viewport.clientWidth - slide.clientWidth) / 2;
-    viewport.scrollTo({
-      left: targetLeft,
-      behavior,
-    });
-  }, []);
+      const targetLeft = slide.offsetLeft - firstSlide.offsetLeft;
+      viewport.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior,
+      });
+    },
+    []
+  );
 
-  // Ensure current slide is centered when sidePadding changes (e.g. after layout measurement)
+  // Ensure current slide is aligned when sidePadding changes
   useEffect(() => {
-    if (sidePadding > 0) {
+    if (sidePadding != null) {
       goToSlide(currentIndex, "instant");
     }
   }, [sidePadding, currentIndex, goToSlide]);
@@ -89,14 +99,16 @@ export function ReflectionCarousel() {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         const slides = viewport.querySelectorAll<HTMLElement>(".skin-reflection-slide");
-        if (!slides.length) return;
-        const viewportCenter = viewport.scrollLeft + viewport.clientWidth / 2;
+        const firstSlide = slides[0];
+        if (!slides.length || !firstSlide) return;
+
+        const currentScroll = viewport.scrollLeft;
         let closestIndex = 0;
         let minDistance = Infinity;
 
         slides.forEach((slide, idx) => {
-          const slideCenter = slide.offsetLeft + slide.clientWidth / 2;
-          const dist = Math.abs(viewportCenter - slideCenter);
+          const slideTarget = slide.offsetLeft - firstSlide.offsetLeft;
+          const dist = Math.abs(currentScroll - slideTarget);
           if (dist < minDistance) {
             minDistance = dist;
             closestIndex = idx;
@@ -104,7 +116,7 @@ export function ReflectionCarousel() {
         });
 
         setCurrentIndex(closestIndex);
-      }, 100);
+      }, 60);
     };
 
     viewport.addEventListener("scroll", handleScroll, { passive: true });
@@ -133,7 +145,9 @@ export function ReflectionCarousel() {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const deltaX = e.clientX - startXRef.current;
-    viewport.scrollLeft = startScrollLeftRef.current - deltaX;
+    if (Math.abs(deltaX) > 2) {
+      viewport.scrollLeft = startScrollLeftRef.current - deltaX;
+    }
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -151,16 +165,15 @@ export function ReflectionCarousel() {
       className="skin-reflection-carousel relative outline-none"
       role="region"
       aria-roledescription="carousel"
-      aria-label="Fictional reflections"
+      aria-label="Member reflections"
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
       <div
         ref={viewportRef}
-        className="overflow-x-auto relative w-full select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="skin-reflection-viewport"
         style={{
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
+          scrollPaddingLeft: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
         }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -168,12 +181,10 @@ export function ReflectionCarousel() {
         onPointerCancel={handlePointerUp}
       >
         <div
-          className="skin-reflection-track flex"
+          className="skin-reflection-track"
           style={{
-            width: "max-content",
-            paddingLeft: sidePadding > 0 ? `${sidePadding}px` : "calc(50% - 250px)",
-            paddingRight: sidePadding > 0 ? `${sidePadding}px` : "calc(50% - 250px)",
-            marginLeft: 0,
+            paddingLeft: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
+            paddingRight: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
           }}
         >
           {reflections.map(({ name, age, city, quote }, index) => (
@@ -181,7 +192,7 @@ export function ReflectionCarousel() {
               key={name}
               className="skin-reflection-slide shrink-0 select-none cursor-grab active:cursor-grabbing touch-pan-y"
               style={{
-                scrollSnapAlign: "center",
+                scrollSnapAlign: "start",
               }}
               role="group"
               aria-roledescription="slide"

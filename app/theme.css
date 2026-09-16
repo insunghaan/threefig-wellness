@@ -35,6 +35,7 @@
 }
 body {
   font-family: var(--font-ui);
+  font-size: 17px;
 }
 ::selection {
   background: #f3c4db;
@@ -152,7 +153,7 @@ select:focus-visible {
   letter-spacing: -0.025em;
 }
 .hero h1 {
-  font-size: clamp(60px, 6.4vw, 96px);
+  font-size: clamp(62px, 6.4vw, 98px);
   line-height: 1.02;
 }
 .hero h1 > span {
@@ -171,7 +172,7 @@ select:focus-visible {
   color: #635469;
 }
 .hero-description {
-  font-size: 17px;
+  font-size: 18px;
 }
 .stage-light {
   display: none;
@@ -187,7 +188,7 @@ select:focus-visible {
 }
 .preview-heading h2 {
   font-family: var(--font-display);
-  font-size: 35px;
+  font-size: 37px;
   letter-spacing: -0.02em;
 }
 .preview-progress em,
@@ -219,7 +220,7 @@ select:focus-visible {
   gap: 65px;
 }
 .section-copy h2 {
-  font-size: clamp(42px, 4.4vw, 64px);
+  font-size: clamp(44px, 4.4vw, 66px);
   line-height: 1.08;
 }
 .age-section {
@@ -270,7 +271,7 @@ select:focus-visible {
 }
 .learning-path h3 {
   font-family: var(--font-display);
-  font-size: 35px;
+  font-size: 37px;
   letter-spacing: -0.02em;
 }
 .change-section {
@@ -336,7 +337,7 @@ select:focus-visible {
   pointer-events: none;
 }
 .prototype-intro h1 {
-  font-size: 64px;
+  font-size: 66px;
   line-height: 1.02;
 }
 .prototype-intro h1 em {
@@ -391,7 +392,7 @@ select:focus-visible {
   color: var(--primary);
 }
 .app-content h1 {
-  font-size: 42px;
+  font-size: 44px;
   line-height: 1.07;
 }
 .app-content .eyebrow {
@@ -401,7 +402,7 @@ select:focus-visible {
 }
 .screen-subtitle {
   color: #706278;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.55;
 }
 .app-nav {
@@ -453,7 +454,7 @@ select:focus-visible {
   padding-top: 17px;
 }
 .today-screen h1 {
-  font-size: 43px;
+  font-size: 45px;
 }
 .today-screen .organic-wrap {
   height: 151px;
@@ -489,7 +490,7 @@ select:focus-visible {
   min-height: 70px;
 }
 .action-title {
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: -0.015em;
 }
 .daily-action .action-number {
@@ -578,11 +579,11 @@ select:focus-visible {
 }
 .age-main > p {
   color: #735879;
-  font-size: 16px;
+  font-size: 17px;
 }
 .age-screen > h2 {
   font-family: var(--font-display);
-  font-size: 29px;
+  font-size: 31px;
   margin-top: 25px;
 }
 .age-calendar,
@@ -602,13 +603,13 @@ select:focus-visible {
 }
 .age-insight > p {
   margin-top: 16px;
-  font-size: 18px;
+  font-size: 19px;
 }
 .age-insight > .text-link {
   font-size: 13px;
 }
 .rhythm-screen h1 {
-  font-size: 37px;
+  font-size: 39px;
 }
 .rhythm-dial {
   background: transparent;
@@ -636,7 +637,7 @@ select:focus-visible {
 .dial-title {
   fill: #64456f;
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 42px;
 }
 .dial-time,
 .dial-caption,
@@ -662,7 +663,7 @@ select:focus-visible {
 
 /* Personal space: quiet, individual destinations instead of heavy separators. */
 .you-screen h1 {
-  font-size: 47px;
+  font-size: 49px;
   margin-top: 10px;
 }
 .ring-summary {
@@ -692,7 +693,7 @@ select:focus-visible {
   min-height: 85px;
   gap: 12px;
   box-shadow: var(--shadow-soft);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.35;
 }
 .you-links > a[href="/app/skin"] {
@@ -737,10 +738,10 @@ select:focus-visible {
   margin-bottom: 18px;
 }
 .detail-screen h1 {
-  font-size: 39px;
+  font-size: 41px;
 }
 .detail-screen h2 {
-  font-size: 19px;
+  font-size: 21px;
 }
 .detail-next,
 .journal-entry,
@@ -799,7 +800,7 @@ select:focus-visible {
 }
 .skin-hero-panel h2 {
   font-family: var(--font-display);
-  font-size: 34px;
+  font-size: 36px;
   letter-spacing: -0.02em;
 }
 .skin-hero-photo {
@@ -1028,7 +1029,7 @@ select:focus-visible {
   box-shadow: 0 20px 70px rgb(76 39 91 / 16%);
 }
 .fig-dialog [data-slot="dialog-title"] {
-  font-size: 36px;
+  font-size: 38px;
   line-height: 1.1;
 }
 .fig-dialog [data-slot="dialog-description"],
@@ -1083,7 +1084,7 @@ select:focus-visible {
   background: var(--color-air);
 }
 .design-intro h1 {
-  font-size: 86px;
+  font-size: 88px;
 }
 .design-intro > .eyebrow,
 .design-intro > p:last-child {
@@ -1147,7 +1148,7 @@ select:focus-visible {
   justify-content: space-between;
 }
 .design-surface-examples h3 {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 400;
 }
 .design-surface-examples p {
@@ -1168,12 +1169,12 @@ select:focus-visible {
 }
 .design-label h2 {
   font-family: var(--font-display);
-  font-size: 33px;
+  font-size: 35px;
 }
 .design-rhythm h3,
 .voice-examples {
   font-family: var(--font-display);
-  font-size: 38px;
+  font-size: 40px;
 }
 
 /* One reusable glass material. A faint rim and inset highlight describe the
@@ -1307,10 +1308,10 @@ select:focus-visible {
 
 @media (min-width: 761px) and (max-width: 1150px) {
   .prototype-intro h1 {
-    font-size: 52px;
+    font-size: 54px;
   }
   .hero h1 {
-    font-size: clamp(50px, 6vw, 69px);
+    font-size: clamp(52px, 6vw, 71px);
   }
   .feature-section {
     gap: 34px;
@@ -1323,14 +1324,14 @@ select:focus-visible {
   }
   .hero h1,
   .hero h1 > span {
-    font-size: clamp(43px, 9.9vw, 68px);
+    font-size: clamp(45px, 9.9vw, 70px);
     letter-spacing: -0.025em;
   }
   .hero-copy {
     padding-bottom: 5px;
   }
   .hero-description {
-    font-size: 16px;
+    font-size: 17px;
   }
   .hero-stage {
     padding: 27px 0 20px;
@@ -1351,7 +1352,7 @@ select:focus-visible {
     width: min(305px, 100%);
   }
   .section-copy h2 {
-    font-size: 45px;
+    font-size: 47px;
   }
   .feature-section {
     gap: 30px;
@@ -1362,7 +1363,7 @@ select:focus-visible {
   .three-intro h2,
   .learning-heading h2,
   .change-section h2 {
-    font-size: 46px;
+    font-size: 48px;
   }
   .three-actions > a {
     padding: 21px 18px;
@@ -1387,22 +1388,22 @@ select:focus-visible {
     padding-inline: 22px;
   }
   .app-content h1 {
-    font-size: 41px;
+    font-size: 43px;
   }
   .app-content .you-screen h1 {
-    font-size: 47px;
+    font-size: 49px;
   }
   .app-content .rhythm-screen h1 {
-    font-size: 37px;
+    font-size: 39px;
   }
   .app-content .age-main > h1 {
     font-size: 124px;
   }
   .app-content .detail-screen h1 {
-    font-size: 38px;
+    font-size: 40px;
   }
   .app-content .today-screen h1 {
-    font-size: 40px;
+    font-size: 42px;
   }
   .app-nav a {
     font-size: 11px;
@@ -1411,7 +1412,7 @@ select:focus-visible {
     padding: 45px 23px;
   }
   .design-intro h1 {
-    font-size: 54px;
+    font-size: 56px;
   }
   .color-swatches {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1437,11 +1438,11 @@ select:focus-visible {
     padding-inline: 19px;
   }
   .app-content .today-screen h1 {
-    font-size: 37px;
+    font-size: 39px;
   }
   .app-content .detail-screen h1,
   .app-content .rhythm-screen h1 {
-    font-size: 35px;
+    font-size: 37px;
   }
   .app-content .age-main > h1 {
     font-size: 111px;
@@ -1454,14 +1455,14 @@ select:focus-visible {
     padding-inline: 12px;
   }
   .action-title {
-    font-size: 15px;
+    font-size: 16px;
   }
   .app-nav {
     margin-inline: 9px;
   }
   .hero h1,
   .hero h1 > span {
-    font-size: 43px;
+    font-size: 45px;
   }
 }
 @media (max-width: 760px) and (max-height: 820px) {
@@ -1777,7 +1778,7 @@ select:focus-visible {
     align-items: center;
   }
   .landing .hero-copy { padding-bottom: 0; }
-  .landing .hero h1 { font-size: clamp(46px, 6.1vw, 82px); }
+  .landing .hero h1 { font-size: clamp(48px, 6.1vw, 84px); }
   .landing .hero-stage { padding-block: 0; }
   .landing .stage-caption { top: 20px; }
 }
@@ -1867,7 +1868,7 @@ select:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 .app-content .age-main > h1 { font-size: clamp(110px, 30vw, 138px); font-weight: 250; }
-.app-content .age-main > p { color: #62486e; font-size: 17px; margin-top: 15px; }
+.app-content .age-main > p { color: #62486e; font-size: 18px; margin-top: 15px; }
 .app-content .age-reveal-number { position: relative; isolation: isolate; }
 .app-content .legend-actual-line { width: 18px; height: 5px; border-radius: 99px; background: #716479; display: inline-block; }
 @media (max-width: 760px) and (max-height: 820px) {

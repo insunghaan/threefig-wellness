@@ -17,12 +17,12 @@ import {
   Sparkles,
   Thermometer,
   Utensils,
-  Waves,
   X,
 } from "lucide-react";
 import { Brand } from "./visuals";
 import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
+import { PathwayCarousel } from "./pathway-carousel";
 import { PatternPreview } from "./pattern-preview";
 import {
   Dialog,
@@ -30,33 +30,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-const pathways = [
-  {
-    number: "01",
-    icon: MoonStar,
-    label: "Sleep",
-    title: "Past the score. Toward better sleep.",
-    body: "3FIG connects when you sleep, how steadily you sleep and how your skin feels the next day. Then it finds a wind-down window built around your rhythm — not everybody else’s.",
-    example: "Tonight · Wind down at 10:20. Tomorrow starts here.",
-  },
-  {
-    number: "02",
-    icon: Utensils,
-    label: "Food",
-    title: "Less counting. More noticing.",
-    body: "Log a meal. Skip the calorie math. 3FIG sorts what seems to work, what may not and what deserves another look — then serves up recipes that fit.",
-    example: "This week · Oats, berries, walnuts. Your kind of bowl.",
-  },
-  {
-    number: "03",
-    icon: Waves,
-    label: "Stress",
-    title: "Spot the pressure. Soften the landing.",
-    body: "3FIG compares stress and recovery signals with changes you notice in your skin. When tension leaves a trace, it suggests one realistic way to reset.",
-    example: "Now · Walk for ten. Let the day loosen.",
-  },
-];
 
 const signals = [
   { icon: MoonStar, label: "Sleep, timing & rhythm" },
@@ -196,43 +169,21 @@ export default function Landing() {
           </div>
         </section>
 
-        <section id="three" className="skin-pathways skin-shell">
-          <div className="skin-pattern-intro">
-            <div className="skin-section-heading">
-            <p className="skin-kicker">SLEEP. FOOD. STRESS. ONE STORY.</p>
-            <h2><TwoLines text="Connect the dots. Change the plot." /></h2>
-            <p>
-              3FIG pairs continuous body signals with quick check-ins. The more
-              it learns, the more personal the next step feels.
-            </p>
+        <section id="three" className="skin-pathways" aria-labelledby="pathways-title">
+          <div className="skin-shell">
+            <div className="skin-pattern-intro">
+              <div className="skin-section-heading">
+                <p className="skin-kicker">SLEEP. FOOD. STRESS. ONE STORY.</p>
+                <h2 id="pathways-title"><TwoLines text="Connect the dots. Change the plot." /></h2>
+                <p>
+                  3FIG pairs continuous body signals with quick check-ins. The more
+                  it learns, the more personal the next step feels.
+                </p>
+              </div>
+              <PatternPreview />
             </div>
-            <PatternPreview />
           </div>
-          <div className="skin-pathway-list">
-            {pathways.map(({ number, icon: Icon, label, title, body, example }) => (
-              <article className="skin-pathway" key={label}>
-                <div className="skin-pathway-meta">
-                  <span>{number}</span>
-                  <Icon size={23} strokeWidth={1.5} />
-                  <strong>{label}</strong>
-                </div>
-                <div className="skin-pathway-content">
-                  <h3><TwoLines text={title} /></h3>
-                  <div className="skin-pathway-details">
-                    <p>{body}</p>
-                    <aside className="skin-example">
-                      <span>YOUR 3FIG</span>
-                      <p>{example}</p>
-                    </aside>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-          <p className="skin-small-print">
-            Food patterns are wellness guidance — not allergy testing,
-            diagnosis or medical nutrition therapy.
-          </p>
+          <PathwayCarousel />
         </section>
 
         <section id="ring" className="skin-ring-section">

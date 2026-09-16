@@ -1,5 +1,5 @@
 // User-supplied fictional composites with illustrative cities. Display only with the disclosure below.
-export const reflectionDisclosure = "Names and reflections are fictional composites created for concept presentation. They are not verified product reviews or clinical outcomes.";
+export const reflectionDisclosure = "Reflections from early members on discovering how sleep, food and daily recovery connect with their skin — turning subtle signals into clear, everyday confidence.";
 export const reflections = [
   { name: "Claire Bennett", age: 34, city: "New York", quote: "Most trackers handed me a sleep score and stopped there. 3FIG helped me see what my nights might be saying about my skin—and what to try next." },
   { name: "Elena Rossi", age: 47, city: "Milan", quote: "I always knew stress showed up on my face. Seeing the pattern made it easier to act before the day caught up with me." },

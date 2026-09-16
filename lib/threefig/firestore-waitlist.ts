@@ -56,16 +56,17 @@ function persistFallback(map: Map<string, WaitlistRecord>) {
 }
 
 // Lazy Firestore client initialization to prevent boot crashes if credentials/APIs are pending
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let firestoreInstance: any = null;
 let firestoreInitFailed = false;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getFirestoreInstance(): any | null {
   if (firestoreInitFailed) return null;
   if (firestoreInstance) return firestoreInstance;
 
   try {
     // Dynamically require to avoid bundling issues on edge/browser
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Firestore } = require("@google-cloud/firestore");
     const projectId =
       process.env.FIRESTORE_PROJECT_ID ||
@@ -132,9 +133,11 @@ export async function saveWaitlistSignup(
       persistFallback(local);
 
       return { success: true, storage: "firestore", alreadyExisted: false };
-    } catch (firestoreError: any) {
+    } catch (firestoreError: unknown) {
+      const errMessage =
+        firestoreError instanceof Error ? firestoreError.message : String(firestoreError);
       console.warn(
-        `[3FIG Waitlist] Firestore save encountered error: ${firestoreError?.message || firestoreError}. Falling back to server-side durable storage.`
+        `[3FIG Waitlist] Firestore save encountered error: ${errMessage}. Falling back to server-side durable storage.`
       );
     }
   }
@@ -173,6 +176,7 @@ export async function getUndeliveredWaitlist(limit = 25): Promise<WaitlistRecord
         .limit(limit)
         .get();
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       snapshot.forEach((doc: any) => {
         const data = doc.data() as WaitlistRecord;
         if (data && data.email) {
