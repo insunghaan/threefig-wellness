@@ -113,8 +113,10 @@ export function PathwayCarousel() {
   const [activePopupItem, setActivePopupItem] = useState<PathwayItem | null>(null);
 
   const isPointerDownRef = useRef(false);
+  const hasMovedRef = useRef(false);
   const startXRef = useRef(0);
   const startScrollLeftRef = useRef(0);
+  const animRef = useRef<number | null>(null);
 
   const totalSlides = defaultPathways.length;
 
@@ -140,9 +142,49 @@ export function PathwayCarousel() {
     return () => window.removeEventListener("resize", updatePadding);
   }, []);
 
-  // Scroll so that the selected slide aligns with the exact left offset
+  // Smooth custom RAF scroll animation with cubic ease-out curve
+  const smoothScrollTo = useCallback((targetLeft: number, duration = 540) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    if (animRef.current !== null) {
+      cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+    }
+
+    const startLeft = viewport.scrollLeft;
+    const distance = targetLeft - startLeft;
+    if (Math.abs(distance) < 1) {
+      viewport.scrollLeft = targetLeft;
+      return;
+    }
+
+    const prevSnap = viewport.style.scrollSnapType;
+    viewport.style.scrollSnapType = "none";
+
+    const startTime = performance.now();
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      viewport.scrollLeft = startLeft + distance * easeOutCubic(progress);
+
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(step);
+      } else {
+        viewport.scrollLeft = targetLeft;
+        viewport.style.scrollSnapType = prevSnap;
+        animRef.current = null;
+      }
+    };
+
+    animRef.current = requestAnimationFrame(step);
+  }, []);
+
+  // Scroll so that the selected slide aligns with the exact offset
   const goToSlide = useCallback(
-    (index: number, behavior: ScrollBehavior = "smooth") => {
+    (index: number, immediate = false) => {
       if (totalSlides === 0) return;
       const nextIndex = ((index % totalSlides) + totalSlides) % totalSlides;
       setCurrentIndex(nextIndex);
@@ -155,19 +197,29 @@ export function PathwayCarousel() {
       const firstSlide = slides[0];
       if (!slide || !firstSlide) return;
 
-      const targetLeft = slide.offsetLeft - firstSlide.offsetLeft;
-      viewport.scrollTo({
-        left: Math.max(0, targetLeft),
-        behavior,
-      });
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      let targetLeft = slide.offsetLeft - firstSlide.offsetLeft;
+
+      // When navigating to the last slide, align right edge to shell boundary
+      if (nextIndex === totalSlides - 1 || targetLeft > maxScroll) {
+        targetLeft = maxScroll;
+      } else if (nextIndex === 0) {
+        targetLeft = 0;
+      }
+
+      if (immediate) {
+        viewport.scrollLeft = targetLeft;
+      } else {
+        smoothScrollTo(targetLeft, 560);
+      }
     },
-    [totalSlides]
+    [totalSlides, smoothScrollTo]
   );
 
   // Ensure current slide is aligned when sidePadding changes
   useEffect(() => {
     if (sidePadding != null) {
-      goToSlide(currentIndex, "instant");
+      goToSlide(currentIndex, true);
     }
   }, [sidePadding, currentIndex, goToSlide]);
 
@@ -207,6 +259,13 @@ export function PathwayCarousel() {
         if (!slides.length || !firstSlide) return;
 
         const currentScroll = viewport.scrollLeft;
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+
+        if (maxScroll > 0 && currentScroll >= maxScroll - 30) {
+          setCurrentIndex(slides.length - 1);
+          return;
+        }
+
         let closestIndex = 0;
         let minDistance = Infinity;
 
@@ -232,15 +291,20 @@ export function PathwayCarousel() {
 
   // Desktop horizontal mouse dragging
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("button, a, [role='button']")) {
+      return;
+    }
     if (e.pointerType === "mouse" && e.button === 0) {
       const viewport = viewportRef.current;
       if (!viewport) return;
+      if (animRef.current !== null) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
       isPointerDownRef.current = true;
+      hasMovedRef.current = false;
       startXRef.current = e.clientX;
       startScrollLeftRef.current = viewport.scrollLeft;
-      try {
-        e.currentTarget.setPointerCapture(e.pointerId);
-      } catch {}
     }
   };
 
@@ -249,7 +313,8 @@ export function PathwayCarousel() {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const deltaX = e.clientX - startXRef.current;
-    if (Math.abs(deltaX) > 2) {
+    if (Math.abs(deltaX) > 4) {
+      hasMovedRef.current = true;
       viewport.scrollLeft = startScrollLeftRef.current - deltaX;
     }
   };
@@ -257,11 +322,16 @@ export function PathwayCarousel() {
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isPointerDownRef.current) return;
     isPointerDownRef.current = false;
-    try {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-        e.currentTarget.releasePointerCapture(e.pointerId);
+    const deltaX = e.clientX - startXRef.current;
+    if (hasMovedRef.current && Math.abs(deltaX) > 30) {
+      if (deltaX < 0) {
+        goToNext();
+      } else {
+        goToPrev();
       }
-    } catch {}
+    } else if (hasMovedRef.current) {
+      goToSlide(currentIndex);
+    }
   };
 
   return (
@@ -289,12 +359,13 @@ export function PathwayCarousel() {
           className="skin-pathway-carousel-track"
           style={{
             paddingLeft: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
-            paddingRight: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
+            paddingRight: 0,
           }}
         >
           {defaultPathways.map((item, index) => {
             const Icon = item.icon;
             const isCurrent = currentIndex === index;
+            const isLast = index === totalSlides - 1;
 
             return (
               <article
@@ -303,6 +374,13 @@ export function PathwayCarousel() {
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${item.label} (${index + 1} of ${totalSlides})`}
+                style={{
+                  marginRight: isLast
+                    ? sidePadding != null
+                      ? `${sidePadding}px`
+                      : "var(--shell-gutter)"
+                    : undefined,
+                }}
               >
                 <div className="skin-pathway-card">
                   {/* Ultra-minimalist macro background image (no people) */}
@@ -327,8 +405,12 @@ export function PathwayCarousel() {
 
                     <button
                       type="button"
-                      className="skin-pathway-expand-btn"
+                      className="skin-pathway-expand-btn cursor-pointer"
+                      onPointerDown={(e) => {
+                        e.stopPropagation();
+                      }}
                       onClick={(e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         setActivePopupItem(item);
                       }}
@@ -353,7 +435,7 @@ export function PathwayCarousel() {
         </div>
       </div>
 
-      {/* Centered Navigation Arrows (01 / 03 removed, arrows centered like testimonials) */}
+      {/* Centered Navigation Arrows: left and right match in design */}
       <div className="skin-pathway-controls-bar">
         <div className="skin-pathway-nav-arrows">
           <button
@@ -366,7 +448,7 @@ export function PathwayCarousel() {
           </button>
           <button
             type="button"
-            className="skin-pathway-nav-btn is-primary"
+            className="skin-pathway-nav-btn is-secondary"
             onClick={goToNext}
             aria-label="Next slide"
           >
@@ -383,7 +465,7 @@ export function PathwayCarousel() {
         }}
       >
         <DialogContent
-          className="skin-pathway-dialog-content sm:max-w-[540px] bg-[#271d2c] border border-white/20 text-[#f7f2f8] p-7 rounded-[28px] shadow-2xl backdrop-blur-2xl"
+          className="skin-pathway-dialog-content sm:max-w-[540px]"
         >
           {activePopupItem && (
             <div className="space-y-5">

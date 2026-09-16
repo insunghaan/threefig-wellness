@@ -117,7 +117,7 @@
   user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   scroll-padding-left: var(--shell-gutter);
   -webkit-overflow-scrolling: touch;
   cursor: grab;
@@ -133,7 +133,7 @@
   gap: 24px;
   width: max-content;
   padding-left: var(--shell-gutter);
-  padding-right: var(--shell-gutter);
+  padding-right: 0;
   will-change: transform;
 }
 .skin-pathway-slide {
@@ -141,6 +141,9 @@
   scroll-snap-align: start;
   position: relative;
   display: flex;
+}
+.skin-pathway-slide:last-child {
+  margin-right: var(--shell-gutter);
 }
 .skin-pathway-card {
   position: relative;
@@ -273,6 +276,13 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  background: transparent;
+  border: 1px solid rgba(62, 45, 70, 0.24);
+  color: #3e2d46;
+}
+.skin-pathway-nav-btn:hover:not(:disabled) {
+  background: rgba(62, 45, 70, 0.08);
+  border-color: rgba(62, 45, 70, 0.4);
 }
 .skin-pathway-nav-btn.is-secondary {
   background: transparent;
@@ -284,14 +294,13 @@
   border-color: rgba(62, 45, 70, 0.4);
 }
 .skin-pathway-nav-btn.is-primary {
-  background: #332537;
-  border: 1px solid #332537;
-  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(62, 45, 70, 0.24);
+  color: #3e2d46;
 }
 .skin-pathway-nav-btn.is-primary:hover:not(:disabled) {
-  background: #48344e;
-  border-color: #48344e;
-  transform: scale(1.03);
+  background: rgba(62, 45, 70, 0.08);
+  border-color: rgba(62, 45, 70, 0.4);
 }
 
 .skin-pathway-list { margin-top: 64px; border-top: 1px solid var(--skin-line); }
@@ -336,7 +345,7 @@
   user-select: none;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: x proximity;
   scroll-padding-left: var(--shell-gutter);
   -webkit-overflow-scrolling: touch;
   cursor: grab;
@@ -353,10 +362,11 @@
   gap: 24px;
   width: max-content;
   padding-left: var(--shell-gutter);
-  padding-right: var(--shell-gutter);
+  padding-right: 0;
   will-change: transform;
 }
 .skin-reflection-slide { flex-basis: clamp(500px, 44vw, 720px); padding-left: 0; display: flex; }
+.skin-reflection-slide:last-child { margin-right: var(--shell-gutter); }
 .skin-reflection-slide figure { width: 100%; display: flex; flex-direction: column; padding: 36px 40px; border: 1px solid #ffffff24; border-radius: 32px; background: linear-gradient(145deg, #ffffff0d, #ffffff03); }
 .skin-reflection-number { color: #c3aecf; font-size: 0.9375rem; letter-spacing: .1em; }
 .skin-reflection-slide blockquote { margin: 24px 0 32px; font-family: var(--font-display); font-size: 30px; line-height: 1.35; color: #f6f0f7; }
@@ -597,6 +607,47 @@
   .skin-pathway-controls-bar { margin-top: 24px; padding-top: 18px; }
   .skin-pathway-nav-btn { width: 42px; height: 42px; }
 }
+
+/* YOUR 3FIG Popup Dialog Styling */
+.skin-pathway-dialog-content {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(540px, calc(100vw - 32px)) !important;
+  max-height: calc(100dvh - 48px) !important;
+  overflow-y: auto !important;
+  background-color: #241929 !important;
+  color: #f7f2f8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 28px !important;
+  padding: 32px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65) !important;
+  z-index: 1000 !important;
+}
+
+.skin-pathway-dialog-content [data-slot="dialog-close"] {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.skin-pathway-dialog-content [data-slot="dialog-close"]:hover {
+  background: rgba(255, 255, 255, 0.24) !important;
+  transform: scale(1.05) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skin-site *, .skin-site *::before, .skin-site *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }

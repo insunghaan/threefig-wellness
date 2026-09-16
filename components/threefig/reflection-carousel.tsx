@@ -10,8 +10,12 @@ export function ReflectionCarousel() {
   const [sidePadding, setSidePadding] = useState<number | null>(null);
 
   const isPointerDownRef = useRef(false);
+  const hasMovedRef = useRef(false);
   const startXRef = useRef(0);
   const startScrollLeftRef = useRef(0);
+  const animRef = useRef<number | null>(null);
+
+  const totalSlides = reflections.length;
 
   // Compute left padding so that the first slide aligns with the left edge of .skin-shell
   useEffect(() => {
@@ -35,12 +39,51 @@ export function ReflectionCarousel() {
     return () => window.removeEventListener("resize", updatePadding);
   }, []);
 
+  // Smooth custom RAF scroll animation with cubic ease-out curve
+  const smoothScrollTo = useCallback((targetLeft: number, duration = 540) => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    if (animRef.current !== null) {
+      cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+    }
+
+    const startLeft = viewport.scrollLeft;
+    const distance = targetLeft - startLeft;
+    if (Math.abs(distance) < 1) {
+      viewport.scrollLeft = targetLeft;
+      return;
+    }
+
+    const prevSnap = viewport.style.scrollSnapType;
+    viewport.style.scrollSnapType = "none";
+
+    const startTime = performance.now();
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      viewport.scrollLeft = startLeft + distance * easeOutCubic(progress);
+
+      if (progress < 1) {
+        animRef.current = requestAnimationFrame(step);
+      } else {
+        viewport.scrollLeft = targetLeft;
+        viewport.style.scrollSnapType = prevSnap;
+        animRef.current = null;
+      }
+    };
+
+    animRef.current = requestAnimationFrame(step);
+  }, []);
+
   // Scroll so that the selected slide aligns with the exact left offset
   const goToSlide = useCallback(
-    (index: number, behavior: ScrollBehavior = "smooth") => {
-      const count = reflections.length;
-      if (count === 0) return;
-      const nextIndex = ((index % count) + count) % count;
+    (index: number, immediate = false) => {
+      if (totalSlides === 0) return;
+      const nextIndex = ((index % totalSlides) + totalSlides) % totalSlides;
       setCurrentIndex(nextIndex);
 
       const viewport = viewportRef.current;
@@ -51,19 +94,29 @@ export function ReflectionCarousel() {
       const firstSlide = slides[0];
       if (!slide || !firstSlide) return;
 
-      const targetLeft = slide.offsetLeft - firstSlide.offsetLeft;
-      viewport.scrollTo({
-        left: Math.max(0, targetLeft),
-        behavior,
-      });
+      const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      let targetLeft = slide.offsetLeft - firstSlide.offsetLeft;
+
+      // When navigating to the last slide, align right edge to shell boundary
+      if (nextIndex === totalSlides - 1 || targetLeft > maxScroll) {
+        targetLeft = maxScroll;
+      } else if (nextIndex === 0) {
+        targetLeft = 0;
+      }
+
+      if (immediate) {
+        viewport.scrollLeft = targetLeft;
+      } else {
+        smoothScrollTo(targetLeft, 560);
+      }
     },
-    []
+    [totalSlides, smoothScrollTo]
   );
 
   // Ensure current slide is aligned when sidePadding changes
   useEffect(() => {
     if (sidePadding != null) {
-      goToSlide(currentIndex, "instant");
+      goToSlide(currentIndex, true);
     }
   }, [sidePadding, currentIndex, goToSlide]);
 
@@ -103,6 +156,13 @@ export function ReflectionCarousel() {
         if (!slides.length || !firstSlide) return;
 
         const currentScroll = viewport.scrollLeft;
+        const maxScroll = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+
+        if (maxScroll > 0 && currentScroll >= maxScroll - 30) {
+          setCurrentIndex(slides.length - 1);
+          return;
+        }
+
         let closestIndex = 0;
         let minDistance = Infinity;
 
@@ -128,15 +188,20 @@ export function ReflectionCarousel() {
 
   // Desktop mouse horizontal dragging
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest("button, a, [role='button']")) {
+      return;
+    }
     if (e.pointerType === "mouse" && e.button === 0) {
       const viewport = viewportRef.current;
       if (!viewport) return;
+      if (animRef.current !== null) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
       isPointerDownRef.current = true;
+      hasMovedRef.current = false;
       startXRef.current = e.clientX;
       startScrollLeftRef.current = viewport.scrollLeft;
-      try {
-        e.currentTarget.setPointerCapture(e.pointerId);
-      } catch {}
     }
   };
 
@@ -145,7 +210,8 @@ export function ReflectionCarousel() {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const deltaX = e.clientX - startXRef.current;
-    if (Math.abs(deltaX) > 2) {
+    if (Math.abs(deltaX) > 4) {
+      hasMovedRef.current = true;
       viewport.scrollLeft = startScrollLeftRef.current - deltaX;
     }
   };
@@ -153,11 +219,16 @@ export function ReflectionCarousel() {
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!isPointerDownRef.current) return;
     isPointerDownRef.current = false;
-    try {
-      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-        e.currentTarget.releasePointerCapture(e.pointerId);
+    const deltaX = e.clientX - startXRef.current;
+    if (hasMovedRef.current && Math.abs(deltaX) > 30) {
+      if (deltaX < 0) {
+        handleNext();
+      } else {
+        handlePrev();
       }
-    } catch {}
+    } else if (hasMovedRef.current) {
+      goToSlide(currentIndex);
+    }
   };
 
   return (
@@ -184,34 +255,42 @@ export function ReflectionCarousel() {
           className="skin-reflection-track"
           style={{
             paddingLeft: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
-            paddingRight: sidePadding != null ? `${sidePadding}px` : "var(--shell-gutter)",
+            paddingRight: 0,
           }}
         >
-          {reflections.map(({ name, age, city, quote }, index) => (
-            <div
-              key={name}
-              className="skin-reflection-slide shrink-0 select-none cursor-grab active:cursor-grabbing touch-pan-y"
-              style={{
-                scrollSnapAlign: "start",
-              }}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${index + 1} of ${reflections.length}`}
-            >
-              <figure tabIndex={0} className="select-none">
-                <span className="skin-reflection-number" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                <blockquote>“{quote}”</blockquote>
-                <figcaption>
-                  <strong>{name}</strong>
-                  <span aria-label={`Age ${age}, ${city}`}>
-                    {age} / {city}
+          {reflections.map(({ name, age, city, quote }, index) => {
+            const isLast = index === totalSlides - 1;
+            return (
+              <div
+                key={name}
+                className="skin-reflection-slide shrink-0 select-none cursor-grab active:cursor-grabbing touch-pan-y"
+                style={{
+                  scrollSnapAlign: "start",
+                  marginRight: isLast
+                    ? sidePadding != null
+                      ? `${sidePadding}px`
+                      : "var(--shell-gutter)"
+                    : undefined,
+                }}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${index + 1} of ${totalSlides}`}
+              >
+                <figure tabIndex={0} className="select-none">
+                  <span className="skin-reflection-number" aria-hidden="true">
+                    0{index + 1}
                   </span>
-                </figcaption>
-              </figure>
-            </div>
-          ))}
+                  <blockquote>“{quote}”</blockquote>
+                  <figcaption>
+                    <strong>{name}</strong>
+                    <span aria-label={`Age ${age}, ${city}`}>
+                      {age} / {city}
+                    </span>
+                  </figcaption>
+                </figure>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="skin-reflection-controls">
