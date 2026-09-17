@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
 import type { GeoLocationData } from "./geolocation";
+import type { Firestore } from "@google-cloud/firestore";
+import { newWelcomeJob, OUTBOX, welcomeId } from "./welcome-outbox";
 
 const require = createRequire(import.meta.url);
 
@@ -62,8 +64,7 @@ function persistFallback(map: Map<string, WaitlistRecord>) {
 let firestoreInstance: any = null;
 let firestoreInitFailed = false;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getFirestoreInstance(): any | null {
+export function getFirestoreInstance(): Firestore | null {
   if (firestoreInitFailed) return null;
   if (firestoreInstance) return firestoreInstance;
 
@@ -98,7 +99,8 @@ function safeDocId(email: string): string {
 /**
  * Inserts a new waitlist signup into server-side Firestore.
  * If Firestore is temporarily unavailable or pending API activation in the GCP project,
- * gracefully falls back to secure server-side persistent storage to guarantee zero data loss.
+ * Local fallback is development-only. Cloud Run disk is ephemeral and must not
+ * acknowledge a signup when its durable database is unavailable.
  */
 export async function saveWaitlistSignup(
   email: string,
@@ -112,13 +114,6 @@ export async function saveWaitlistSignup(
   if (db) {
     try {
       const docRef = db.collection("waitlist_signups").doc(safeDocId(normalizedEmail));
-      const existing = await docRef.get();
-
-      if (existing.exists) {
-        console.log(`[3FIG Waitlist Firestore] Email already registered: ${normalizedEmail}`);
-        return { success: true, storage: "firestore", alreadyExisted: true };
-      }
-
       const record: WaitlistRecord = {
         email: normalizedEmail,
         source,
@@ -128,8 +123,16 @@ export async function saveWaitlistSignup(
         geo_location: geoLocation,
       };
 
-      await docRef.set(record);
-      console.log(`[3FIG Waitlist Firestore] Successfully saved signup: ${normalizedEmail}`);
+      const alreadyExisted = await db.runTransaction(async tx => {
+        const existing = await tx.get(docRef);
+        if (existing.exists) return true;
+        tx.create(docRef, record);
+        if (process.env.THREEFIG_WELCOME_ENABLED === "true") {
+          tx.create(db.collection(OUTBOX).doc(welcomeId(normalizedEmail)), newWelcomeJob(normalizedEmail));
+        }
+        return false;
+      });
+      if (alreadyExisted) return { success: true, storage: "firestore", alreadyExisted: true };
 
       // Also mirror to local persistent storage for redundant durability
       const local = ensureFallbackLoaded();
@@ -138,12 +141,19 @@ export async function saveWaitlistSignup(
 
       return { success: true, storage: "firestore", alreadyExisted: false };
     } catch (firestoreError: unknown) {
+      if (process.env.K_SERVICE || process.env.NODE_ENV === "production") {
+        throw new Error("Waitlist storage temporarily unavailable", { cause: firestoreError });
+      }
       const errMessage =
         firestoreError instanceof Error ? firestoreError.message : String(firestoreError);
       console.warn(
         `[3FIG Waitlist] Firestore save encountered error: ${errMessage}. Falling back to server-side durable storage.`
       );
     }
+  }
+
+  if (process.env.K_SERVICE || process.env.NODE_ENV === "production") {
+    throw new Error("Waitlist storage temporarily unavailable");
   }
 
   // Server-side durable fallback
@@ -166,86 +176,3 @@ export async function saveWaitlistSignup(
   return { success: true, storage: "local-persistent", alreadyExisted };
 }
 
-/**
- * Retrieves undelivered waitlist signups for Google Apps Script sync.
- */
-export async function getUndeliveredWaitlist(limit = 25): Promise<WaitlistRecord[]> {
-  const db = getFirestoreInstance();
-  const results: Map<string, WaitlistRecord> = new Map();
-
-  if (db) {
-    try {
-      const snapshot = await db
-        .collection("waitlist_signups")
-        .where("delivered_at", "==", null)
-        .limit(limit)
-        .get();
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      snapshot.forEach((doc: any) => {
-        const data = doc.data() as WaitlistRecord;
-        if (data && data.email) {
-          results.set(data.email.toLowerCase(), data);
-        }
-      });
-    } catch (err) {
-      console.warn("[3FIG Waitlist] Firestore read encountered error, checking server fallback:", err);
-    }
-  }
-
-  // Merge with local fallback
-  const local = ensureFallbackLoaded();
-  for (const record of local.values()) {
-    if (record.delivered_at === null && !results.has(record.email.toLowerCase())) {
-      results.set(record.email.toLowerCase(), record);
-    }
-  }
-
-  const sorted = Array.from(results.values()).sort(
-    (a, b) => a.created_at.localeCompare(b.created_at) || a.email.localeCompare(b.email)
-  );
-
-  return sorted.slice(0, limit);
-}
-
-/**
- * Acknowledges delivered emails after Google Apps Script sync.
- */
-export async function markWaitlistDelivered(
-  emails: string[],
-  deliveredAt = new Date().toISOString()
-): Promise<number> {
-  const normalized = emails.map((e) => e.toLowerCase().trim());
-  let count = 0;
-
-  const db = getFirestoreInstance();
-  if (db) {
-    try {
-      const batch = db.batch();
-      for (const email of normalized) {
-        const docRef = db.collection("waitlist_signups").doc(safeDocId(email));
-        batch.update(docRef, { delivered_at: deliveredAt });
-      }
-      await batch.commit();
-      count = normalized.length;
-    } catch (err) {
-      console.warn("[3FIG Waitlist] Firestore batch update failed, updating server fallback:", err);
-    }
-  }
-
-  // Update local fallback
-  const local = ensureFallbackLoaded();
-  let localCount = 0;
-  for (const email of normalized) {
-    const record = local.get(email);
-    if (record && record.delivered_at === null) {
-      record.delivered_at = deliveredAt;
-      localCount++;
-    }
-  }
-  if (localCount > 0) {
-    persistFallback(local);
-  }
-
-  return Math.max(count, localCount);
-}

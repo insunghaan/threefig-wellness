@@ -37,7 +37,7 @@ The source currently uses a Next-compatible Vinext/Cloudflare runtime. Migrate o
 - Do not silently discard submissions.
 - Do not expose existing or new credentials in frontend code.
 - Before switching the production waitlist destination, report which backend will be used and which Google Cloud permissions are required.
-- The repository contains a Google Apps Script integration under `integrations/google-apps-script`; inspect it before proposing a replacement.
+- Waitlist welcome mail uses Brevo. See `docs/brevo-welcome.md`. The unused Google Apps Script integration was removed.
 - If Firestore is selected, create the minimum schema and security rules necessary for server-side waitlist writes. The browser must not receive unrestricted Firestore write access.
 
 ## Verification gate

@@ -5,7 +5,8 @@ import {
   failure,
   json,
 } from "@/lib/threefig/records-server";
-import { saveWaitlistSignup } from "@/lib/threefig/firestore-waitlist";
+import { getFirestoreInstance, saveWaitlistSignup } from "@/lib/threefig/firestore-waitlist";
+import { dispatchWelcome, welcomeId } from "@/lib/threefig/welcome-outbox";
 import { resolveGeoLocation } from "@/lib/threefig/geolocation";
 import { sendSlackWaitlistNotification } from "@/lib/threefig/slack-notification";
 
@@ -51,6 +52,13 @@ export async function POST(request: Request) {
 
     // Only notify Slack for genuinely new signups; never block user signup
     if (!result.alreadyExisted) {
+      // Await the initial attempt: Cloud Run can suspend work after responding.
+      // The durable outbox survives failure; signup still succeeds once saved.
+      const db = getFirestoreInstance();
+      if (db && process.env.THREEFIG_WELCOME_ENABLED === "true") {
+        try { await dispatchWelcome(db, welcomeId(email)); }
+        catch { console.warn("[3FIG Welcome] Dispatch failed; inspect outbox status."); }
+      }
       try {
         await sendSlackWaitlistNotification({
           email,
