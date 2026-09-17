@@ -4,10 +4,39 @@ import "./globals.css";
 import "./theme.css";
 import "./landing.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://threefig-wellness-jn3fn5lewq-uc.a.run.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "3FIG – The skin wellness ring",
   description:
     "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+  openGraph: {
+    title: "3FIG – The skin wellness ring",
+    description:
+      "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+    url: siteUrl,
+    siteName: "3FIG",
+    images: [
+      {
+        url: "/images/threefig-hero-amber.jpg",
+        width: 1024,
+        height: 576,
+        alt: "3FIG – The skin wellness ring",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "3FIG – The skin wellness ring",
+    description:
+      "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+    images: ["/images/threefig-hero-amber.jpg"],
+  },
 };
 
 export default function RootLayout({
