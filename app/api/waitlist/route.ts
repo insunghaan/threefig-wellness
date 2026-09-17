@@ -7,6 +7,7 @@ import {
 } from "@/lib/threefig/records-server";
 import { saveWaitlistSignup } from "@/lib/threefig/firestore-waitlist";
 import { resolveGeoLocation } from "@/lib/threefig/geolocation";
+import { sendSlackWaitlistNotification } from "@/lib/threefig/slack-notification";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -45,7 +46,22 @@ export async function POST(request: Request) {
       language: clientLanguage,
     });
 
-    await saveWaitlistSignup(email, "landing", "2026-09-10", geoLocation);
+    const createdAt = new Date().toISOString();
+    const result = await saveWaitlistSignup(email, "landing", "2026-09-10", geoLocation);
+
+    // Only notify Slack for genuinely new signups; never block user signup
+    if (!result.alreadyExisted) {
+      try {
+        await sendSlackWaitlistNotification({
+          email,
+          source: "landing",
+          createdAt,
+          geoLocation,
+        });
+      } catch (slackErr) {
+        console.warn("[3FIG Waitlist] Non-blocking Slack notification error:", slackErr);
+      }
+    }
 
     return json({ message: "You’re in. Welcome to the 3FIG launch list." }, 201);
   } catch (error) {

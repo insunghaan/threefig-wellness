@@ -30,7 +30,7 @@ function isPrivateIp(ip: string): boolean {
 
 /**
  * Extracts client IP from standard proxy and Cloud Run headers.
- * Used internally for server-side lookup; client IP itself is not persisted in geo_location.
+ * Used internally for server-side lookup; client IP itself is never persisted in geo_location.
  */
 export function extractClientIp(request: Request): string | null {
   const forwardedFor = request.headers.get("x-forwarded-for");
@@ -49,10 +49,15 @@ export function extractClientIp(request: Request): string | null {
 }
 
 /**
- * Resolves approximate geolocation data server-side with a strict timeout.
- * - Stores minimized fields only (country_code, country, region, city, timezone).
- * - Never stores latitude, longitude, or raw IP in the geo_location payload.
- * - Guaranteed never to throw, ensuring waitlist signup resilience.
+ * Resolves approximate geolocation data server-side using HTTPS (ipwho.is).
+ *
+ * Requirements:
+ * - 100% server-side execution via HTTPS only
+ * - Enforces strict 1.5-second timeout via AbortController
+ * - Zero API key / secret requirement
+ * - Saves strictly minimized schema (country_code, country, region, city, timezone)
+ * - Raw IP, latitude, and longitude are NEVER stored
+ * - Failure guaranteed never to throw or block waitlist signup
  */
 export async function resolveGeoLocation(
   request: Request,
@@ -83,41 +88,40 @@ export async function resolveGeoLocation(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1500);
 
-    // Using IP-API (public DNS/IP endpoint, strictly server-side, no credentials needed)
-    const res = await fetch(
-      `http://ip-api.com/json/${encodeURIComponent(clientIp)}?fields=status,message,country,countryCode,region,regionName,city,timezone`,
-      {
-        signal: controller.signal,
-        headers: { "User-Agent": "3FIG-Waitlist-Geo/1.0" },
-      }
-    );
+    // Production-safe HTTPS geolocation lookup via ipwho.is
+    const res = await fetch(`https://ipwho.is/${encodeURIComponent(clientIp)}`, {
+      signal: controller.signal,
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "3FIG-Waitlist-Geo/1.0",
+      },
+    });
     clearTimeout(timeoutId);
 
     if (!res.ok) return fallbackGeo;
 
     const data = (await res.json()) as {
-      status?: string;
+      success?: boolean;
+      country_code?: string;
       country?: string;
-      countryCode?: string;
       region?: string;
-      regionName?: string;
       city?: string;
-      timezone?: string;
+      timezone?: { id?: string };
     };
 
-    if (data && data.status === "success") {
+    if (data && data.success === true) {
       return {
-        country_code: data.countryCode || null,
+        country_code: data.country_code || null,
         country: data.country || null,
-        region: data.regionName || data.region || null,
+        region: data.region || null,
         city: data.city || null,
-        timezone: data.timezone || clientTimezone,
+        timezone: data.timezone?.id || clientTimezone,
         client_timezone: clientTimezone,
         client_language: clientLanguage,
       };
     }
   } catch {
-    // Graceful fallback on timeout or network error - never block waitlist signup
+    // Graceful fallback on timeout, rate-limit, network error, or invalid response
   }
 
   return fallbackGeo;
