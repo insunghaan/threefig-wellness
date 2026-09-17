@@ -117,10 +117,10 @@ export default function Landing() {
         <section className="skin-hero">
           <img
             className="skin-hero-image"
-            src="/images/threefig-amber-hero-v9.webp"
-            width="1916"
-            height="821"
-            alt="A Black model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
+            src="/images/threefig-hero-amber.webp"
+            width="1024"
+            height="576"
+            alt="A model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
             fetchPriority="high"
           />
           <div className="skin-hero-copy">

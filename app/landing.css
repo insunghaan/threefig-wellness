@@ -54,16 +54,16 @@
   width: 100%; margin: 0; position: relative; isolation: isolate;
   min-height: clamp(640px, calc(100svh - 96px), 860px);
   display: grid; align-items: center; overflow: hidden;
-  background: #5c2b13; color: #fff;
+  background: #220e08; color: #fff;
 }
 .skin-hero-image {
   position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%;
-  max-width: none; object-fit: cover; object-position: center; border-radius: 0;
+  max-width: none; object-fit: cover; object-position: 62% center; border-radius: 0;
   transform: none;
 }
 .skin-hero::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(90deg, rgba(34,14,8,.76), rgba(34,14,8,.4) 38%, transparent 66%);
+  background: linear-gradient(90deg, rgba(34,14,8,.82), rgba(34,14,8,.45) 42%, transparent 68%);
 }
 .skin-hero-copy { width: min(1120px, calc(100% - 96px)); margin-inline: auto; min-width: 0; padding-block: 100px 120px; }
 .skin-hero .skin-kicker { color: #f1dfd1; font-size: 0.9375rem; }
@@ -466,20 +466,55 @@
   .skin-nav { display: none; position: absolute; top: 72px; left: 0; right: 0; margin: 0; padding: 20px; border-radius: 28px; border: 1px solid white; background: #f9f7faed; box-shadow: 0 12px 32px #322b3710; backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); }
   .skin-nav.is-open { display: grid; gap: 4px; }
   .skin-nav a { padding: 12px; font-size: 1.125rem; }
-  .skin-hero { min-height: 740px; min-height: max(740px, calc(100svh - 80px)); align-items: start; background: #220e08; }
-  .skin-hero-copy { width: calc(100% - 40px); text-align: center; padding: 38px 0 390px; }
-  .skin-hero h1 { font-size: clamp(46px, 9.8vw, 64px); margin: 18px auto 0; }
-  .skin-hero-lead { margin: 20px auto 0 !important; max-width: 345px; font-size: 1.125rem; }
-  .skin-hero-actions { justify-content: center; margin-top: 24px; gap: 22px; }
-  .skin-hero-image {
-    top: 200px; height: calc(100% - 200px); object-position: 74% center; transform: none;
-    /* Blend the mobile art direction into the full-height backdrop without
-       moving the ring or exposing the photograph's horizontal top edge. */
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 150px);
-    mask-image: linear-gradient(to bottom, transparent, #000 150px);
+  .skin-hero {
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1c0c07;
+    padding-top: 36px;
+    padding-bottom: 32px;
+    position: relative;
+    overflow: hidden;
   }
-  .skin-hero::before { background: linear-gradient(180deg, rgba(34,14,8,.97), rgba(34,14,8,.94) 24%, rgba(34,14,8,.76) 40%, rgba(34,14,8,.12) 59%, transparent 74%, rgba(34,14,8,.7)); }
-  .skin-hero-scroll { bottom: 23px; font-size: 0.9375rem; }
+  .skin-hero::before { display: none; }
+  .skin-hero-copy {
+    order: 1;
+    width: calc(100% - 36px);
+    max-width: 520px;
+    text-align: center;
+    padding: 0 0 24px;
+    margin-inline: auto;
+  }
+  .skin-hero h1 { font-size: clamp(38px, 9vw, 52px); margin: 16px auto 0; line-height: 1.1; }
+  .skin-hero-lead { margin: 18px auto 0 !important; max-width: 360px; font-size: 1.0625rem; line-height: 1.6; }
+  .skin-hero-actions { justify-content: center; margin-top: 22px; gap: 16px; }
+  .skin-hero-image {
+    order: 2;
+    position: relative;
+    top: auto;
+    inset: auto;
+    width: calc(100% - 32px);
+    max-width: 540px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    -webkit-mask-image: none;
+    mask-image: none;
+    margin: 0 auto;
+  }
+  .skin-hero-scroll {
+    order: 3;
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    margin-top: 24px;
+    font-size: 0.9375rem;
+  }
   .skin-statement { padding-block: 74px; }
   .skin-statement-body { font-size: 1.125rem; }
   .skin-three-words { margin-top: 30px; gap: 24px; }
@@ -613,7 +648,9 @@
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  translate: -50% -50% !important;
+  transform: none !important;
+  margin: 0 !important;
   width: min(540px, calc(100vw - 32px)) !important;
   max-height: calc(100dvh - 48px) !important;
   overflow-y: auto !important;
@@ -624,6 +661,15 @@
   padding: 32px !important;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.65) !important;
   z-index: 1000 !important;
+}
+
+@media (max-width: 640px) {
+  .skin-pathway-dialog-content {
+    width: calc(100vw - 28px) !important;
+    max-height: calc(100dvh - 36px) !important;
+    padding: 24px 20px !important;
+    border-radius: 24px !important;
+  }
 }
 
 .skin-pathway-dialog-content [data-slot="dialog-close"] {

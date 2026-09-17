@@ -382,7 +382,13 @@ export function PathwayCarousel() {
                     : undefined,
                 }}
               >
-                <div className="skin-pathway-card">
+                <div
+                  className="skin-pathway-card cursor-pointer"
+                  onClick={() => {
+                    if (hasMovedRef.current) return;
+                    setActivePopupItem(item);
+                  }}
+                >
                   {/* Ultra-minimalist macro background image (no people) */}
                   <img
                     src={item.image}
