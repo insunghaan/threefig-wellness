@@ -579,6 +579,10 @@
   .skin-statement-body { margin-top: 24px !important; font-size: 1.0625rem; line-height: 1.8; text-align: left; }
   .skin-three-words { margin-top: 28px; gap: 22px; }
   .skin-pathways { padding-block: 24px 64px; }
+  .skin-pathway-carousel-track { gap: 16px; }
+  .skin-pathway-slide { flex: 0 0 min(420px, calc(100vw - 72px)); max-width: calc(100vw - 72px); scroll-snap-align: start; }
+  .skin-pathway-card { aspect-ratio: auto; min-height: 380px; padding: 24px 20px; border-radius: 24px; }
+  .skin-pathway-slide-title { font-size: clamp(24px, 5.8vw, 30px); }
   .skin-pattern-intro { gap: 24px; }
   .skin-section-heading > p:last-child:not(.skin-kicker) { margin-top: 24px; font-size: 1.0625rem; line-height: 1.8; }
   .skin-pattern-concept { container-type: inline-size; aspect-ratio: auto; }
@@ -596,6 +600,7 @@
   .skin-example p { font-size: 1.0625rem; line-height: 1.65; }
   .skin-pathways > .skin-small-print { margin-top: 20px; }
   .skin-ring-section { gap: 32px; }
+  .skin-ring-photo { aspect-ratio: 4 / 5; max-height: 480px; }
   .skin-ring-copy { padding: 0; }
   .skin-ring-copy > p:not(.skin-kicker) { margin-top: 24px; font-size: 1.0625rem; line-height: 1.8; }
   .skin-signal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 28px; }
@@ -609,9 +614,10 @@
   .skin-reflections { padding-block: 64px; }
   .skin-reflections .skin-reflection-disclosure { font-size: .9375rem !important; line-height: 1.75; }
   .skin-reflection-carousel { margin-top: 32px; }
-  .skin-reflection-slide { flex-basis: min(460px, calc(100vw - 40px)); }
-  .skin-reflection-slide figure { padding: 24px; }
-  .skin-reflection-slide blockquote { margin: 20px 0 24px; font-size: 28px; line-height: 1.35; }
+  .skin-reflection-track { gap: 16px; }
+  .skin-reflection-slide { flex: 0 0 min(420px, calc(100vw - 72px)); max-width: calc(100vw - 72px); scroll-snap-align: start; }
+  .skin-reflection-slide figure { padding: 24px 20px; border-radius: 24px; }
+  .skin-reflection-slide blockquote { margin: 18px 0 22px; font-size: 22px; line-height: 1.4; }
   .skin-reflection-controls { margin-top: 36px; }
   .skin-evidence { padding-block: 64px; gap: 32px; }
   .skin-evidence-intro > p:not(.skin-kicker) { margin-top: 24px; font-size: 1.0625rem; line-height: 1.8; }

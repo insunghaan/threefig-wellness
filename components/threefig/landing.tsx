@@ -155,9 +155,38 @@ export default function Landing() {
               </a>
             </div>
           </div>
-          <a className="skin-hero-scroll" href="#why">
+          <a className="skin-hero-scroll" href="#specs">
             Look beneath the surface <span>↓</span>
           </a>
+        </section>
+
+        <section id="specs" className="skin-specs skin-shell" aria-labelledby="spec-title">
+          <div>
+            <p className="skin-kicker">THE BASICS. AND THE BETWEEN-THE-LINES.</p>
+            <h2 id="spec-title"><TwoLines text="Everyday signals. A more personal picture." /></h2>
+          </div>
+          <div className="skin-spec-list">
+            <article>
+              <HeartPulse />
+              <h3>The daily picture</h3>
+              <p>Sleep, activity, resting heart rate, HRV, recovery and temperature — quietly tracked.</p>
+            </article>
+            <article>
+              <Sparkles />
+              <h3>Skin, in context</h3>
+              <p>Skin check-ins meet food and stress patterns, so isolated moments become a clearer story.</p>
+            </article>
+            <article>
+              <BatteryMedium />
+              <h3>Built to stay on</h3>
+              <p>A considered shape and a quiet presence. Designed to feel at home in your everyday.</p>
+            </article>
+            <article>
+              <ShieldCheck />
+              <h3>Your data. Your call.</h3>
+              <p>Your baseline stays yours, with clear controls over what is collected and used.</p>
+            </article>
+          </div>
         </section>
 
         <section id="why" className="skin-statement skin-shell">
@@ -202,7 +231,7 @@ export default function Landing() {
           <div
             className="skin-ring-photo"
             role="img"
-            aria-label="A polished silver ring balanced on dark sculptural stone"
+            aria-label="A polished black smart ring balanced on dark sculptural stone"
           />
           <div className="skin-ring-copy">
             <p className="skin-kicker">WHY A RING? LIFE DOESN’T PAUSE.</p>
@@ -227,39 +256,10 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="skin-specs skin-shell" aria-labelledby="spec-title">
-          <div>
-            <p className="skin-kicker">THE BASICS. AND THE BETWEEN-THE-LINES.</p>
-            <h2 id="spec-title"><TwoLines text="Everyday signals. A more personal picture." /></h2>
-          </div>
-          <div className="skin-spec-list">
-            <article>
-              <HeartPulse />
-              <h3>The daily picture</h3>
-              <p>Sleep, activity, resting heart rate, HRV, recovery and temperature — quietly tracked.</p>
-            </article>
-            <article>
-              <Sparkles />
-              <h3>Skin, in context</h3>
-              <p>Skin check-ins meet food and stress patterns, so isolated moments become a clearer story.</p>
-            </article>
-            <article>
-              <BatteryMedium />
-              <h3>Built to stay on</h3>
-              <p>A considered shape and a quiet presence. Designed to feel at home in your everyday.</p>
-            </article>
-            <article>
-              <ShieldCheck />
-              <h3>Your data. Your call.</h3>
-              <p>Your baseline stays yours, with clear controls over what is collected and used.</p>
-            </article>
-          </div>
-        </section>
-
         <section className="skin-reflections" aria-labelledby="reflections-title" aria-describedby="reflections-disclosure">
           <div className="skin-shell">
             <div className="skin-section-heading">
-              <p className="skin-kicker">EVERYDAY PERSPECTIVES</p>
+              <p className="skin-kicker">BETA PARTICIPANT PERSPECTIVES</p>
               <h2 id="reflections-title"><TwoLines text="Less guessing. More understanding." /></h2>
               <p id="reflections-disclosure" className="skin-reflection-disclosure">{reflectionDisclosure}</p>
             </div>

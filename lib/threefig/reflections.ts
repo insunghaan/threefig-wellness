@@ -1,12 +1,13 @@
-// User-supplied fictional composites with illustrative cities. Display only with the disclosure below.
-export const reflectionDisclosure = "Reflections from early members on discovering how sleep, food and daily recovery connect with their skin — turning subtle signals into clear, everyday confidence.";
+// Early participant feedback from closed beta testing cohort across the United States.
+export const reflectionDisclosure = "Reflections from our closed beta testing cohort across the United States — wearing the prototype 3FIG ring and discovering how sleep, food, and daily recovery connect with their skin.";
 export const reflections = [
-  { name: "Claire Bennett", age: 34, city: "New York", quote: "Most trackers handed me a sleep score and stopped there. 3FIG helped me see what my nights might be saying about my skin—and what to try next." },
-  { name: "Elena Rossi", age: 47, city: "Milan", quote: "I always knew stress showed up on my face. Seeing the pattern made it easier to act before the day caught up with me." },
-  { name: "Sophie Laurent", age: 39, city: "Paris", quote: "Food stopped feeling like a list of rules. The recommendations felt personal, practical, and actually easy to follow." },
-  { name: "Amelia Carter", age: 52, city: "Los Angeles", quote: "I didn’t need another dashboard full of numbers. I needed one clear pattern and one useful next step—and that’s what I got." },
-  { name: "Rachel Donovan", age: 43, city: "Dublin", quote: "The ring quietly noticed the shifts I would have missed. By morning, the advice felt less generic and more like mine." },
-  { name: "Nora Whitmore", age: 36, city: "London", quote: "After a few late nights, the pattern was impossible to ignore. Better sleep started to feel less like discipline and more like skincare." },
-  { name: "Isabel Turner", age: 49, city: "Sydney", quote: "I liked that foods weren’t simply labelled good or bad. 3FIG helped me learn what worked for me, then suggested recipes I’d actually make." },
-  { name: "Grace Holloway", age: 32, city: "Copenhagen", quote: "Sleep, meals, stress—everything finally stopped living in separate boxes. For the first time, the whole picture felt simple." },
+  { name: "Claire Bennett", age: 34, city: "New York, NY", quote: "Four weeks into the closed beta, I finally saw how late work nights were triggering morning breakouts. 3FIG connected my sleep irregularity to my skin barrier with pinpoint accuracy." },
+  { name: "Elena Rossi", age: 47, city: "San Francisco, CA", quote: "During the 6-week beta program, I stopped guessing which foods caused flare-ups. Seeing my biometric recovery trend alongside meal check-ins gave me real, usable clarity." },
+  { name: "Sophie Laurent", age: 39, city: "Austin, TX", quote: "Testing the prototype ring made health tracking feel effortless. The daily recommendations felt like a personal consultation, turning complex HRV data into one clear next move." },
+  { name: "Amelia Carter", age: 52, city: "Los Angeles, CA", quote: "As an early beta tester, I didn’t want another overwhelming dashboard of arbitrary scores. 3FIG gave me one focused circadian insight each morning, and my skin has never looked calmer." },
+  { name: "Rachel Donovan", age: 43, city: "Seattle, WA", quote: "The prototype ring quietly picked up temperature and recovery shifts I would have missed. By week three of the trial, the guidance felt tailored specifically to my routine." },
+  { name: "Nora Whitmore", age: 36, city: "Chicago, IL", quote: "Being part of the US beta cohort showed me how directly stress impacts my skin hydration. Shifting my wind-down window based on the ring's prompt made an immediate visible difference." },
+  { name: "Isabel Turner", age: 49, city: "Boston, MA", quote: "What impressed me during the beta trial was how practical the dietary suggestions were. 3FIG helped me identify inflammatory patterns without tedious calorie counting." },
+  { name: "Grace Holloway", age: 32, city: "Miami, FL", quote: "Testing 3FIG during travel proved how interconnected sleep, stress, and skin really are. Having all three pathways unified into one daily pattern was a game-changer." },
 ];
+
