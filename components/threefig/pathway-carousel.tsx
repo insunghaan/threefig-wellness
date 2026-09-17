@@ -45,8 +45,8 @@ export const defaultPathways: PathwayItem[] = [
     body: "3FIG connects when you sleep, how steadily you sleep and how your skin feels the next day. Then it finds a wind-down window built around your rhythm — not everybody else’s.",
     example: "Tonight · Wind down at 10:20. Tomorrow starts here.",
     exampleLabel: "YOUR 3FIG",
-    image: "/images/threefig-pathway-sleep-macro.jpg",
-    imageAlt: "Macro close-up texture of serene organic washed linen fabric folds in soft ambient evening lamp glow",
+    image: "/images/threefig-pathway-01-sleep.webp",
+    imageAlt: "A hand wearing a silver smart ring resting peacefully on soft white bed linen in morning light",
   },
   {
     id: "food",
@@ -59,8 +59,8 @@ export const defaultPathways: PathwayItem[] = [
     body: "Log a meal. Skip the calorie math. 3FIG sorts what seems to work, what may not and what deserves another look — then serves up recipes that fit.",
     example: "This week · Oats, berries, walnuts. Your kind of bowl.",
     exampleLabel: "YOUR 3FIG",
-    image: "/images/threefig-pathway-food-macro.jpg",
-    imageAlt: "Macro close-up of dark fresh ripe berries with glistening water droplets on matte ceramic surface",
+    image: "/images/threefig-pathway-02-food.webp",
+    imageAlt: "A hand wearing a dark smart ring reaching toward fresh cut figs and a bowl of salad",
   },
   {
     id: "stress",
@@ -73,8 +73,8 @@ export const defaultPathways: PathwayItem[] = [
     body: "3FIG compares stress and recovery signals with changes you notice in your skin. When tension leaves a trace, it suggests one realistic way to reset.",
     example: "Now · Walk for ten. Let the day loosen.",
     exampleLabel: "YOUR 3FIG",
-    image: "/images/threefig-pathway-stress-macro.jpg",
-    imageAlt: "Macro close-up of calm water ripples over smooth dark stone in serene zen atmosphere",
+    image: "/images/threefig-pathway-03-stress.webp",
+    imageAlt: "A hand wearing a silver smart ring submerged in calm, sunlit rippling water",
   },
   {
     id: "rhythm",
@@ -87,8 +87,8 @@ export const defaultPathways: PathwayItem[] = [
     body: "Light, movement and recovery operate as one circadian system. 3FIG identifies optimal active windows and restorative breaks so energy stays consistent throughout your day.",
     example: "Morning · 15 minutes of outdoor sunlight sets circadian tone.",
     exampleLabel: "YOUR 3FIG",
-    image: "/images/threefig-pathway-rhythm-macro.jpg",
-    imageAlt: "Macro close-up of warm golden sunlight rays and soft diagonal shadow casting morning warmth",
+    image: "/images/threefig-pathway-04-rhythm.webp",
+    imageAlt: "A hand wearing a sleek smart ring gently touching a bare sunlit shoulder",
   },
   {
     id: "balance",
@@ -101,8 +101,8 @@ export const defaultPathways: PathwayItem[] = [
     body: "Skin temperature and overnight barrier fluctuations reveal micro-shifts before they become visible. Subtle evening adjustments support deep overnight repair and radiance.",
     example: "Notice · Hydration and rest keep barrier resilience steady.",
     exampleLabel: "YOUR 3FIG",
-    image: "/images/threefig-pathway-balance-macro.jpg",
-    imageAlt: "Macro close-up of crystal-clear water droplet on silky organic petal reflecting gentle light",
+    image: "/images/threefig-pathway-05-balance.webp",
+    imageAlt: "A gentle rainbow spectrum of sunlight cast across radiant, healthy bare skin",
   },
 ];
 
