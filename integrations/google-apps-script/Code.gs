@@ -87,12 +87,31 @@ function deliverRecord_(sheet, row, record, sheetUrl) {
   var status = sheet.getRange(row, 5, 1, 2).getDisplayValues()[0];
   if (status[0] !== '발송 완료') {
     if (MailApp.getRemainingDailyQuota() < 1) return deferQuota_(sheet, row);
+    var locationInfo = '';
+    if (record.geo_location) {
+      var locParts = [];
+      if (record.geo_location.country) {
+        locParts.push(record.geo_location.country);
+      } else if (record.geo_location.country_code) {
+        locParts.push(record.geo_location.country_code);
+      }
+      if (record.geo_location.city) {
+        locParts.push(record.geo_location.city);
+      }
+      var tz = record.geo_location.timezone || record.geo_location.client_timezone;
+      if (tz) {
+        locParts.push('(' + tz + ')');
+      }
+      if (locParts.length) {
+        locationInfo = '\n접속 위치: ' + locParts.join(', ');
+      }
+    }
     MailApp.sendEmail({
       to: ADMIN_EMAIL, name: '3FIG 접수 알림',
       subject: '[3FIG] 새로운 사전신청이 접수되었습니다',
       body: '3FIG 사전신청이 접수되었습니다.\n\n이메일: ' + record.email +
         '\n접수 일시: ' + Utilities.formatDate(new Date(record.created_at), 'Asia/Seoul', 'yyyy-MM-dd HH:mm:ss') +
-        ' (KST)\n유입 경로: ' + record.source + '\n\n전체 접수 명단: ' + sheetUrl
+        ' (KST)\n유입 경로: ' + record.source + locationInfo + '\n\n전체 접수 명단: ' + sheetUrl
     });
     sheet.getRange(row, 5).setValue('발송 완료');
     SpreadsheetApp.flush();

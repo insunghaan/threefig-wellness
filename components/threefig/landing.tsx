@@ -59,10 +59,22 @@ export default function Landing() {
     setStatus("submitting");
     setMessage("");
     try {
+      const clientTimezone =
+        typeof Intl !== "undefined"
+          ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+          : "";
+      const clientLanguage =
+        typeof navigator !== "undefined" ? navigator.language || "" : "";
+
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company }),
+        body: JSON.stringify({
+          email,
+          company,
+          client_timezone: clientTimezone,
+          client_language: clientLanguage,
+        }),
       });
       const result = (await response.json()) as { message?: string; error?: string };
       if (!response.ok) throw new Error(result.error || "Please try again.");

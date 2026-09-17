@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
+import type { GeoLocationData } from "./geolocation";
 
 const require = createRequire(import.meta.url);
 
@@ -10,6 +11,7 @@ export type WaitlistRecord = {
   consent_version: string;
   created_at: string;
   delivered_at: string | null;
+  geo_location?: GeoLocationData | null;
 };
 
 export type SaveWaitlistResult = {
@@ -101,7 +103,8 @@ function safeDocId(email: string): string {
 export async function saveWaitlistSignup(
   email: string,
   source = "landing",
-  consentVersion = "2026-09-10"
+  consentVersion = "2026-09-10",
+  geoLocation: GeoLocationData | null = null
 ): Promise<SaveWaitlistResult> {
   const normalizedEmail = email.toLowerCase().trim();
   const db = getFirestoreInstance();
@@ -122,6 +125,7 @@ export async function saveWaitlistSignup(
         consent_version: consentVersion,
         created_at: new Date().toISOString(),
         delivered_at: null,
+        geo_location: geoLocation,
       };
 
       await docRef.set(record);
@@ -152,6 +156,7 @@ export async function saveWaitlistSignup(
       consent_version: consentVersion,
       created_at: new Date().toISOString(),
       delivered_at: null,
+      geo_location: geoLocation,
     };
     local.set(normalizedEmail, record);
     persistFallback(local);

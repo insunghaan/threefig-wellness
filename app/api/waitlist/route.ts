@@ -6,6 +6,7 @@ import {
   json,
 } from "@/lib/threefig/records-server";
 import { saveWaitlistSignup } from "@/lib/threefig/firestore-waitlist";
+import { resolveGeoLocation } from "@/lib/threefig/geolocation";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -34,7 +35,17 @@ export async function POST(request: Request) {
       throw new ApiError(400, "Enter a valid email address.");
     }
 
-    await saveWaitlistSignup(email, "landing", "2026-09-10");
+    const clientTimezone =
+      typeof body.client_timezone === "string" ? body.client_timezone : null;
+    const clientLanguage =
+      typeof body.client_language === "string" ? body.client_language : null;
+
+    const geoLocation = await resolveGeoLocation(request, {
+      timezone: clientTimezone,
+      language: clientLanguage,
+    });
+
+    await saveWaitlistSignup(email, "landing", "2026-09-10", geoLocation);
 
     return json({ message: "You’re in. Welcome to the 3FIG launch list." }, 201);
   } catch (error) {
