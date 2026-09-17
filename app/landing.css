@@ -28,7 +28,7 @@
 .skin-site button { cursor: pointer; font: inherit; }
 .skin-site :is(a, button, input):focus-visible { outline: 2px solid #91749d; outline-offset: 5px; }
 .skin-site :is(button, input):disabled { cursor: wait; opacity: .65; }
-.skin-site :is(section[id], main[id]) { scroll-margin-top: 100px; }
+.skin-site :is(section[id], main[id]) { scroll-margin-top: 108px; }
 .skin-site img { display: block; max-width: 100%; }
 .skin-site em { font-weight: 400; }
 .skin-site .skin-title-line { display: block; }
@@ -36,10 +36,22 @@
 .skin-kicker { font-size: 0.9375rem; line-height: 1.5; font-weight: 600; letter-spacing: .14em; color: var(--skin-accent); }
 .skin-skip { position: fixed; top: -100px; left: 20px; z-index: 100; padding: 12px 20px; background: white; border-radius: 20px; }
 .skin-skip:focus { top: 12px; }
+.skin-header-wrap {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(248, 247, 248, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--skin-line);
+  box-shadow: 0 2px 12px rgba(48, 43, 52, 0.04);
+}
 .skin-header {
   width: min(1200px, calc(100% - 96px)); margin-inline: auto;
   display: flex; align-items: center; gap: 32px; height: 96px;
-  border-bottom: 1px solid var(--skin-line); position: relative; z-index: 30;
+  position: relative; z-index: 30;
 }
 .skin-header > a:first-child { flex-shrink: 0; }
 .skin-nav { display: flex; justify-content: center; gap: 30px; margin-inline: auto; font-size: 1rem; }

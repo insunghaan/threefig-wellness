@@ -98,31 +98,33 @@ export default function Landing() {
         Skip to content
       </a>
 
-      <header className="skin-header">
-        <Link href="/" aria-label="3FIG home" onClick={closeMenu}>
-          <Brand />
-        </Link>
-        <nav
-          className={menuOpen ? "skin-nav is-open" : "skin-nav"}
-          aria-label="Main navigation"
-        >
-          <a href="#why" onClick={closeMenu}>Why 3FIG</a>
-          <a href="#three" onClick={closeMenu}>The pattern</a>
-          <a href="#ring" onClick={closeMenu}>The ring</a>
-          <a href="#evidence" onClick={closeMenu}>The science</a>
-        </nav>
-        <a className="skin-header-cta" href="#updates">
-          Join early <ArrowRight size={16} />
-        </a>
-        <button
-          className="skin-menu"
-          type="button"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          {menuOpen ? <X /> : <Menu />}
-        </button>
+      <header className="skin-header-wrap">
+        <div className="skin-header">
+          <Link href="/" aria-label="3FIG home" onClick={closeMenu}>
+            <Brand />
+          </Link>
+          <nav
+            className={menuOpen ? "skin-nav is-open" : "skin-nav"}
+            aria-label="Main navigation"
+          >
+            <a href="#why" onClick={closeMenu}>Why 3FIG</a>
+            <a href="#three" onClick={closeMenu}>The pattern</a>
+            <a href="#ring" onClick={closeMenu}>The ring</a>
+            <a href="#evidence" onClick={closeMenu}>The science</a>
+          </nav>
+          <a className="skin-header-cta" href="#updates">
+            Join early <ArrowRight size={16} />
+          </a>
+          <button
+            className="skin-menu"
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </header>
 
       <main id="main">
