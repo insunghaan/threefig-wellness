@@ -130,7 +130,14 @@ svg {
   letter-spacing: -2.2px;
   line-height: 1;
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
+}
+.brand-logo-img {
+  display: block;
+  height: 32px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
 }
 .brand-period {
   font-size: 27px;

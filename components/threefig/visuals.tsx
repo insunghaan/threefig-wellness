@@ -1,10 +1,28 @@
 "use client";
 import { useId } from "react";
 import { actual, suggested } from "@/lib/threefig/mock-data";
-export function Brand({ light = false }: { light?: boolean }) {
+export function Brand({
+  light = false,
+  className = "",
+}: {
+  light?: boolean;
+  className?: string;
+}) {
+  const src = light ? "/images/threefig-logo-white.png" : "/images/threefig-logo.png";
+  const webpSrc = light ? "/images/threefig-logo-white.webp" : "/images/threefig-logo.webp";
+
   return (
-    <span className={`brand ${light ? "light" : ""}`} aria-label="3FIG">
-      3FIG<span className="brand-period">·</span>
+    <span className={`brand ${light ? "light" : ""} ${className}`} aria-label="3fig">
+      <picture>
+        <source srcSet={webpSrc} type="image/webp" />
+        <img
+          src={src}
+          alt="3fig"
+          className="brand-logo-img"
+          width="70"
+          height="36"
+        />
+      </picture>
     </span>
   );
 }

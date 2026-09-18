@@ -24,6 +24,7 @@ import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
 import { PathwayCarousel } from "./pathway-carousel";
 import { PatternPreview } from "./pattern-preview";
+import { SkinRhythmInteractive } from "./skin-rhythm-interactive";
 import {
   Dialog,
   DialogContent,
@@ -32,12 +33,12 @@ import {
 } from "@/components/ui/dialog";
 
 const signals = [
-  { icon: MoonStar, label: "Sleep, timing & rhythm" },
-  { icon: HeartPulse, label: "Resting heart rate & HRV" },
-  { icon: Thermometer, label: "Temperature shifts" },
-  { icon: Activity, label: "Movement & recovery" },
-  { icon: Sparkles, label: "Skin check-ins" },
-  { icon: Utensils, label: "Meal notes" },
+  { icon: MoonStar, label: "Sleep, timing & rhythm", note: "Continuous ring sensing" },
+  { icon: HeartPulse, label: "Resting heart rate & HRV", note: "Continuous ring sensing" },
+  { icon: Thermometer, label: "Temperature shifts", note: "Continuous ring sensing" },
+  { icon: Activity, label: "Movement & recovery", note: "Continuous ring sensing" },
+  { icon: Sparkles, label: "Skin check-ins", note: "Lightweight 2-second note" },
+  { icon: Utensils, label: "Meal notes", note: "Optional check-in" },
 ];
 
 function TwoLines({ text }: { text: string }) {
@@ -107,8 +108,8 @@ export default function Landing() {
             className={menuOpen ? "skin-nav is-open" : "skin-nav"}
             aria-label="Main navigation"
           >
-            <a href="#why" onClick={closeMenu}>Why 3FIG</a>
-            <a href="#three" onClick={closeMenu}>The pattern</a>
+            <a href="#rhythm" onClick={closeMenu}>Skin Rhythm</a>
+            <a href="#inputs" onClick={closeMenu}>The inputs</a>
             <a href="#ring" onClick={closeMenu}>The ring</a>
             <a href="#evidence" onClick={closeMenu}>The science</a>
           </nav>
@@ -132,95 +133,50 @@ export default function Landing() {
           <img
             className="skin-hero-image"
             src="/images/threefig-hero-amber.webp"
-            width="1024"
-            height="576"
+            srcSet="/images/threefig-hero-amber.webp 1x, /images/threefig-hero-amber-2x.png 2x"
+            width="2048"
+            height="1152"
             alt="A model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
             fetchPriority="high"
           />
           <div className="skin-hero-copy">
-            <p className="skin-kicker">THE SKIN WELLNESS RING</p>
+            <p className="skin-kicker">MEET 3FIG</p>
             <h1>
-              Skin, understood
+              Your skin responds to
               <br />
-              <em>from within.</em>
+              <em>more than skincare.</em>
             </h1>
             <p className="skin-hero-lead">
-              Sleep. Food. Stress. They all show up on your skin. 3FIG connects
-              the dots — and turns them into one clear next move.
+              The smart ring that quietly connects how your skin feels with sleep, recovery, and body signals over time.
             </p>
             <div className="skin-hero-actions">
               <a className="skin-button" href="#updates">
                 Join early <ArrowRight size={18} />
               </a>
-              <a className="skin-text-link" href="#three">
-                See the pattern
+              <a className="skin-text-link" href="#rhythm">
+                See how it works
               </a>
             </div>
           </div>
-          <a className="skin-hero-scroll" href="#specs">
-            Look beneath the surface <span>↓</span>
+          <a className="skin-hero-scroll" href="#rhythm">
+            See how it works <span>↓</span>
           </a>
         </section>
 
-        <section id="specs" className="skin-specs skin-shell" aria-labelledby="spec-title">
-          <div>
-            <p className="skin-kicker">THE BASICS. AND THE BETWEEN-THE-LINES.</p>
-            <h2 id="spec-title"><TwoLines text="Everyday signals. A more personal picture." /></h2>
-          </div>
-          <div className="skin-spec-list">
-            <article>
-              <HeartPulse />
-              <h3>The daily picture</h3>
-              <p>Sleep, activity, resting heart rate, HRV, recovery and temperature — quietly tracked.</p>
-            </article>
-            <article>
-              <Sparkles />
-              <h3>Skin, in context</h3>
-              <p>Skin check-ins meet food and stress patterns, so isolated moments become a clearer story.</p>
-            </article>
-            <article>
-              <BatteryMedium />
-              <h3>Built to stay on</h3>
-              <p>A considered shape and a quiet presence. Designed to feel at home in your everyday.</p>
-            </article>
-            <article>
-              <ShieldCheck />
-              <h3>Your data. Your call.</h3>
-              <p>Your baseline stays yours, with clear controls over what is collected and used.</p>
-            </article>
-          </div>
-        </section>
+        {/* The 4-Stage Skin Rhythm Core Loop */}
+        <SkinRhythmInteractive />
 
-        <section id="why" className="skin-statement skin-shell">
-          <p className="skin-kicker">GOOD SKIN STARTS BEFORE SKINCARE</p>
-          <h2>
-            Your skin remembers
-            <br />
-            <em>more than you think.</em>
-          </h2>
-          <p className="skin-statement-body">
-            The late night. The rushed lunch. The week that wouldn’t quit. 3FIG
-            connects those moments with how your skin feels, so the pattern gets
-            clearer — without turning life into a spreadsheet.
-          </p>
-          <div className="skin-three-words" aria-label="The three pathways">
-            <span>Sleep</span>
-            <i />
-            <span>Food</span>
-            <i />
-            <span>Stress</span>
-          </div>
-        </section>
-
-        <section id="three" className="skin-pathways" aria-labelledby="pathways-title">
+        {/* Repositioned Sleep / Food / Stress as Inputs into Skin Rhythm */}
+        <section id="inputs" className="skin-pathways" aria-labelledby="inputs-title">
           <div className="skin-shell">
             <div className="skin-pattern-intro">
               <div className="skin-section-heading">
-                <p className="skin-kicker">SLEEP. FOOD. STRESS. ONE STORY.</p>
-                <h2 id="pathways-title"><TwoLines text="Connect the dots. Change the plot." /></h2>
+                <p className="skin-kicker">THE EVERYDAY INPUTS</p>
+                <h2 id="inputs-title"><TwoLines text="Life in dialogue with your skin." /></h2>
                 <p>
-                  3FIG pairs continuous body signals with quick check-ins. The more
-                  it learns, the more personal the next step feels.
+                  Sleep, temperature and recovery are sensed continuously by the ring.
+                  Food is a lightweight, optional note whenever you choose to add context.
+                  Together, they shape the rhythm 3FIG interprets for you.
                 </p>
               </div>
               <PatternPreview />
@@ -236,22 +192,25 @@ export default function Landing() {
             aria-label="A polished black smart ring balanced on dark sculptural stone"
           />
           <div className="skin-ring-copy">
-            <p className="skin-kicker">WHY A RING? LIFE DOESN’T PAUSE.</p>
+            <p className="skin-kicker">THE SENSING FOUNDATION</p>
             <h2>
               Always on.
               <br />
               Never in the way.
             </h2>
             <p>
-              Day and night, the 3FIG ring is designed to notice subtle shifts
-              in rhythm, recovery and movement. Add a quick skin or meal
-              check-in, and the signal gets its story.
+              The ring is the sensing layer. Skin Rhythm is the interpretation layer.
+              Crafted in featherlight titanium with multi-day battery life, 3FIG tracks
+              physiological baselines 24/7 so your skin’s story becomes legible.
             </p>
             <div className="skin-signal-grid">
-              {signals.map(({ icon: Icon, label }) => (
+              {signals.map(({ icon: Icon, label, note }) => (
                 <div key={label}>
                   <Icon size={18} strokeWidth={1.55} />
-                  <span>{label}</span>
+                  <div className="skin-signal-content">
+                    <strong className="skin-signal-label">{label}</strong>
+                    <span className="skin-signal-note">{note}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -368,24 +327,24 @@ export default function Landing() {
             <div
               className="skin-early-benefits"
               role="group"
-              aria-label="Early access benefits for the first 10 people"
+              aria-label="Pre-registration benefits: 20% device discount and lifetime subscription"
             >
-              <article>
-                <span className="skin-benefit-icon" aria-hidden="true">
-                  <CalendarDays size={23} />
-                </span>
-                <div>
-                  <span>THREE MONTHS. ON US.</span>
-                  <strong>Full 3FIG access from day one.</strong>
-                </div>
-              </article>
               <article>
                 <span className="skin-benefit-icon" aria-hidden="true">
                   <BadgePercent size={24} />
                 </span>
                 <div>
-                  <span>30% OFF THE RING</span>
-                  <strong>A launch code for the first in line.</strong>
+                  <span>20% OFF AT LAUNCH</span>
+                  <strong>20% device discount when orders open.</strong>
+                </div>
+              </article>
+              <article>
+                <span className="skin-benefit-icon" aria-hidden="true">
+                  <Sparkles size={23} />
+                </span>
+                <div>
+                  <span>LIFETIME SUBSCRIPTION</span>
+                  <strong>Free subscription for life as a founding member.</strong>
                 </div>
               </article>
             </div>
@@ -394,8 +353,7 @@ export default function Landing() {
                 <Gift size={16} />
               </span>
               <p>
-                <strong>First 10 only.</strong> Join early and both are yours.
-                We’ll confirm by email.
+                <strong>Pre-registration benefit:</strong> 20% device discount at launch and lifetime subscription included.
               </p>
             </div>
             {status === "success" ? (

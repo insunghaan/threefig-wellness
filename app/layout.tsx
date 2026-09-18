@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   title: "3FIG – The skin wellness ring",
   description:
     "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     title: "3FIG – The skin wellness ring",
     description:
