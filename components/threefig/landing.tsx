@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, useRef, type FormEvent } from "react";
 import Link from "next/link";
+import { captureBrowserAttribution, type Attribution } from "@/lib/threefig/attribution";
+import { trackEvent } from "./analytics";
 import {
   Activity,
   ArrowRight,
@@ -46,6 +48,10 @@ function TwoLines({ text }: { text: string }) {
 }
 
 export default function Landing() {
+  const attribution = useRef<Attribution | null>(null);
+  const signupStarted = useRef(false);
+  const submitting = useRef(false);
+  useEffect(() => { attribution.current = captureBrowserAttribution(); }, []);
   const [menuOpen, setMenuOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -57,6 +63,8 @@ export default function Landing() {
 
   async function joinWaitlist(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     setStatus("submitting");
     setMessage("");
     try {
@@ -73,12 +81,14 @@ export default function Landing() {
         body: JSON.stringify({
           email,
           company,
+          attribution: attribution.current || captureBrowserAttribution(),
           client_timezone: clientTimezone,
           client_language: clientLanguage,
         }),
       });
-      const result = (await response.json()) as { message?: string; error?: string };
+      const result = (await response.json()) as { message?: string; error?: string; created?: boolean };
       if (!response.ok) throw new Error(result.error || "Please try again.");
+      if (result.created === true) trackEvent("generate_lead", { lead_source: "waitlist" });
       setStatus("success");
       setMessage(result.message || "You’re on the list.");
     } catch (error) {
@@ -88,13 +98,18 @@ export default function Landing() {
           ? error.message
           : "We couldn’t save your email. Please try again.",
       );
+    } finally {
+      submitting.current = false;
     }
   }
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site">
+    <div className="skin-site" onClick={(event) => {
+      const link = (event.target as Element).closest('a[href="#updates"]');
+      if (link) trackEvent("cta_click", { placement: link.closest("header") ? "header" : link.closest("footer") ? "footer" : "hero" });
+    }}>
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
@@ -133,7 +148,7 @@ export default function Landing() {
           <img
             className="skin-hero-image"
             src="/images/threefig-hero-amber.webp"
-            srcSet="/images/threefig-hero-amber.webp 1x, /images/threefig-hero-amber-2x.png 2x"
+            srcSet="/images/threefig-hero-amber.webp 1x, /images/threefig-hero-amber-2x-seo-v1.webp 2x"
             width="2048"
             height="1152"
             alt="A model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
@@ -371,6 +386,8 @@ export default function Landing() {
                     id="launch-email"
                     aria-label="Email address"
                     type="email"
+                    data-clarity-mask="true"
+                    onFocus={() => { if (!signupStarted.current) { signupStarted.current = true; trackEvent("signup_start"); } }}
                     inputMode="email"
                     autoComplete="email"
                     placeholder="you@example.com"
@@ -425,6 +442,11 @@ export default function Landing() {
             Join the launch list and we’ll keep your email only to send
             occasional 3FIG product updates. We never sell it. Leave anytime.
           </DialogDescription>
+          <p>
+            We use Google Analytics and Microsoft Clarity to understand website usage.
+            Campaign attribution is remembered in your browser for up to 90 days and
+            saved with your signup to help us understand how people find 3FIG.
+          </p>
           <p>
             3FIG supports everyday wellness. It does not diagnose, prevent
             or treat medical conditions.

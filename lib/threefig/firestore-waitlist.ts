@@ -1,3 +1,4 @@
+import type { Attribution } from "./attribution";
 import fs from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -13,6 +14,7 @@ export type WaitlistRecord = {
   consent_version: string;
   created_at: string;
   delivered_at: string | null;
+  attribution?: Attribution | null;
   geo_location?: GeoLocationData | null;
 };
 
@@ -106,7 +108,8 @@ export async function saveWaitlistSignup(
   email: string,
   source = "landing",
   consentVersion = "2026-09-10",
-  geoLocation: GeoLocationData | null = null
+  geoLocation: GeoLocationData | null = null,
+  attribution: Attribution | null = null
 ): Promise<SaveWaitlistResult> {
   const normalizedEmail = email.toLowerCase().trim();
   const db = getFirestoreInstance();
@@ -121,6 +124,7 @@ export async function saveWaitlistSignup(
         created_at: new Date().toISOString(),
         delivered_at: null,
         geo_location: geoLocation,
+        attribution,
       };
 
       const alreadyExisted = await db.runTransaction(async tx => {
@@ -167,6 +171,7 @@ export async function saveWaitlistSignup(
       created_at: new Date().toISOString(),
       delivered_at: null,
       geo_location: geoLocation,
+        attribution,
     };
     local.set(normalizedEmail, record);
     persistFallback(local);

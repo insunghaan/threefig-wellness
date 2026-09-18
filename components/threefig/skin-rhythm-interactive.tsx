@@ -266,7 +266,7 @@ export function SkinRhythmInteractive() {
         <div className="skin-rhythm-macro-ring-stage">
           <div className="skin-rhythm-sensor-glow-aura" aria-hidden="true" />
           <img
-            src="/images/threefig-ring-sensor-macro-crop.png"
+            src="/images/threefig-ring-sensor-macro-crop-seo-v1.webp"
             alt="3FIG Smart Ring worn on finger with active optical biometric sensor"
             className="skin-rhythm-macro-ring-img"
             loading="eager"
