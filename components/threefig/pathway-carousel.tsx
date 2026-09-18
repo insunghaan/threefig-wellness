@@ -31,6 +31,7 @@ export interface PathwayItem {
   exampleLabel: string;
   image: string;
   imageAlt: string;
+  objectPosition?: string;
 }
 
 export const defaultPathways: PathwayItem[] = [
@@ -60,7 +61,8 @@ export const defaultPathways: PathwayItem[] = [
     example: "This week · Oats, berries, walnuts. Your kind of bowl.",
     exampleLabel: "YOUR 3FIG",
     image: "/images/threefig-pathway-02-food.webp",
-    imageAlt: "A hand wearing a dark smart ring reaching toward fresh cut figs and a bowl of salad",
+    imageAlt: "A hand wearing a sleek smart ring reaching toward fresh berries and wholesome breakfast bowl in soft morning light",
+    objectPosition: "center 52%",
   },
   {
     id: "stress",
@@ -74,7 +76,8 @@ export const defaultPathways: PathwayItem[] = [
     example: "Now · Walk for ten. Let the day loosen.",
     exampleLabel: "YOUR 3FIG",
     image: "/images/threefig-pathway-03-stress.webp",
-    imageAlt: "A hand wearing a silver smart ring submerged in calm, sunlit rippling water",
+    imageAlt: "A hand wearing a sleek smart ring submerged in clear sunlit swimming pool water with caustic reflections",
+    objectPosition: "center 48%",
   },
   {
     id: "rhythm",
@@ -394,6 +397,7 @@ export function PathwayCarousel() {
                     src={item.image}
                     alt={item.imageAlt}
                     className="skin-pathway-bg"
+                    style={item.objectPosition ? { objectPosition: item.objectPosition } : undefined}
                     loading={index === 0 ? "eager" : "lazy"}
                     referrerPolicy="no-referrer"
                   />
