@@ -113,12 +113,15 @@ export function ReflectionCarousel() {
     [totalSlides, smoothScrollTo]
   );
 
-  // Ensure current slide is aligned when sidePadding changes
+  const currentIndexRef = useRef(currentIndex);
+  currentIndexRef.current = currentIndex;
+
+  // Ensure current slide is aligned when sidePadding changes (e.g. initial layout or window resize)
   useEffect(() => {
     if (sidePadding != null) {
-      goToSlide(currentIndex, true);
+      goToSlide(currentIndexRef.current, true);
     }
-  }, [sidePadding, currentIndex, goToSlide]);
+  }, [sidePadding, goToSlide]);
 
   const handlePrev = useCallback(() => {
     goToSlide(currentIndex - 1);
@@ -149,8 +152,10 @@ export function ReflectionCarousel() {
 
     let timeoutId: ReturnType<typeof setTimeout>;
     const handleScroll = () => {
+      if (animRef.current !== null) return;
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
+        if (animRef.current !== null) return;
         const slides = viewport.querySelectorAll<HTMLElement>(".skin-reflection-slide");
         const firstSlide = slides[0];
         if (!slides.length || !firstSlide) return;
@@ -263,7 +268,7 @@ export function ReflectionCarousel() {
             return (
               <div
                 key={name}
-                className="skin-reflection-slide shrink-0 select-none cursor-grab active:cursor-grabbing touch-pan-y"
+                className="skin-reflection-slide shrink-0 select-none cursor-grab active:cursor-grabbing"
                 style={{
                   scrollSnapAlign: "start",
                   marginRight: isLast
@@ -276,7 +281,7 @@ export function ReflectionCarousel() {
                 aria-roledescription="slide"
                 aria-label={`${index + 1} of ${totalSlides}`}
               >
-                <figure tabIndex={0} className="select-none">
+                <figure className="select-none">
                   <span className="skin-reflection-number" aria-hidden="true">
                     0{index + 1}
                   </span>
