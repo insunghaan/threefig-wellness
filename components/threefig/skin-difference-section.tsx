@@ -38,7 +38,6 @@ export function SkinDifferenceSection() {
         <div className="skin-diff-composition">
           {/* Central High-Resolution 3FIG Ring Anchor */}
           <div className="skin-diff-ring-anchor">
-            <div className="skin-diff-ring-core-glow" aria-hidden="true" />
             <img
               src="/images/threefig-ring-isolated.png"
               alt="3FIG Smart Ring in brushed titanium showing sensor array"

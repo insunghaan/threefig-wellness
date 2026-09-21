@@ -153,14 +153,22 @@ export default function Landing() {
 
       <main id="main">
         <section className="skin-hero">
-          <img
-            className="skin-hero-image"
-            src="/images/threefig-hero-master.png"
-            alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
-            fetchPriority="high"
-            width={1024}
-            height={576}
-          />
+          <picture>
+            <source
+              media="(max-width: 820px)"
+              srcSet="/images/threefig-hero-mobile.png"
+              width={576}
+              height={1024}
+            />
+            <img
+              className="skin-hero-image"
+              src="/images/threefig-hero-master.png"
+              alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
+              fetchPriority="high"
+              width={1024}
+              height={576}
+            />
+          </picture>
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
             <h1>
@@ -406,51 +414,25 @@ export default function Landing() {
                 </div>
               </div>
             ) : (
-              <form
-                className="skin-signup"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setSurveyOpen(true);
-                }}
-              >
-                <div className="skin-signup-row">
-                  <input
-                    id="launch-email"
-                    aria-label="Email address"
-                    type="email"
-                    data-clarity-mask="true"
-                    onFocus={() => { if (!signupStarted.current) { signupStarted.current = true; trackEvent("signup_start"); } }}
-                    name="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    required
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    disabled={status === "submitting"}
-                  />
-                  <input
-                    className="skin-honeypot"
-                    type="text"
-                    name="company"
-                    tabIndex={-1}
-                    autoComplete="off"
-                    value={company}
-                    onChange={(event) => setCompany(event.target.value)}
-                    aria-hidden="true"
-                  />
-                  <button type="submit" disabled={status === "submitting"}>
-                    {status === "submitting" ? "Joining…" : "Join early"}
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-                {status === "error" && (
-                  <p className="skin-form-error" role="alert">{message}</p>
-                )}
+              <div className="skin-signup-wrap">
+                <button
+                  type="button"
+                  className="skin-signup-btn"
+                  onClick={() => {
+                    if (!signupStarted.current) {
+                      signupStarted.current = true;
+                      trackEvent("signup_start");
+                    }
+                    setSurveyOpen(true);
+                  }}
+                >
+                  Join early
+                  <ArrowRight size={18} />
+                </button>
                 <p className="skin-consent">
                   Occasional 3FIG updates. No clutter. Unsubscribe anytime.
                 </p>
-              </form>
+              </div>
             )}
           </div>
         </section>
