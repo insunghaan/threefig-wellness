@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "node scripts/dev.cjs",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "node scripts/start.cjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"

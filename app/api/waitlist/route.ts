@@ -49,24 +49,47 @@ export async function POST(request: Request) {
       language: clientLanguage,
     });
 
-    const createdAt = new Date().toISOString();
-    const result = await saveWaitlistSignup(email, "landing", "2026-09-10", geoLocation, sanitizeAttribution(body.attribution));
+    const surveyRaw =
+      body.survey && typeof body.survey === "object" && !Array.isArray(body.survey)
+        ? (body.survey as Record<string, unknown>)
+        : null;
 
-    // Only notify Slack for genuinely new signups; never block user signup
-    if (!result.alreadyExisted) {
+    const survey = surveyRaw
+      ? {
+          gender: typeof surveyRaw.gender === "string" ? surveyRaw.gender.slice(0, 50) : undefined,
+          age: typeof surveyRaw.age === "string" ? surveyRaw.age.slice(0, 50) : undefined,
+          intended_user: typeof surveyRaw.intended_user === "string" ? surveyRaw.intended_user.slice(0, 50) : undefined,
+          primary_feature: typeof surveyRaw.primary_feature === "string" ? surveyRaw.primary_feature.slice(0, 100) : undefined,
+          subscription_preference: typeof surveyRaw.subscription_preference === "string" ? surveyRaw.subscription_preference.slice(0, 200) : undefined,
+        }
+      : null;
+
+    const createdAt = new Date().toISOString();
+    const result = await saveWaitlistSignup(
+      email,
+      "landing",
+      "2026-09-10",
+      geoLocation,
+      sanitizeAttribution(body.attribution),
+      survey
+    );
+
+    // Notify Slack for signups or survey submissions; never block user signup
+    if (!result.alreadyExisted || survey) {
       // Await the initial attempt: Cloud Run can suspend work after responding.
       // The durable outbox survives failure; signup still succeeds once saved.
       const db = getFirestoreInstance();
-      if (db && process.env.THREEFIG_WELCOME_ENABLED === "true") {
+      if (!result.alreadyExisted && db && process.env.THREEFIG_WELCOME_ENABLED === "true") {
         try { await dispatchWelcome(db, welcomeId(email)); }
         catch { console.warn("[3FIG Welcome] Dispatch failed; inspect outbox status."); }
       }
       try {
         await sendSlackWaitlistNotification({
           email,
-          source: "landing",
+          source: survey ? "landing-survey" : "landing",
           createdAt,
           geoLocation,
+          survey,
         });
       } catch (slackErr) {
         console.warn("[3FIG Waitlist] Non-blocking Slack notification error:", slackErr);

@@ -5,6 +5,13 @@ export type SlackWaitlistNotificationParams = {
   source: string;
   createdAt: string;
   geoLocation?: GeoLocationData | null;
+  survey?: {
+    gender?: string;
+    age?: string;
+    intended_user?: string;
+    primary_feature?: string;
+    subscription_preference?: string;
+  } | null;
 };
 
 /**
@@ -46,15 +53,28 @@ export async function sendSlackWaitlistNotification(
     params.geoLocation?.client_timezone ||
     "Unknown";
 
-  const messageText = [
+  const lines = [
     "*[3FIG] New Waitlist Signup*",
     `• *Email:* \`${params.email}\``,
     `• *Location:* ${locationStr}`,
     `• *Timezone:* ${tzStr}`,
     `• *Source:* ${params.source}`,
     `• *Signed up:* ${params.createdAt}`,
-    `• *Environment:* 3FIG (Production)`,
-  ].join("\n");
+  ];
+
+  if (params.survey) {
+    lines.push(
+      "• *Survey Responses:*",
+      `  - *Gender:* ${params.survey.gender || "Not answered"}`,
+      `  - *Age:* ${params.survey.age || "Not answered"}`,
+      `  - *User:* ${params.survey.intended_user || "Not answered"}`,
+      `  - *Key Feature:* ${params.survey.primary_feature || "Not answered"}`,
+      `  - *Budget:* ${params.survey.subscription_preference || "Not answered"}`
+    );
+  }
+
+  lines.push(`• *Environment:* 3FIG (Production)`);
+  const messageText = lines.join("\n");
 
   const payload = {
     text: `New 3FIG Waitlist Signup: ${params.email} (${locationStr})`,

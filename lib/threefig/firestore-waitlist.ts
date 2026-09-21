@@ -8,6 +8,14 @@ import { newWelcomeJob, OUTBOX, welcomeId } from "./welcome-outbox";
 
 const require = createRequire(import.meta.url);
 
+export type WaitlistSurvey = {
+  gender?: string;
+  age?: string;
+  intended_user?: string;
+  primary_feature?: string;
+  subscription_preference?: string;
+};
+
 export type WaitlistRecord = {
   email: string;
   source: string;
@@ -16,6 +24,7 @@ export type WaitlistRecord = {
   delivered_at: string | null;
   attribution?: Attribution | null;
   geo_location?: GeoLocationData | null;
+  survey?: WaitlistSurvey | null;
 };
 
 export type SaveWaitlistResult = {
@@ -109,7 +118,8 @@ export async function saveWaitlistSignup(
   source = "landing",
   consentVersion = "2026-09-10",
   geoLocation: GeoLocationData | null = null,
-  attribution: Attribution | null = null
+  attribution: Attribution | null = null,
+  survey: WaitlistSurvey | null = null
 ): Promise<SaveWaitlistResult> {
   const normalizedEmail = email.toLowerCase().trim();
   const db = getFirestoreInstance();
@@ -125,18 +135,35 @@ export async function saveWaitlistSignup(
         delivered_at: null,
         geo_location: geoLocation,
         attribution,
+        survey: survey || null,
       };
 
       const alreadyExisted = await db.runTransaction(async tx => {
         const existing = await tx.get(docRef);
-        if (existing.exists) return true;
+        if (existing.exists) {
+          if (survey) {
+            tx.update(docRef, { survey });
+          }
+          return true;
+        }
         tx.create(docRef, record);
         if (process.env.THREEFIG_WELCOME_ENABLED === "true") {
           tx.create(db.collection(OUTBOX).doc(welcomeId(normalizedEmail)), newWelcomeJob(normalizedEmail));
         }
         return false;
       });
-      if (alreadyExisted) return { success: true, storage: "firestore", alreadyExisted: true };
+      if (alreadyExisted) {
+        // Also update local persistent storage
+        if (survey) {
+          const local = ensureFallbackLoaded();
+          const prev = local.get(normalizedEmail);
+          if (prev) {
+            prev.survey = survey;
+            persistFallback(local);
+          }
+        }
+        return { success: true, storage: "firestore", alreadyExisted: true };
+      }
 
       // Also mirror to local persistent storage for redundant durability
       const local = ensureFallbackLoaded();
@@ -171,11 +198,18 @@ export async function saveWaitlistSignup(
       created_at: new Date().toISOString(),
       delivered_at: null,
       geo_location: geoLocation,
-        attribution,
+      attribution,
+      survey: survey || null,
     };
     local.set(normalizedEmail, record);
     persistFallback(local);
     console.log(`[3FIG Waitlist Local] Stored signup to durable server storage: ${normalizedEmail}`);
+  } else if (survey) {
+    const existing = local.get(normalizedEmail);
+    if (existing) {
+      existing.survey = survey;
+      persistFallback(local);
+    }
   }
 
   return { success: true, storage: "local-persistent", alreadyExisted };

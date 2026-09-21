@@ -26,7 +26,11 @@ import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
 import { PathwayCarousel } from "./pathway-carousel";
 import { PatternPreview } from "./pattern-preview";
-import { SkinRhythmInteractive } from "./skin-rhythm-interactive";
+import { SkinDifferenceSection } from "./skin-difference-section";
+import { SkinBalanceSlider } from "./skin-balance-slider";
+import { SkinDifferenceStatement } from "./skin-difference-statement";
+import { EvidenceMobileCarousel } from "./evidence-carousel";
+import { WaitlistSurveyDialog } from "./waitlist-survey-dialog";
 import {
   Dialog,
   DialogContent,
@@ -54,6 +58,7 @@ export default function Landing() {
   useEffect(() => { attribution.current = captureBrowserAttribution(); }, []);
   const [menuOpen, setMenuOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [surveyOpen, setSurveyOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<
@@ -128,9 +133,13 @@ export default function Landing() {
             <a href="#ring" onClick={closeMenu}>The ring</a>
             <a href="#evidence" onClick={closeMenu}>The science</a>
           </nav>
-          <a className="skin-header-cta" href="#updates">
+          <button
+            className="skin-header-cta"
+            type="button"
+            onClick={() => setSurveyOpen(true)}
+          >
             Join early <ArrowRight size={16} />
-          </a>
+          </button>
           <button
             className="skin-menu"
             type="button"
@@ -182,9 +191,13 @@ export default function Landing() {
               The smart ring that quietly connects how your skin feels with sleep, recovery, and body signals over time.
             </p>
             <div className="skin-hero-actions">
-              <a className="skin-button" href="#updates">
+              <button
+                className="skin-button"
+                type="button"
+                onClick={() => setSurveyOpen(true)}
+              >
                 Join early <ArrowRight size={18} />
-              </a>
+              </button>
               <a className="skin-text-link" href="#rhythm">
                 See how it works
               </a>
@@ -195,8 +208,14 @@ export default function Landing() {
           </a>
         </section>
 
-        {/* The 4-Stage Skin Rhythm Core Loop */}
-        <SkinRhythmInteractive />
+        {/* The 3FIG Difference: Three Signals. One Skin Balance. */}
+        <SkinDifferenceSection />
+
+        {/* Skin Balance Index: Dedicated Horizontal Slider (NOW / WHY / NEXT) */}
+        <SkinBalanceSlider />
+
+        {/* Apple-Style Core Difference Statement */}
+        <SkinDifferenceStatement />
 
         {/* Repositioned Sleep / Food / Stress as Inputs into Skin Rhythm */}
         <section id="inputs" className="skin-pathways" aria-labelledby="inputs-title">
@@ -275,7 +294,8 @@ export default function Landing() {
               <strong>Your skin doesn’t live in a separate tab.</strong>
             </div>
           </div>
-          <div className="skin-study-list">
+          {/* Desktop Study Cards */}
+          <div className="skin-study-list skin-desktop-studies">
             <a
               href="https://pubmed.ncbi.nlm.nih.gov/42641586/"
               target="_blank"
@@ -306,6 +326,11 @@ export default function Landing() {
               <p>Ahmed et al. · Wiadomości Lekarskie · 2026</p>
               <ArrowRight />
             </a>
+          </div>
+
+          {/* Mobile Evidence 3-Slide Carousel */}
+          <div className="skin-mobile-studies">
+            <EvidenceMobileCarousel />
           </div>
           <p className="skin-study-caveat">
             Research on sleep, nutrition and stress informs our approach.
@@ -397,7 +422,13 @@ export default function Landing() {
                 </div>
               </div>
             ) : (
-              <form className="skin-signup" onSubmit={joinWaitlist}>
+              <form
+                className="skin-signup"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  setSurveyOpen(true);
+                }}
+              >
                 <div className="skin-signup-row">
                   <input
                     id="launch-email"
@@ -405,6 +436,7 @@ export default function Landing() {
                     type="email"
                     data-clarity-mask="true"
                     onFocus={() => { if (!signupStarted.current) { signupStarted.current = true; trackEvent("signup_start"); } }}
+                    name="email"
                     inputMode="email"
                     autoComplete="email"
                     placeholder="you@example.com"
@@ -447,7 +479,7 @@ export default function Landing() {
         </div>
         <nav aria-label="Footer navigation">
           <button type="button" onClick={() => setPrivacyOpen(true)}>Privacy</button>
-          <a href="#updates">Join early</a>
+          <button type="button" className="skin-footer-link-btn" onClick={() => setSurveyOpen(true)}>Join early</button>
         </nav>
         <span>© 2026 3FIG</span>
       </footer>
@@ -470,6 +502,16 @@ export default function Landing() {
           </p>
         </DialogContent>
       </Dialog>
+
+      <WaitlistSurveyDialog
+        open={surveyOpen}
+        onOpenChange={setSurveyOpen}
+        defaultEmail={email}
+        onSuccess={() => {
+          setStatus("success");
+          setMessage("You’re in. Welcome to the 3FIG launch list.");
+        }}
+      />
     </div>
   );
 }
