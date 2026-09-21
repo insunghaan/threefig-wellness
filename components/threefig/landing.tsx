@@ -147,6 +147,15 @@ export default function Landing() {
         <section className="skin-hero">
           <picture>
             <source
+              media="(max-width: 820px)"
+              type="image/webp"
+              srcSet="/images/threefig-hero-amber-mobile-hq.webp 1x, /images/threefig-hero-amber-mobile-2x.webp 2x"
+            />
+            <source
+              media="(max-width: 820px)"
+              srcSet="/images/threefig-hero-amber-mobile-2x.png"
+            />
+            <source
               type="image/webp"
               srcSet="/images/threefig-hero-amber-hq.webp 1024w, /images/threefig-hero-amber-2x-hq.webp 2048w"
               sizes="100vw"
