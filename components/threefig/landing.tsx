@@ -187,9 +187,6 @@ export default function Landing() {
               >
                 Join early <ArrowRight size={18} />
               </button>
-              <a className="skin-text-link" href="#difference">
-                See how it works
-              </a>
             </div>
           </div>
           <a className="skin-hero-scroll" href="#difference">
@@ -252,6 +249,15 @@ export default function Landing() {
                   <span className="skin-signal-note">{note}</span>
                 </div>
               ))}
+            </div>
+            <div className="skin-ring-cta">
+              <button
+                className="skin-button"
+                type="button"
+                onClick={() => setSurveyOpen(true)}
+              >
+                Join early <ArrowRight size={18} />
+              </button>
             </div>
           </div>
         </section>
