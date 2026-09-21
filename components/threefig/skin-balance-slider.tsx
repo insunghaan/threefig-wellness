@@ -69,7 +69,7 @@ const balanceSlides: BalanceSlide[] = [
       'Late-evening HRV dips correlate with increased barrier reactivity. Your skin is reflecting daytime cumulative strain.',
     metricLabel: 'Primary Driver',
     metricValue: 'Evening Strain · Elevated HRV dips',
-    image: '/images/threefig-balance-why.webp',
+    image: '/images/threefig-balance-why-sunset.webp',
     imageAlt: 'Hand wearing titanium smart ring hovering gracefully over misty clouds',
     objectPosition: '60% 42%',
     objectPositionMobile: '60% 42%',
