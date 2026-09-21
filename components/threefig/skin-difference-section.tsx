@@ -43,58 +43,61 @@ export function SkinDifferenceSection() {
               src="/images/threefig-ring-oblique-isolated.webp"
               alt="3FIG Smart Ring in brushed titanium oblique view"
               className="skin-diff-ring-img"
-              width={1184}
-              height={812}
+              width={1180}
+              height={833}
               loading="eager"
               draggable={false}
             />
           </div>
 
-          {/* Keyword 01: SLEEP (Top-Left on desktop / 1st on mobile) */}
-          <div className="skin-diff-editorial-keyword skin-diff-keyword-sleep">
-            <span className="skin-diff-keyword-num">01</span>
-            <div className="skin-diff-keyword-icon">
-              <Moon size={28} strokeWidth={1.8} />
+          {/* Keywords Wrapper: Symmetrical triad on desktop, centered column bundle on mobile */}
+          <div className="skin-diff-keywords-wrap">
+            {/* Keyword 01: SLEEP (Top-Left on desktop / 1st on mobile) */}
+            <div className="skin-diff-editorial-keyword skin-diff-keyword-sleep">
+              <span className="skin-diff-keyword-num">01</span>
+              <div className="skin-diff-keyword-icon">
+                <Moon size={28} strokeWidth={1.8} />
+              </div>
+              <div className="skin-diff-keyword-text">
+                <h3 className="skin-diff-keyword-title">Sleep</h3>
+                <p className="skin-diff-keyword-sub">
+                  How well your body
+                  <br className="skin-mobile-break" />
+                  restores overnight.
+                </p>
+              </div>
             </div>
-            <div className="skin-diff-keyword-text">
-              <h3 className="skin-diff-keyword-title">Sleep</h3>
-              <p className="skin-diff-keyword-sub">
-                How well your body
-                <br className="skin-mobile-break" />
-                restores overnight.
-              </p>
-            </div>
-          </div>
 
-          {/* Keyword 02: STRESS (Top-Right on desktop / 2nd on mobile) */}
-          <div className="skin-diff-editorial-keyword skin-diff-keyword-stress">
-            <span className="skin-diff-keyword-num">02</span>
-            <div className="skin-diff-keyword-icon">
-              <Activity size={28} strokeWidth={1.8} />
+            {/* Keyword 02: STRESS (Top-Right on desktop / 2nd on mobile) */}
+            <div className="skin-diff-editorial-keyword skin-diff-keyword-stress">
+              <span className="skin-diff-keyword-num">02</span>
+              <div className="skin-diff-keyword-icon">
+                <Activity size={28} strokeWidth={1.8} />
+              </div>
+              <div className="skin-diff-keyword-text">
+                <h3 className="skin-diff-keyword-title">Stress</h3>
+                <p className="skin-diff-keyword-sub">
+                  How daily load shows up
+                  <br className="skin-mobile-break" />
+                  beneath the surface.
+                </p>
+              </div>
             </div>
-            <div className="skin-diff-keyword-text">
-              <h3 className="skin-diff-keyword-title">Stress</h3>
-              <p className="skin-diff-keyword-sub">
-                How daily load shows up
-                <br className="skin-mobile-break" />
-                beneath the surface.
-              </p>
-            </div>
-          </div>
 
-          {/* Keyword 03: NUTRITION (Bottom-Center on desktop / 3rd on mobile) */}
-          <div className="skin-diff-editorial-keyword skin-diff-keyword-nutrition">
-            <span className="skin-diff-keyword-num">03</span>
-            <div className="skin-diff-keyword-icon">
-              <Utensils size={28} strokeWidth={1.8} />
-            </div>
-            <div className="skin-diff-keyword-text">
-              <h3 className="skin-diff-keyword-title">Nutrition</h3>
-              <p className="skin-diff-keyword-sub">
-                How daily nourishment aligns
-                <br className="skin-mobile-break" />
-                with your skin baseline.
-              </p>
+            {/* Keyword 03: NUTRITION (Bottom-Center on desktop / 3rd on mobile) */}
+            <div className="skin-diff-editorial-keyword skin-diff-keyword-nutrition">
+              <span className="skin-diff-keyword-num">03</span>
+              <div className="skin-diff-keyword-icon">
+                <Utensils size={28} strokeWidth={1.8} />
+              </div>
+              <div className="skin-diff-keyword-text">
+                <h3 className="skin-diff-keyword-title">Nutrition</h3>
+                <p className="skin-diff-keyword-sub">
+                  How daily nourishment aligns
+                  <br className="skin-mobile-break" />
+                  with your skin baseline.
+                </p>
+              </div>
             </div>
           </div>
         </div>

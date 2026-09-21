@@ -998,11 +998,15 @@
   transform: translate(-50%, -50%);
   width: 250px;
   height: auto;
-  aspect-ratio: 294 / 202;
+  aspect-ratio: 1180 / 833;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.skin-diff-keywords-wrap {
+  display: contents;
 }
 
 .skin-diff-ring-core-glow {
@@ -1286,11 +1290,22 @@
     top: auto;
     left: auto;
     transform: none !important;
-    width: min(180px, 48vw);
+    width: min(200px, 52vw);
     height: auto;
-    aspect-ratio: 294 / 202;
+    aspect-ratio: 1180 / 833;
     margin: 0 auto 28px;
     flex-shrink: 0;
+  }
+
+  /* Keywords on mobile: Centered bundle directly under the ring */
+  .skin-diff-keywords-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
   }
 
   /* Keywords on mobile: Icon on left, Title + 2-line Sub bundled on right */
@@ -1308,17 +1323,17 @@
     align-items: flex-start !important;
     text-align: left !important;
     gap: 16px !important;
-    width: 100% !important;
-    max-width: 290px !important;
-    margin: 0 auto !important;
-    padding-bottom: 22px !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .skin-diff-keyword-nutrition {
     padding-bottom: 0 !important;
-    width: 100% !important;
-    max-width: 290px !important;
-    margin: 0 auto !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
 
   /* Delete numbers on mobile as requested */
