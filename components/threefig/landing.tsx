@@ -28,7 +28,6 @@ import { PathwayCarousel } from "./pathway-carousel";
 import { PatternPreview } from "./pattern-preview";
 import { SkinDifferenceSection } from "./skin-difference-section";
 import { SkinBalanceSlider } from "./skin-balance-slider";
-import { SkinDifferenceStatement } from "./skin-difference-statement";
 import { EvidenceMobileCarousel } from "./evidence-carousel";
 import { WaitlistSurveyDialog } from "./waitlist-survey-dialog";
 import {
@@ -213,9 +212,6 @@ export default function Landing() {
 
         {/* Skin Balance Index: Dedicated Horizontal Slider (NOW / WHY / NEXT) */}
         <SkinBalanceSlider />
-
-        {/* Apple-Style Core Difference Statement */}
-        <SkinDifferenceStatement />
 
         {/* Repositioned Sleep / Food / Stress as Inputs into Skin Rhythm */}
         <section id="inputs" className="skin-pathways" aria-labelledby="inputs-title">
@@ -456,7 +452,7 @@ export default function Landing() {
                     aria-hidden="true"
                   />
                   <button type="submit" disabled={status === "submitting"}>
-                    {status === "submitting" ? "Saving your spot…" : "Save my spot"}
+                    {status === "submitting" ? "Joining…" : "Join early"}
                     <ArrowRight size={18} />
                   </button>
                 </div>
@@ -473,15 +469,8 @@ export default function Landing() {
       </main>
 
       <footer className="skin-footer">
-        <div>
-          <Brand />
-          <p>Your skin. Your signals. One clearer story.</p>
-        </div>
-        <nav aria-label="Footer navigation">
-          <button type="button" onClick={() => setPrivacyOpen(true)}>Privacy</button>
-          <button type="button" className="skin-footer-link-btn" onClick={() => setSurveyOpen(true)}>Join early</button>
-        </nav>
-        <span>© 2026 3FIG</span>
+        <p className="skin-footer-copy">Your skin. Your signals. One clearer story.</p>
+        <span className="skin-footer-copyright">© 2026 3FIG</span>
       </footer>
 
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>

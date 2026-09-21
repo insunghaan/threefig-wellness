@@ -89,9 +89,9 @@ const balanceSlides: BalanceSlide[] = [
     metricLabel: 'Target Window',
     metricValue: 'Wind-down 10:20 PM · Rest Focus',
     image: '/images/threefig-balance-next.webp',
-    imageAlt: '3FIG Smart Ring standing upright on raw textured stone',
-    objectPosition: '65% 42%',
-    objectPositionMobile: '65% 42%',
+    imageAlt: '3FIG Smart Ring resting on dark marble bedside table with illuminated sensors',
+    objectPosition: '58% 50%',
+    objectPositionMobile: '58% 50%',
   },
 ];
 
