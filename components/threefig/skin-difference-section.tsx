@@ -40,11 +40,11 @@ export function SkinDifferenceSection() {
           <div className="skin-diff-ring-anchor">
             <div className="skin-diff-ring-core-glow" aria-hidden="true" />
             <img
-              src="/images/threefig-ring-front-product.webp"
-              alt="3FIG Smart Ring in brushed titanium front view"
+              src="/images/threefig-ring-oblique-isolated.webp"
+              alt="3FIG Smart Ring in brushed titanium oblique view"
               className="skin-diff-ring-img"
-              width={480}
-              height={480}
+              width={294}
+              height={202}
               loading="eager"
               draggable={false}
             />
@@ -56,8 +56,14 @@ export function SkinDifferenceSection() {
             <div className="skin-diff-keyword-icon">
               <Moon size={28} strokeWidth={1.8} />
             </div>
-            <h3 className="skin-diff-keyword-title">Sleep</h3>
-            <p className="skin-diff-keyword-sub">How well your body restores overnight.</p>
+            <div className="skin-diff-keyword-text">
+              <h3 className="skin-diff-keyword-title">Sleep</h3>
+              <p className="skin-diff-keyword-sub">
+                How well your body
+                <br className="skin-mobile-break" />
+                restores overnight.
+              </p>
+            </div>
           </div>
 
           {/* Keyword 02: STRESS (Top-Right on desktop / 2nd on mobile) */}
@@ -66,8 +72,14 @@ export function SkinDifferenceSection() {
             <div className="skin-diff-keyword-icon">
               <Activity size={28} strokeWidth={1.8} />
             </div>
-            <h3 className="skin-diff-keyword-title">Stress</h3>
-            <p className="skin-diff-keyword-sub">How daily load shows up beneath the surface.</p>
+            <div className="skin-diff-keyword-text">
+              <h3 className="skin-diff-keyword-title">Stress</h3>
+              <p className="skin-diff-keyword-sub">
+                How daily load shows up
+                <br className="skin-mobile-break" />
+                beneath the surface.
+              </p>
+            </div>
           </div>
 
           {/* Keyword 03: NUTRITION (Bottom-Center on desktop / 3rd on mobile) */}
@@ -76,8 +88,14 @@ export function SkinDifferenceSection() {
             <div className="skin-diff-keyword-icon">
               <Utensils size={28} strokeWidth={1.8} />
             </div>
-            <h3 className="skin-diff-keyword-title">Nutrition</h3>
-            <p className="skin-diff-keyword-sub">How daily nourishment aligns with your skin baseline.</p>
+            <div className="skin-diff-keyword-text">
+              <h3 className="skin-diff-keyword-title">Nutrition</h3>
+              <p className="skin-diff-keyword-sub">
+                How daily nourishment aligns
+                <br className="skin-mobile-break" />
+                with your skin baseline.
+              </p>
+            </div>
           </div>
         </div>
       </div>

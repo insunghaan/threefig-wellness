@@ -97,17 +97,6 @@ export function EvidenceMobileCarousel({ studies = defaultStudies }: { studies?:
         >
           <ArrowLeft size={16} />
         </button>
-        <div className="skin-evidence-dots">
-          {studies.map((_, idx) => (
-            <button
-              key={idx}
-              type="button"
-              className={`skin-evidence-dot ${activeIndex === idx ? "is-active" : ""}`}
-              onClick={() => scrollToIndex(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
         <button
           type="button"
           className="skin-evidence-nav-btn"
