@@ -252,14 +252,14 @@ export function WaitlistSurveyDialog({
               <div className="skin-survey-cards">
                 {[
                   {
-                    value: "Under $10/mo regardless of features",
-                    label: "Under $10 / month",
-                    hint: "I prefer a budget under $10/month regardless of features.",
+                    value: "$5/mo - Basic (Sleep Analysis, Stress Tracking)",
+                    label: "$5 / month · Basic",
+                    hint: "Sleep Analysis, Stress Tracking",
                   },
                   {
-                    value: "$10 or more/mo if features deliver value",
-                    label: "$10 or more / month",
-                    hint: "I am comfortable with $10+/month if the insights deliver genuine value.",
+                    value: "$8/mo - Premium (Basic + Menstrual Cycle, Temperature Tracking)",
+                    label: "$8 / month · Premium",
+                    hint: "Basic + Menstrual Cycle, Temperature Tracking",
                   },
                 ].map((opt) => (
                   <button

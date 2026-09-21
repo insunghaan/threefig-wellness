@@ -11,7 +11,6 @@ import {
   BatteryMedium,
   CalendarDays,
   Check,
-  Gift,
   HeartPulse,
   Menu,
   MoonStar,
@@ -403,14 +402,6 @@ export default function Landing() {
                 </div>
               </article>
             </div>
-            <div className="skin-benefit-note">
-              <span className="skin-benefit-note-icon" aria-hidden="true">
-                <Gift size={16} />
-              </span>
-              <p>
-                <strong>Pre-registration benefit:</strong> 20% device discount at launch and lifetime subscription included.
-              </p>
-            </div>
             {status === "success" ? (
               <div className="skin-form-success" role="status">
                 <Check size={22} />
@@ -435,9 +426,6 @@ export default function Landing() {
                   Join early
                   <ArrowRight size={18} />
                 </button>
-                <p className="skin-consent">
-                  Occasional 3FIG updates. No clutter. Unsubscribe anytime.
-                </p>
               </div>
             )}
           </div>

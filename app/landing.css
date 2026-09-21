@@ -468,7 +468,7 @@
 .skin-benefit-note strong { font-weight: 600; color: #fff; }
 .skin-signup-wrap {
   width: min(570px, 100%);
-  margin: 32px auto 0;
+  margin: 36px auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -763,7 +763,7 @@
   .skin-early-benefits { grid-template-columns: minmax(0, 1fr); width: min(400px, 100%); margin: 24px auto 0; gap: 14px; }
   .skin-early-benefits article { padding: 20px 22px; }
   .skin-benefit-note { max-width: 340px; gap: 10px; margin-top: 20px; }
-  .skin-signup-wrap { margin-top: 24px; width: 100%; }
+  .skin-signup-wrap { margin-top: 28px; width: 100%; }
   .skin-signup-btn { width: min(320px, 100%); padding: 15px 28px; font-size: 1rem; }
   .skin-footer { flex-direction: column; text-align: center; gap: 6px; padding-block: 36px; }
 }
@@ -1051,7 +1051,7 @@
   .skin-early-benefits article { padding: 20px; gap: 16px; }
   .skin-benefit-note { margin-top: 20px; flex-direction: column; gap: 8px; max-width: 300px; }
   .skin-benefit-note p { text-align: center; line-height: 1.7; }
-  .skin-signup-wrap { margin-top: 24px; }
+  .skin-signup-wrap { margin-top: 28px; }
   .skin-signup-btn { width: min(300px, 100%); padding: 14px 24px; font-size: 0.9375rem; }
   .skin-consent { line-height: 1.7; }
   .skin-footer { gap: 6px; padding-block: 30px; }
