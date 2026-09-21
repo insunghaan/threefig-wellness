@@ -51,9 +51,9 @@ const balanceSlides: BalanceSlide[] = [
     metricLabel: 'Skin Barrier Status',
     metricValue: 'Responsive · Recovery Steady',
     image: '/images/threefig-balance-now.webp',
-    imageAlt: 'Hand wearing titanium smart ring resting gently on shoulder',
-    objectPosition: '55% 30%',
-    objectPositionMobile: '62% 22%',
+    imageAlt: 'Hand wearing titanium smart ring resting gently on collarbone in dark silk dress',
+    objectPosition: '54% 45%',
+    objectPositionMobile: '54% 45%',
   },
   {
     id: 'why',
@@ -70,9 +70,9 @@ const balanceSlides: BalanceSlide[] = [
     metricLabel: 'Primary Driver',
     metricValue: 'Evening Strain · Elevated HRV dips',
     image: '/images/threefig-balance-why.webp',
-    imageAlt: 'Hand wearing titanium smart ring hovering gracefully over mist',
-    objectPosition: '60% 40%',
-    objectPositionMobile: '63% 42%',
+    imageAlt: 'Hand wearing titanium smart ring hovering gracefully over misty clouds',
+    objectPosition: '60% 42%',
+    objectPositionMobile: '60% 42%',
   },
   {
     id: 'next',
@@ -89,9 +89,9 @@ const balanceSlides: BalanceSlide[] = [
     metricLabel: 'Target Window',
     metricValue: 'Wind-down 10:20 PM · Rest Focus',
     image: '/images/threefig-balance-next.webp',
-    imageAlt: '3FIG Smart Ring resting on dark marble bedside table with illuminated sensors',
-    objectPosition: '58% 50%',
-    objectPositionMobile: '58% 50%',
+    imageAlt: '3FIG Smart Ring resting on dark marble bedside table with illuminated sensors next to candle',
+    objectPosition: '64% 56%',
+    objectPositionMobile: '64% 56%',
   },
 ];
 

@@ -732,8 +732,8 @@
     align-items: flex-start;
     gap: 20px;
     margin-top: 32px;
-    width: 100%;
-    max-width: 310px;
+    width: fit-content;
+    max-width: 100%;
     margin-inline: auto;
   }
   .skin-signal-grid > div {

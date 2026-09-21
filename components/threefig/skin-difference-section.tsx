@@ -43,8 +43,8 @@ export function SkinDifferenceSection() {
               src="/images/threefig-ring-oblique-isolated.webp"
               alt="3FIG Smart Ring in brushed titanium oblique view"
               className="skin-diff-ring-img"
-              width={294}
-              height={202}
+              width={1184}
+              height={812}
               loading="eager"
               draggable={false}
             />
