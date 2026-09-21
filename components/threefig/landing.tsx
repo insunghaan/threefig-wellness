@@ -244,12 +244,12 @@ export default function Landing() {
             </p>
             <div className="skin-signal-grid">
               {signals.map(({ icon: Icon, label, note }) => (
-                <div key={label}>
-                  <Icon className="skin-signal-icon" size={20} strokeWidth={1.8} />
-                  <div className="skin-signal-content">
+                <div key={label} className="skin-signal-item">
+                  <div className="skin-signal-item-header">
+                    <Icon className="skin-signal-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
                     <strong className="skin-signal-label">{label}</strong>
-                    <span className="skin-signal-note">{note}</span>
                   </div>
+                  <span className="skin-signal-note">{note}</span>
                 </div>
               ))}
             </div>
