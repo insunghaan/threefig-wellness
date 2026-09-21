@@ -197,12 +197,12 @@ export default function Landing() {
               >
                 Join early <ArrowRight size={18} />
               </button>
-              <a className="skin-text-link" href="#rhythm">
+              <a className="skin-text-link" href="#difference">
                 See how it works
               </a>
             </div>
           </div>
-          <a className="skin-hero-scroll" href="#rhythm">
+          <a className="skin-hero-scroll" href="#difference">
             See how it works <span>↓</span>
           </a>
         </section>
@@ -219,7 +219,10 @@ export default function Landing() {
             <div className="skin-pattern-intro">
               <div className="skin-section-heading">
                 <p className="skin-kicker">THE EVERYDAY INPUTS</p>
-                <h2 id="inputs-title"><TwoLines text="Life in dialogue with your skin." /></h2>
+                <h2 id="inputs-title">
+                  Life in dialogue<br />
+                  <em>with your skin.</em>
+                </h2>
                 <p>
                   Sleep, temperature and recovery are sensed continuously by the ring.
                   Food is a lightweight, optional note whenever you choose to add context.
@@ -241,9 +244,8 @@ export default function Landing() {
           <div className="skin-ring-copy">
             <p className="skin-kicker">THE SENSING FOUNDATION</p>
             <h2>
-              Always on.
-              <br />
-              Never in the way.
+              Always on.<br />
+              <em>Never in the way.</em>
             </h2>
             <p>
               The ring is the sensing layer. Skin Rhythm is the interpretation layer.
@@ -268,7 +270,10 @@ export default function Landing() {
           <div className="skin-shell">
             <div className="skin-section-heading">
               <p className="skin-kicker">BETA PARTICIPANT PERSPECTIVES</p>
-              <h2 id="reflections-title"><TwoLines text="Less guessing. More understanding." /></h2>
+              <h2 id="reflections-title">
+                Less guessing.<br />
+                <em>More understanding.</em>
+              </h2>
               <p id="reflections-disclosure" className="skin-reflection-disclosure">{reflectionDisclosure}</p>
             </div>
           </div>
@@ -278,7 +283,10 @@ export default function Landing() {
         <section id="evidence" className="skin-evidence skin-shell">
           <div className="skin-evidence-intro">
             <p className="skin-kicker">THE SKIN–BODY CONNECTION</p>
-            <h2><TwoLines text="Different signals. One connected system." /></h2>
+            <h2 id="evidence-title">
+              Different signals.<br />
+              <em>One connected system.</em>
+            </h2>
             <p>
               The latest reviews keep pointing in the same direction: sleep,
               nutrition and stress interact with pathways relevant to skin
@@ -339,9 +347,8 @@ export default function Landing() {
           <div className="skin-story-copy">
             <p className="skin-kicker">WHY 3FIG</p>
             <h2>
-              Not more data.
-              <br />
-              More meaning.
+              Not more data.<br />
+              <em>More meaning.</em>
             </h2>
             <p>
               Skin rarely changes for one reason. Sleep slips. Meals shift.
@@ -369,8 +376,7 @@ export default function Landing() {
           <div className="skin-update-content">
             <p className="skin-kicker">YOUR NEXT CHAPTER, WITH 3FIG</p>
             <h2>
-              A little closer.
-              <br />
+              A little closer.<br />
               <em>To your everyday.</em>
             </h2>
             <p>

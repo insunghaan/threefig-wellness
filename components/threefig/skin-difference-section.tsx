@@ -14,7 +14,7 @@ import { Moon, Activity, Utensils } from 'lucide-react';
 export function SkinDifferenceSection() {
   return (
     <section
-      id="rhythm"
+      id="difference"
       className="skin-diff-section"
       aria-labelledby="diff-heading"
     >
@@ -23,11 +23,11 @@ export function SkinDifferenceSection() {
         <div className="skin-diff-ambient-glow" aria-hidden="true" />
 
         {/* Section Header: Visible immediately at top */}
-        <header className="skin-diff-header">
-          <p className="skin-diff-eyebrow">THE 3FIG DIFFERENCE</p>
+        <header className="skin-diff-header skin-section-heading">
+          <p className="skin-kicker skin-diff-eyebrow">THE 3FIG DIFFERENCE</p>
           <h2 id="diff-heading" className="skin-diff-headline">
-            THREE SIGNALS.<br />
-            <em>ONE SKIN BALANCE.</em>
+            Three signals.<br />
+            <em>One skin balance.</em>
           </h2>
           <p className="skin-diff-opening-body">
             Skin doesn’t change in isolation. 3FIG brings sleep, stress, and nutrition together into one clear view.
