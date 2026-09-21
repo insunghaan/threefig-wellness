@@ -34,70 +34,61 @@ export function SkinDifferenceSection() {
           </p>
         </header>
 
-        {/* Main Composition: Center Ring + Always-Visible Symmetrical Triad */}
+        {/* Main Composition: Centered Ring + Centered Vertical Information Flow */}
         <div className="skin-diff-composition">
-          {/* Central Brushed Titanium Ring Anchor */}
+          {/* Central High-Resolution 3FIG Ring Anchor */}
           <div className="skin-diff-ring-anchor">
             <div className="skin-diff-ring-core-glow" aria-hidden="true" />
             <img
-              src="/images/threefig-ring-oblique-isolated.webp"
-              alt="3FIG Smart Ring in brushed titanium oblique view"
+              src="/images/threefig-ring-isolated.png"
+              alt="3FIG Smart Ring in brushed titanium showing sensor array"
               className="skin-diff-ring-img"
-              width={1180}
-              height={833}
+              width={1024}
+              height={1024}
               loading="eager"
               draggable={false}
             />
           </div>
 
-          {/* Keywords Wrapper: Symmetrical triad on desktop, centered column bundle on mobile */}
-          <div className="skin-diff-keywords-wrap">
-            {/* Keyword 01: SLEEP (Top-Left on desktop / 1st on mobile) */}
-            <div className="skin-diff-editorial-keyword skin-diff-keyword-sleep">
-              <span className="skin-diff-keyword-num">01</span>
-              <div className="skin-diff-keyword-icon">
-                <Moon size={28} strokeWidth={1.8} />
+          {/* Centered Information Flow: One clean center axis for all 3 items */}
+          <div className="skin-diff-info-area">
+            {/* Item 1: Sleep */}
+            <div className="skin-diff-item">
+              <div className="skin-diff-item-header">
+                <Moon className="skin-diff-item-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+                <span className="skin-diff-item-title">Sleep</span>
               </div>
-              <div className="skin-diff-keyword-text">
-                <h3 className="skin-diff-keyword-title">Sleep</h3>
-                <p className="skin-diff-keyword-sub">
-                  How well your body
-                  <br className="skin-mobile-break" />
-                  restores overnight.
-                </p>
-              </div>
+              <p className="skin-diff-item-desc">
+                How well your body
+                <br />
+                restores overnight.
+              </p>
             </div>
 
-            {/* Keyword 02: STRESS (Top-Right on desktop / 2nd on mobile) */}
-            <div className="skin-diff-editorial-keyword skin-diff-keyword-stress">
-              <span className="skin-diff-keyword-num">02</span>
-              <div className="skin-diff-keyword-icon">
-                <Activity size={28} strokeWidth={1.8} />
+            {/* Item 2: Stress */}
+            <div className="skin-diff-item">
+              <div className="skin-diff-item-header">
+                <Activity className="skin-diff-item-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+                <span className="skin-diff-item-title">Stress</span>
               </div>
-              <div className="skin-diff-keyword-text">
-                <h3 className="skin-diff-keyword-title">Stress</h3>
-                <p className="skin-diff-keyword-sub">
-                  How daily load shows up
-                  <br className="skin-mobile-break" />
-                  beneath the surface.
-                </p>
-              </div>
+              <p className="skin-diff-item-desc">
+                How daily load shows up
+                <br />
+                beneath the surface.
+              </p>
             </div>
 
-            {/* Keyword 03: NUTRITION (Bottom-Center on desktop / 3rd on mobile) */}
-            <div className="skin-diff-editorial-keyword skin-diff-keyword-nutrition">
-              <span className="skin-diff-keyword-num">03</span>
-              <div className="skin-diff-keyword-icon">
-                <Utensils size={28} strokeWidth={1.8} />
+            {/* Item 3: Nutrition */}
+            <div className="skin-diff-item">
+              <div className="skin-diff-item-header">
+                <Utensils className="skin-diff-item-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+                <span className="skin-diff-item-title">Nutrition</span>
               </div>
-              <div className="skin-diff-keyword-text">
-                <h3 className="skin-diff-keyword-title">Nutrition</h3>
-                <p className="skin-diff-keyword-sub">
-                  How daily nourishment aligns
-                  <br className="skin-mobile-break" />
-                  with your skin baseline.
-                </p>
-              </div>
+              <p className="skin-diff-item-desc">
+                How daily nourishment aligns
+                <br />
+                with your skin baseline.
+              </p>
             </div>
           </div>
         </div>

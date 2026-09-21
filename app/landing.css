@@ -614,7 +614,7 @@
     max-width: none;
     aspect-ratio: auto;
     object-fit: cover;
-    object-position: center center;
+    object-position: 62% center;
     border-radius: 0;
     box-shadow: none;
     -webkit-mask-image: none;
@@ -1151,33 +1151,30 @@
 }
 
 /* -------------------------------------------------------------
-   STAGE COMPOSITION: Centered Ring & Symmetrical Radial Triad
+   STAGE COMPOSITION: Centered Ring & Centered Vertical Axis
    ------------------------------------------------------------- */
 .skin-diff-composition {
   position: relative;
   width: 100%;
-  max-width: 960px;
-  height: 420px;
+  max-width: 680px;
   margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   z-index: 2;
 }
 
 .skin-diff-ring-anchor {
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 250px;
+  position: relative;
+  width: clamp(240px, 26vw, 300px);
   height: auto;
-  aspect-ratio: 1180 / 833;
-  z-index: 2;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.skin-diff-keywords-wrap {
-  display: contents;
+  z-index: 2;
 }
 
 .skin-diff-ring-core-glow {
@@ -1185,111 +1182,84 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 72%;
-  height: 72%;
+  width: 65%;
+  height: 65%;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(235, 195, 150, 0.45) 0%,
-    rgba(200, 168, 204, 0.22) 50%,
-    transparent 75%
+    rgba(235, 195, 150, 0.35) 0%,
+    rgba(200, 168, 204, 0.18) 50%,
+    transparent 72%
   );
-  filter: blur(28px);
+  filter: blur(24px);
   pointer-events: none;
+  z-index: -1;
 }
 
 .skin-diff-ring-img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: contain;
   user-select: none;
   pointer-events: none;
 }
 
-/* Keywords: Center aligned, vertical order: number -> icon -> title -> body */
-.skin-diff-editorial-keyword {
-  position: absolute;
-  z-index: 4;
+/* Centered Information Area on One Clean Vertical Axis */
+.skin-diff-info-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(22px, 3vh, 28px);
+  width: 100%;
+  max-width: 440px;
+  margin: clamp(24px, 3.5vh, 32px) auto 0;
+  z-index: 3;
+}
+
+.skin-diff-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 5px;
-  width: 240px;
-  background: transparent;
-  padding: 0;
-  border: none;
-  box-shadow: none;
-
-  /* Always visible immediately - no scroll interaction or opacity 0 */
-  opacity: 1;
-  pointer-events: auto;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.skin-diff-keyword-text {
-  display: flex;
-  flex-direction: column;
+.skin-diff-item-header {
+  display: inline-flex;
   align-items: center;
-  text-align: center;
-  gap: 4px;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
 }
 
-/* 01 SLEEP: Top-Left (Orbiting ~220px from center at ~145 deg) */
-.skin-diff-keyword-sleep {
-  left: calc(50% - 330px);
-  top: calc(38% - 95px);
-  transform: none;
-}
-
-/* 02 STRESS: Top-Right (Orbiting ~220px from center at ~35 deg) */
-.skin-diff-keyword-stress {
-  left: calc(50% + 90px);
-  top: calc(38% - 95px);
-  transform: none;
-}
-
-/* 03 NUTRITION: Bottom-Center (Orbiting ~200px below center) */
-.skin-diff-keyword-nutrition {
-  left: 50%;
-  top: calc(38% + 125px);
-  transform: translateX(-50%);
-  width: 280px;
-}
-
-/* Typography and details for each keyword */
-.skin-diff-keyword-num {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--skin-accent, #796382);
-  line-height: 1;
-}
-
-.skin-diff-keyword-icon {
+.skin-diff-item-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--skin-accent, #796382);
-  margin-block: 2px;
+  flex-shrink: 0;
 }
 
-.skin-diff-keyword-title {
+.skin-diff-item-title {
   font-family: var(--font-newsreader), "Newsreader", Georgia, serif;
-  font-size: clamp(1.8rem, 2.4vw, 2.2rem);
-  font-weight: 400;
+  font-size: clamp(1.4rem, 2vw, 1.65rem);
+  font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--skin-ink, #251e24);
-  line-height: 1.1;
-  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
-.skin-diff-keyword-sub {
-  font-size: 0.875rem;
-  line-height: 1.5;
+.skin-diff-item-desc {
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.55;
   color: var(--skin-muted, #68616e);
-  margin: 0;
-  max-width: 250px;
+  margin: 6px auto 0;
+  max-width: 280px;
   text-align: center;
+  text-wrap: balance;
 }
 
 /* ==========================================================================
@@ -1466,93 +1436,61 @@
     top: auto;
     left: auto;
     transform: none !important;
-    width: min(200px, 52vw);
+    width: min(220px, 58vw);
     height: auto;
-    aspect-ratio: 1180 / 833;
-    margin: 0 auto 28px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
     flex-shrink: 0;
   }
 
-  /* Keywords on mobile: Centered bundle directly under the ring */
-  .skin-diff-keywords-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  .skin-diff-info-area {
     gap: 22px;
-    width: fit-content;
+    margin: 22px auto 0;
+    width: 100%;
     max-width: 100%;
-    margin-inline: auto;
+    align-items: center;
+    text-align: center;
   }
 
-  /* Keywords on mobile: Icon on left, Title + 2-line Sub bundled on right */
-  .skin-diff-editorial-keyword {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-start !important;
-    text-align: left !important;
-    gap: 16px !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding-bottom: 0 !important;
+  .skin-diff-item {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
   }
 
-  .skin-diff-keyword-nutrition {
-    padding-bottom: 0 !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    margin: 0 !important;
+  .skin-diff-item-header {
+    gap: 8px;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
   }
 
-  /* Delete numbers on mobile as requested */
-  .skin-diff-keyword-num {
-    display: none !important;
-  }
-
-  .skin-diff-keyword-icon {
+  .skin-diff-item-icon {
     flex-shrink: 0;
-    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .skin-diff-keyword-icon svg {
-    width: 24px !important;
-    height: 24px !important;
+  .skin-diff-item-icon svg {
+    width: 20px !important;
+    height: 20px !important;
   }
 
-  .skin-diff-keyword-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 4px;
-  }
-
-  .skin-diff-keyword-title {
-    font-family: var(--font-newsreader), "Newsreader", Georgia, serif;
+  .skin-diff-item-title {
     font-size: 1.35rem;
     line-height: 1.2;
-    margin: 0;
-    text-align: left;
+    text-align: center;
   }
 
-  .skin-diff-keyword-sub {
-    font-size: 0.875rem;
-    line-height: 1.45;
-    text-align: left;
-    margin: 0;
-    color: var(--skin-muted);
-  }
-
-  .skin-mobile-break {
-    display: inline;
+  .skin-diff-item-desc {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    max-width: min(280px, 85vw);
+    text-align: center;
+    margin: 6px auto 0;
   }
 
   /* Skin Balance Slider Card Mobile Framing */
