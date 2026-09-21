@@ -238,7 +238,7 @@ export default function Landing() {
             <div className="skin-signal-grid">
               {signals.map(({ icon: Icon, label, note }) => (
                 <div key={label}>
-                  <Icon size={18} strokeWidth={1.55} />
+                  <Icon className="skin-signal-icon" size={20} strokeWidth={1.8} />
                   <div className="skin-signal-content">
                     <strong className="skin-signal-label">{label}</strong>
                     <span className="skin-signal-note">{note}</span>

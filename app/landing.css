@@ -506,8 +506,8 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background: #0d080c;
-    padding-top: clamp(44px, 7vh, 60px);
+    background: #220e08;
+    padding-top: clamp(24px, 4vh, 36px);
     padding-bottom: clamp(16px, 2.5vh, 24px);
     margin-bottom: 0;
     position: relative;
@@ -523,11 +523,10 @@
     pointer-events: none;
     background: linear-gradient(
       180deg,
-      rgba(12, 8, 11, 0.82) 0%,
-      rgba(12, 8, 11, 0.68) 22%,
-      rgba(12, 8, 11, 0.25) 45%,
-      rgba(12, 8, 11, 0.0) 60%,
-      rgba(12, 8, 11, 0.45) 100%
+      rgba(34, 14, 8, 0.75) 0%,
+      rgba(34, 14, 8, 0.5) 28%,
+      rgba(34, 14, 8, 0.0) 50%,
+      rgba(30, 14, 8, 0.4) 100%
     );
   }
   .skin-hero-copy {
@@ -544,44 +543,52 @@
     font-size: 0.75rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    margin: 0 0 12px;
-    color: #e5b699;
+    margin: 0 0 10px;
+    color: #f1dfd1;
     font-weight: 500;
   }
   .skin-hero h1 {
     font-family: var(--font-display), Georgia, serif;
-    font-size: clamp(2rem, 7.8vw, 2.35rem);
-    line-height: 1.15;
-    margin: 0 auto 14px;
+    font-size: clamp(2.05rem, 7.4vw, 2.4rem);
+    line-height: 1.14;
+    margin: 0 auto 12px;
     font-weight: 400;
     letter-spacing: -0.02em;
     color: #f7f3ef;
   }
   .skin-hero-lead {
-    font-size: clamp(0.92rem, 3.6vw, 1rem);
+    font-size: clamp(0.92rem, 3.4vw, 1rem);
     line-height: 1.55;
-    margin: 0 auto 22px !important;
+    margin: 0 auto 18px !important;
     max-width: 330px;
-    color: rgba(247, 243, 239, 0.88);
+    color: rgba(247, 243, 239, 0.9);
   }
   .skin-hero-actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     margin-top: 0;
-    margin-bottom: 16px;
-    gap: 10px;
+    margin-bottom: 12px;
+    gap: 18px;
   }
   .skin-hero .skin-button {
-    padding: 13px 28px;
+    padding: 12px 24px;
     font-size: 0.9375rem;
     font-weight: 500;
     border-radius: 999px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    white-space: nowrap;
   }
   .skin-hero .skin-text-link {
-    display: none;
+    display: inline-flex;
+    font-size: 0.9375rem;
+    color: #f7f3ef;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    border-bottom: none;
+    padding: 0;
+    white-space: nowrap;
   }
   .skin-hero-image {
     order: unset;
@@ -593,7 +600,7 @@
     max-width: none;
     aspect-ratio: auto;
     object-fit: cover;
-    object-position: center bottom;
+    object-position: center center;
     border-radius: 0;
     box-shadow: none;
     -webkit-mask-image: none;
@@ -717,12 +724,53 @@
   .skin-pathways > .skin-small-print { margin-top: 20px; }
   .skin-ring-section { gap: 28px; padding-block: clamp(56px, 8vh, 72px); }
   .skin-ring-photo { aspect-ratio: 4 / 5; max-height: 480px; }
-  .skin-ring-copy { padding: 0; }
-  .skin-ring-copy > p:not(.skin-kicker) { margin-top: 18px; font-size: 1.0625rem; line-height: 1.75; }
-  .skin-signal-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 24px; }
-  .skin-signal-grid > div { font-size: 1.0625rem; gap: 14px; line-height: 1.5; }
-  .skin-signal-label { font-size: 1rem; }
-  .skin-signal-note { font-size: 0.875rem; }
+  .skin-ring-copy { padding: 0; text-align: center; }
+  .skin-ring-copy > p:not(.skin-kicker) { margin-top: 18px; font-size: 1.0625rem; line-height: 1.75; margin-inline: auto; max-width: 440px; }
+  .skin-signal-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin-top: 32px;
+    width: 100%;
+    text-align: center;
+  }
+  .skin-signal-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .skin-signal-grid svg,
+  .skin-signal-icon {
+    width: 24px !important;
+    height: 24px !important;
+    stroke-width: 2.2px !important;
+    color: var(--skin-accent);
+    margin: 0;
+  }
+  .skin-signal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3px;
+  }
+  .skin-signal-label {
+    font-size: 1.0625rem;
+    font-weight: 500;
+    color: var(--skin-ink, #252028);
+    text-align: center;
+    line-height: 1.35;
+  }
+  .skin-signal-note {
+    font-size: 0.875rem;
+    color: var(--skin-muted, #726879);
+    text-align: center;
+    line-height: 1.4;
+  }
   .skin-specs { padding-block: clamp(56px, 8vh, 72px); }
   .skin-spec-list { grid-template-columns: minmax(0, 1fr); gap: 20px; margin-top: 28px; }
   .skin-spec-list article { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 16px; padding-top: 20px; }
