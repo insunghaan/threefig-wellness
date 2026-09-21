@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Local TypeScript cache
 *.tsbuildinfo
+
+# Teaser2 local export package
+teaser2-package/
+*.zip

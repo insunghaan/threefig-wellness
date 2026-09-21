@@ -65,10 +65,11 @@
 .skin-menu { display: none; border: 0; background: transparent; width: 44px; height: 44px; place-items: center; }
 .skin-hero {
   width: 100%; margin: 0; position: relative; isolation: isolate;
-  min-height: clamp(640px, calc(100svh - 96px), 860px);
+  min-height: calc(100vh - 96px);
+  min-height: calc(100dvh - 96px);
   display: grid; align-items: center; overflow: hidden;
   background: #220e08; color: #fff;
-  margin-bottom: clamp(48px, 8vh, 96px);
+  margin-bottom: 0;
 }
 .skin-hero-image {
   position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%;
@@ -182,6 +183,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--pathway-obj-pos, center center);
   z-index: -2;
   filter: brightness(0.92);
 }
@@ -613,6 +615,12 @@
   .skin-pathway-carousel-track { gap: 16px; }
   .skin-pathway-slide { flex: 0 0 min(420px, calc(100vw - 72px)); max-width: calc(100vw - 72px); scroll-snap-align: start; }
   .skin-pathway-card { aspect-ratio: auto; min-height: 380px; padding: 24px 20px; border-radius: 24px; }
+  .skin-pathway-bg {
+    object-position: var(--pathway-obj-pos-mobile, var(--pathway-obj-pos, center center));
+  }
+  .skin-pathway-slide[data-pathway="sleep"] .skin-pathway-bg {
+    object-position: 95% 50% !important;
+  }
   .skin-pathway-slide-title { font-size: clamp(24px, 5.8vw, 30px); }
   .skin-pattern-intro { gap: 24px; }
   .skin-section-heading > p:last-child:not(.skin-kicker) { margin-top: 24px; font-size: 1.0625rem; line-height: 1.8; }

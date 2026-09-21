@@ -145,15 +145,23 @@ export default function Landing() {
 
       <main id="main">
         <section className="skin-hero">
-          <img
-            className="skin-hero-image"
-            src="/images/threefig-hero-amber.webp"
-            srcSet="/images/threefig-hero-amber.webp 1x, /images/threefig-hero-amber-2x-seo-v1.webp 2x"
-            width="2048"
-            height="1152"
-            alt="A model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
-            fetchPriority="high"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcSet="/images/threefig-hero-amber-hq.webp 1024w, /images/threefig-hero-amber-2x-hq.webp 2048w"
+              sizes="100vw"
+            />
+            <img
+              className="skin-hero-image"
+              src="/images/threefig-hero-amber-2x.png"
+              srcSet="/images/threefig-hero-amber-user.png 1024w, /images/threefig-hero-amber-2x.png 2048w"
+              sizes="100vw"
+              width="2048"
+              height="1152"
+              alt="A model extending her hand toward the camera, with a polished silver ring in focus against warm amber light"
+              fetchPriority="high"
+            />
+          </picture>
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
             <h1>

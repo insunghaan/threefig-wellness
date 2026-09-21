@@ -32,6 +32,7 @@ export interface PathwayItem {
   image: string;
   imageAlt: string;
   objectPosition?: string;
+  objectPositionMobile?: string;
 }
 
 export const defaultPathways: PathwayItem[] = [
@@ -48,6 +49,8 @@ export const defaultPathways: PathwayItem[] = [
     exampleLabel: "YOUR 3FIG",
     image: "/images/threefig-pathway-01-sleep.webp",
     imageAlt: "A hand wearing a silver smart ring resting peacefully on soft white bed linen in morning light",
+    objectPosition: "75% center",
+    objectPositionMobile: "95% 50%",
   },
   {
     id: "food",
@@ -63,6 +66,7 @@ export const defaultPathways: PathwayItem[] = [
     image: "/images/threefig-pathway-02-food.webp",
     imageAlt: "A hand wearing a sleek smart ring reaching toward fresh berries and wholesome breakfast bowl in soft morning light",
     objectPosition: "center 52%",
+    objectPositionMobile: "center 50%",
   },
   {
     id: "stress",
@@ -78,6 +82,7 @@ export const defaultPathways: PathwayItem[] = [
     image: "/images/threefig-pathway-03-stress.webp",
     imageAlt: "A hand wearing a sleek smart ring submerged in clear sunlit swimming pool water with caustic reflections",
     objectPosition: "center 48%",
+    objectPositionMobile: "center 48%",
   },
   {
     id: "rhythm",
@@ -92,6 +97,8 @@ export const defaultPathways: PathwayItem[] = [
     exampleLabel: "YOUR 3FIG",
     image: "/images/threefig-pathway-04-rhythm.webp",
     imageAlt: "A hand wearing a sleek smart ring gently touching a bare sunlit shoulder",
+    objectPosition: "center 30%",
+    objectPositionMobile: "55% 25%",
   },
   {
     id: "balance",
@@ -373,6 +380,7 @@ export function PathwayCarousel() {
             return (
               <article
                 key={item.id}
+                data-pathway={item.id}
                 className={`skin-pathway-slide ${isCurrent ? "is-active" : ""}`}
                 role="group"
                 aria-roledescription="slide"
@@ -397,7 +405,12 @@ export function PathwayCarousel() {
                     src={item.image}
                     alt={item.imageAlt}
                     className="skin-pathway-bg"
-                    style={item.objectPosition ? { objectPosition: item.objectPosition } : undefined}
+                    style={
+                      {
+                        "--pathway-obj-pos": item.objectPosition || "center center",
+                        "--pathway-obj-pos-mobile": item.objectPositionMobile || item.objectPosition || "center center",
+                      } as React.CSSProperties
+                    }
                     loading={index === 0 ? "eager" : "lazy"}
                     referrerPolicy="no-referrer"
                   />
