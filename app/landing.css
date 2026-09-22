@@ -589,8 +589,9 @@
 .skin-benefit-pill {
   position: absolute;
   top: -11px;
-  right: 24px;
-  padding: 4px 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 14px;
   border-radius: 999px;
   background: linear-gradient(135deg, #f8eee5, #edd7c4);
   color: #3b2014;
@@ -598,8 +599,10 @@
   font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
+  white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.8);
+  z-index: 1;
 }
 .skin-benefit-note { display: flex; align-items: center; justify-content: center; gap: 10px; width: fit-content; max-width: 100%; margin: 22px auto 0; }
 .skin-benefit-note-icon { display: flex; flex-shrink: 0; color: #f7eaf5; }
@@ -923,7 +926,7 @@
   .skin-updates { padding: clamp(56px, 8vh, 72px) 24px; }
   .skin-early-benefits { grid-template-columns: minmax(0, 1fr); width: min(400px, 100%); margin: 24px auto 0; gap: 18px; }
   .skin-early-benefits article { padding: 22px 20px; }
-  .skin-benefit-pill { top: -10px; right: 18px; padding: 3px 10px; font-size: 0.625rem; }
+  .skin-benefit-pill { top: -10px; padding: 3px 12px; font-size: 0.625rem; }
   .skin-benefit-note { max-width: 340px; gap: 10px; margin-top: 20px; }
   .skin-signup-wrap { margin-top: 28px; width: 100%; }
   .skin-signup-counter { font-size: 0.875rem; padding: 7px 14px; margin-bottom: 16px; }
@@ -1216,7 +1219,7 @@
   }
   .skin-early-benefits { margin-top: 24px; gap: 16px; }
   .skin-early-benefits article { padding: 20px 18px; }
-  .skin-benefit-pill { top: -10px; right: 14px; font-size: 0.59rem; padding: 2px 8px; }
+  .skin-benefit-pill { top: -10px; font-size: 0.59rem; padding: 2px 10px; }
   .skin-benefit-note { margin-top: 20px; flex-direction: column; gap: 8px; max-width: 300px; }
   .skin-benefit-note p { text-align: center; line-height: 1.7; }
   .skin-signup-wrap { margin-top: 24px; }
