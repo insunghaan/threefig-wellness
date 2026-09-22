@@ -143,7 +143,9 @@ export default function Landing() {
             type="button"
             onClick={() => openWaitlist("header")}
           >
-            Join early <ArrowRight size={16} />
+            <span>Join early</span>
+            <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>27/3,000</span>
+            <ArrowRight size={16} />
           </button>
           <button
             className="skin-menu"
@@ -193,6 +195,10 @@ export default function Landing() {
               >
                 Join early <ArrowRight size={18} />
               </button>
+              <div className="skin-hero-counter skin-waitlist-counter" data-waitlist-counter>
+                <span className="skin-counter-dot" aria-hidden="true" />
+                <span>Founding spots: <strong className="skin-counter-val">27/3,000</strong></span>
+              </div>
             </div>
           </div>
           <a className="skin-hero-scroll" href="#difference">
@@ -390,7 +396,7 @@ export default function Landing() {
               role="group"
               aria-label="Pre-registration benefits: 20% device discount and lifetime subscription"
             >
-              <article>
+              <article className="skin-benefit-card">
                 <span className="skin-benefit-icon" aria-hidden="true">
                   <BadgePercent size={24} />
                 </span>
@@ -399,9 +405,10 @@ export default function Landing() {
                   <strong>20% device discount when orders open.</strong>
                 </div>
               </article>
-              <article>
+              <article className="skin-benefit-card skin-benefit-featured" data-featured="true">
+                <span className="skin-benefit-pill">Founding Member Perk</span>
                 <span className="skin-benefit-icon" aria-hidden="true">
-                  <Sparkles size={23} />
+                  <Sparkles size={24} />
                 </span>
                 <div>
                   <span>LIFETIME SUBSCRIPTION</span>
@@ -419,6 +426,14 @@ export default function Landing() {
               </div>
             ) : (
               <div className="skin-signup-wrap">
+                <div
+                  className="skin-signup-counter skin-waitlist-counter"
+                  id="waitlist-counter"
+                  data-waitlist-counter
+                >
+                  <span className="skin-counter-dot" aria-hidden="true" />
+                  <span>Limited founding spots: <strong className="skin-counter-val">27/3,000</strong></span>
+                </div>
                 <button
                   type="button"
                   className="skin-signup-btn"
