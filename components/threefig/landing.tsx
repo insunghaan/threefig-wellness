@@ -67,7 +67,7 @@ export default function Landing() {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
-  const [waitlistCount, setWaitlistCount] = useState<string>("27/3,000");
+  const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
 
   useEffect(() => {
     let mounted = true;
