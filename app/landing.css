@@ -877,6 +877,10 @@
   .skin-pathway-slide[data-pathway="sleep"] .skin-pathway-bg {
     object-position: 95% 50% !important;
   }
+  .skin-pathway-slide[data-pathway="stress"] .skin-pathway-bg {
+    transform: scale(1.25) translate(-6%, -4%);
+    transform-origin: center center;
+  }
   .skin-pathway-slide-title { font-size: clamp(24px, 5.8vw, 30px); }
   .skin-pattern-intro { gap: 20px; }
   .skin-section-heading > p:last-child:not(.skin-kicker) { margin-top: 18px; font-size: 1.0625rem; line-height: 1.75; }
