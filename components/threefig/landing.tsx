@@ -106,13 +106,20 @@ export default function Landing() {
     }
   }
 
+  function openWaitlist(placement: "header" | "hero" | "inputs" | "signup") {
+    setSurveyOpen(true);
+    trackEvent("cta_click", { placement });
+    // Count entering the waitlist flow once per page load, across all CTAs.
+    if (!signupStarted.current) {
+      signupStarted.current = true;
+      trackEvent("signup_start", { placement });
+    }
+  }
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site" onClick={(event) => {
-      const link = (event.target as Element).closest('a[href="#updates"]');
-      if (link) trackEvent("cta_click", { placement: link.closest("header") ? "header" : link.closest("footer") ? "footer" : "hero" });
-    }}>
+    <div className="skin-site">
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
@@ -134,7 +141,7 @@ export default function Landing() {
           <button
             className="skin-header-cta"
             type="button"
-            onClick={() => setSurveyOpen(true)}
+            onClick={() => openWaitlist("header")}
           >
             Join early <ArrowRight size={16} />
           </button>
@@ -182,7 +189,7 @@ export default function Landing() {
               <button
                 className="skin-button"
                 type="button"
-                onClick={() => setSurveyOpen(true)}
+                onClick={() => openWaitlist("hero")}
               >
                 Join early <ArrowRight size={18} />
               </button>
@@ -253,7 +260,7 @@ export default function Landing() {
               <button
                 className="skin-button"
                 type="button"
-                onClick={() => setSurveyOpen(true)}
+                onClick={() => openWaitlist("inputs")}
               >
                 Join early <ArrowRight size={18} />
               </button>
@@ -415,13 +422,7 @@ export default function Landing() {
                 <button
                   type="button"
                   className="skin-signup-btn"
-                  onClick={() => {
-                    if (!signupStarted.current) {
-                      signupStarted.current = true;
-                      trackEvent("signup_start");
-                    }
-                    setSurveyOpen(true);
-                  }}
+                  onClick={() => openWaitlist("signup")}
                 >
                   Join early
                   <ArrowRight size={18} />
