@@ -30,6 +30,10 @@ import { SkinBalanceSlider } from "./skin-balance-slider";
 import { EvidenceMobileCarousel } from "./evidence-carousel";
 import { WaitlistSurveyDialog } from "./waitlist-survey-dialog";
 import {
+  getSimulatedWaitlistCount,
+  syncWaitlistCounters,
+} from "@/lib/threefig/waitlist-counter";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -63,6 +67,39 @@ export default function Landing() {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [message, setMessage] = useState("");
+  const [waitlistCount, setWaitlistCount] = useState<string>("27/3,000");
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function fetchServerCount() {
+      try {
+        const res = await fetch("/api/waitlist/count", { cache: "no-store" });
+        if (res.ok) {
+          const data = (await res.json()) as { formatted?: string };
+          if (mounted && data?.formatted) {
+            setWaitlistCount(data.formatted);
+            syncWaitlistCounters(data.formatted);
+            return;
+          }
+        }
+      } catch {
+        // Fallback to client-side calculated count
+      }
+      if (mounted) {
+        const fallback = getSimulatedWaitlistCount().formatted;
+        setWaitlistCount(fallback);
+        syncWaitlistCounters(fallback);
+      }
+    }
+
+    fetchServerCount();
+    const interval = setInterval(fetchServerCount, 15000);
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   async function joinWaitlist(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -144,7 +181,7 @@ export default function Landing() {
             onClick={() => openWaitlist("header")}
           >
             <span>Join early</span>
-            <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>27/3,000</span>
+            <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>{waitlistCount}</span>
             <ArrowRight size={16} />
           </button>
           <button
@@ -197,7 +234,7 @@ export default function Landing() {
               </button>
               <div className="skin-hero-counter skin-waitlist-counter" data-waitlist-counter>
                 <span className="skin-counter-dot" aria-hidden="true" />
-                <span>Founding spots: <strong className="skin-counter-val">27/3,000</strong></span>
+                <span>Founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
               </div>
             </div>
           </div>
@@ -432,7 +469,7 @@ export default function Landing() {
                   data-waitlist-counter
                 >
                   <span className="skin-counter-dot" aria-hidden="true" />
-                  <span>Limited founding spots: <strong className="skin-counter-val">27/3,000</strong></span>
+                  <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
                 </div>
                 <button
                   type="button"

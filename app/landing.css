@@ -618,16 +618,16 @@
 .skin-signup-counter {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 18px;
-  margin-bottom: 20px;
+  gap: 11px;
+  padding: 10px 22px;
+  margin-bottom: 22px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   color: #faedf7;
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   letter-spacing: 0.02em;
   box-shadow: 0 4px 16px rgba(22, 9, 30, 0.15);
 }
@@ -929,7 +929,7 @@
   .skin-benefit-pill { top: -10px; padding: 3px 12px; font-size: 0.625rem; }
   .skin-benefit-note { max-width: 340px; gap: 10px; margin-top: 20px; }
   .skin-signup-wrap { margin-top: 28px; width: 100%; }
-  .skin-signup-counter { font-size: 0.875rem; padding: 7px 14px; margin-bottom: 16px; }
+  .skin-signup-counter { font-size: 0.95rem; padding: 8px 18px; margin-bottom: 18px; }
   .skin-signup-btn { width: min(320px, 100%); padding: 15px 28px; font-size: 1rem; }
   .skin-footer { flex-direction: column; text-align: center; gap: 6px; padding-block: 36px; }
 }
@@ -1223,7 +1223,7 @@
   .skin-benefit-note { margin-top: 20px; flex-direction: column; gap: 8px; max-width: 300px; }
   .skin-benefit-note p { text-align: center; line-height: 1.7; }
   .skin-signup-wrap { margin-top: 24px; }
-  .skin-signup-counter { font-size: 0.8125rem; padding: 6px 12px; margin-bottom: 14px; }
+  .skin-signup-counter { font-size: 0.875rem; padding: 7px 15px; margin-bottom: 16px; }
   .skin-signup-btn { width: min(300px, 100%); padding: 14px 24px; font-size: 0.9375rem; }
   .skin-consent { line-height: 1.7; }
   .skin-footer { gap: 6px; padding-block: 30px; }
