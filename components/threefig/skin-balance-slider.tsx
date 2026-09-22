@@ -50,10 +50,10 @@ const balanceSlides: BalanceSlide[] = [
       'Your sleep rhythm held steady overnight. The skin barrier is in a responsive state with slight reactivity to temperature shifts.',
     metricLabel: 'Skin Barrier Status',
     metricValue: 'Responsive · Recovery Steady',
-    image: '/images/threefig-balance-now.webp',
-    imageAlt: 'Hand wearing titanium smart ring resting gently on collarbone in dark silk dress',
-    objectPosition: '54% 45%',
-    objectPositionMobile: '54% 45%',
+    image: '/images/threefig-balance-now-knit.webp',
+    imageAlt: 'Hand wearing titanium smart ring resting gently on knit fabric',
+    objectPosition: '50% 50%',
+    objectPositionMobile: '50% 50%',
   },
   {
     id: 'why',
@@ -69,10 +69,10 @@ const balanceSlides: BalanceSlide[] = [
       'Late-evening HRV dips correlate with increased barrier reactivity. Your skin is reflecting daytime cumulative strain.',
     metricLabel: 'Primary Driver',
     metricValue: 'Evening Strain · Elevated HRV dips',
-    image: '/images/threefig-balance-why-sunset.webp',
-    imageAlt: 'Hand wearing titanium smart ring hovering gracefully over misty clouds',
-    objectPosition: '60% 42%',
-    objectPositionMobile: '60% 42%',
+    image: '/images/threefig-balance-why-blazer.webp',
+    imageAlt: 'Hand wearing titanium smart ring touching chin with elegant posture',
+    objectPosition: '64% 35%',
+    objectPositionMobile: '67% 30%',
   },
   {
     id: 'next',
@@ -88,10 +88,10 @@ const balanceSlides: BalanceSlide[] = [
       'Shifting wind-down 30 minutes earlier creates sufficient circadian runway for cellular repair pathways to complete before morning.',
     metricLabel: 'Target Window',
     metricValue: 'Wind-down 10:20 PM · Rest Focus',
-    image: '/images/threefig-balance-next.webp',
-    imageAlt: '3FIG Smart Ring resting on dark marble bedside table with illuminated sensors next to candle',
-    objectPosition: '64% 56%',
-    objectPositionMobile: '64% 56%',
+    image: '/images/threefig-balance-next-marble.webp',
+    imageAlt: '3FIG Smart Ring resting on bright marble surface in warm morning sunlight',
+    objectPosition: '55% 50%',
+    objectPositionMobile: '56% 50%',
   },
 ];
 
@@ -265,6 +265,7 @@ export function SkinBalanceSlider() {
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${slide.badge} (${index + 1} of ${totalSlides})`}
+                data-balance-id={slide.id}
                 style={{
                   marginRight: isLast
                     ? sidePadding != null
@@ -275,6 +276,7 @@ export function SkinBalanceSlider() {
               >
                 <div
                   className="skin-pathway-card skin-balance-card cursor-pointer"
+                  data-balance-card={slide.id}
                   onClick={() => {
                     if (hasMovedRef.current) return;
                     setActivePopupItem(slide);

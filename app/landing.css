@@ -1561,6 +1561,11 @@
     object-position: var(--pathway-obj-pos-mobile, var(--pathway-obj-pos, center center)) !important;
   }
 
+  .skin-balance-card[data-balance-card="now"] .skin-pathway-bg {
+    transform: scale(1.22) translate(-2%, -12%);
+    transform-origin: center center;
+  }
+
 
   /* Responsive Core Difference Statement */
   .skin-statement-section {
