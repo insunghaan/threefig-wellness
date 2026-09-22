@@ -8,6 +8,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { trackEvent } from "./analytics";
 import { captureBrowserAttribution, type Attribution } from "@/lib/threefig/attribution";
 
 export interface WaitlistSurveyDialogProps {
@@ -32,6 +33,7 @@ export function WaitlistSurveyDialog({
   
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const submitting = useRef(false);
   const attributionRef = useRef<Attribution | null>(null);
 
   useEffect(() => {
@@ -46,11 +48,13 @@ export function WaitlistSurveyDialog({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitting.current) return;
     if (!email || !email.includes("@")) {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
 
+    submitting.current = true;
     setStatus("submitting");
     setErrorMessage("");
 
@@ -85,6 +89,7 @@ export function WaitlistSurveyDialog({
         throw new Error(result.error || "Unable to save your response. Please try again.");
       }
 
+      if (result.created === true) trackEvent("generate_lead", { lead_source: "waitlist" });
       setStatus("success");
       if (onSuccess) {
         onSuccess();
@@ -92,6 +97,8 @@ export function WaitlistSurveyDialog({
     } catch (err: unknown) {
       setStatus("error");
       setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      submitting.current = false;
     }
   }
 

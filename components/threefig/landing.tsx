@@ -445,7 +445,7 @@ export default function Landing() {
             occasional 3FIG product updates. We never sell it. Leave anytime.
           </DialogDescription>
           <p>
-            We use Google Analytics and Microsoft Clarity to understand website usage.
+            We use Google Analytics and Microsoft Clarity to understand website usage, and the Meta Pixel to measure visits and successful new waitlist registrations from our ads. We do not include your email address or survey answers in Meta event parameters.
             Campaign attribution is remembered in your browser for up to 90 days and
             saved with your signup to help us understand how people find 3FIG.
           </p>

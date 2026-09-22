@@ -31,10 +31,36 @@ test('GA config is once-only and strips personal URL data; events exclude protot
  const analytics=load('components/threefig/analytics.tsx',{
  react:{useEffect:fn=>callbacks.push(fn),useState:()=>[false,()=>{}]},'react/jsx-runtime':{},'next/script':{},
  '@/lib/threefig/attribution':{CAMPAIGN_KEYS:['utm_source']},
+ '@/lib/threefig/meta-pixel':load('lib/threefig/meta-pixel.ts',{}, {window:win}),
  },{window:win,document:{referrer:'https://instagram.com/path?private=value'}});
  analytics.Analytics();callbacks[0]();callbacks[0]();
  const config=win.dataLayer.filter(r=>r[0]==='config');assert.equal(config.length,1);assert.equal(config[0][2].page_location,'https://3fig.io/?utm_source=instagram');assert.equal(config[0][2].page_referrer,'https://instagram.com/');
  analytics.trackEvent('generate_lead');assert.equal(win.dataLayer.at(-1)[1],'generate_lead');const n=win.dataLayer.length;
  win.location.pathname='/app';analytics.trackEvent('generate_lead');assert.equal(win.dataLayer.length,n);
  win.location.pathname='/';win.location.hostname='localhost';analytics.trackEvent('generate_lead');assert.equal(win.dataLayer.length,n);
+});
+
+test('Meta buffers first-visit conversion until SDK loads, initializes once, and sends no form data',()=>{
+ const win={location:{hostname:'3fig.io',pathname:'/'}};
+ const pixel=load('lib/threefig/meta-pixel.ts',{}, {window:win});
+ pixel.trackMetaWaitlistLead();pixel.initializeMetaPixel();pixel.initializeMetaPixel();
+ const calls=JSON.parse(JSON.stringify(win.fbq.queue));
+ assert.deepEqual(calls,[
+  ['set','autoConfig',false,'2935955493422843'],
+  ['init','2935955493422843'],
+  ['trackSingle','2935955493422843','PageView'],
+  ['trackSingle','2935955493422843','Lead',{content_name:'3FIG waitlist'}],
+ ]);
+ assert.equal(win._fbq,win.fbq);
+});
+test('Meta never initializes on local, teaser, or health-prototype pages',()=>{
+ for(const location of [{hostname:'localhost',pathname:'/'},{hostname:'127.0.0.1',pathname:'/'},{hostname:'3fig.io',pathname:'/app/skin'},{hostname:'3fig.io',pathname:'/teaser2'},{hostname:'42sai.io',pathname:'/'}]){
+  const win={location};const pixel=load('lib/threefig/meta-pixel.ts',{}, {window:win});
+  pixel.initializeMetaPixel();pixel.trackMetaWaitlistLead();assert.equal(win.fbq,undefined);
+ }
+ const pixel=load('lib/threefig/meta-pixel.ts',{});assert.doesNotThrow(()=>pixel.initializeMetaPixel());
+});
+test('a throwing Meta SDK cannot fail a saved waitlist registration',()=>{
+ const win={location:{hostname:'3fig.io',pathname:'/'},fbq(){throw Error('blocked SDK');}};
+ const pixel=load('lib/threefig/meta-pixel.ts',{}, {window:win});assert.doesNotThrow(()=>pixel.trackMetaWaitlistLead());
 });

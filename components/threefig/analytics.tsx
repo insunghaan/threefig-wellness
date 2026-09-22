@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Script from "next/script";
+import { initializeMetaPixel, trackMetaWaitlistLead } from "@/lib/threefig/meta-pixel";
 import { CAMPAIGN_KEYS } from "@/lib/threefig/attribution";
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; threefigAnalyticsReady?: boolean };
 export function trackEvent(name: "cta_click" | "signup_start" | "generate_lead", params: Record<string, string> = {}) {
   if (typeof window === "undefined" || window.location.hostname !== "3fig.io" || window.location.pathname !== "/") return;
+  if (name === "generate_lead") trackMetaWaitlistLead();
   const target = window as AnalyticsWindow;
   target.dataLayer ||= [];
   target.gtag ||= function () {
@@ -38,10 +40,12 @@ export function Analytics() {
       target.gtag("config", "G-1689JHD6V6", { page_location: clean.href, page_referrer: referrer });
       target.threefigAnalyticsReady = true;
     }
+    initializeMetaPixel();
     setEnabled(true);
   }, []);
   if (!enabled) return null;
   return <>
+    <Script id="threefig-meta-pixel" src="https://connect.facebook.net/en_US/fbevents.js" strategy="afterInteractive" />
     <Script src="https://www.googletagmanager.com/gtag/js?id=G-1689JHD6V6" strategy="afterInteractive" />
     <Script id="clarity-script" strategy="afterInteractive">{`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","yi66k74lc9");`}</Script>
   </>;
