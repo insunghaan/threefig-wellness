@@ -521,6 +521,17 @@ export default function Landing() {
         className={`skin-mobile-floating-bar${showFloatingCta && !menuOpen && !surveyOpen ? " is-visible" : ""}`}
         aria-hidden={!showFloatingCta || menuOpen || surveyOpen}
       >
+        <div
+          className="skin-mobile-floating-counter skin-waitlist-counter"
+          data-waitlist-counter
+          onClick={() => openWaitlist("mobile_floating")}
+          role="button"
+          tabIndex={showFloatingCta && !menuOpen && !surveyOpen ? 0 : -1}
+          aria-label="Limited founding spots"
+        >
+          <span className="skin-counter-dot" aria-hidden="true" />
+          <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
+        </div>
         <button
           className="skin-mobile-floating-btn"
           type="button"
@@ -530,10 +541,7 @@ export default function Landing() {
         >
           <span className="skin-border-beam" aria-hidden="true" />
           <span>Claim Free Lifetime Access</span>
-          <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>
-            {waitlistCount}
-          </span>
-          <ArrowRight size={16} />
+          <ArrowRight size={18} />
         </button>
       </div>
 
