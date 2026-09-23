@@ -263,23 +263,28 @@ export default function Teaser2Landing() {
               width={1024}
               height={576}
             />
+            <source
+              media="(max-width: 820px)"
+              srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            />
             <img
               className="skin-hero-image"
-              src="/images/threefig-hero-master.png"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
               alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
               width={1024}
               height={576}
+              loading="lazy"
             />
           </picture>
           <video
             className="teaser2-hero-video"
-            src="/video/skin_ring_v10f_silent.mp4"
+            src="/video/skin_ring_v10f_silent.mp4?v=2"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            poster="/images/teaser2-hero-poster.jpg"
+            poster="/images/teaser2-hero-poster.jpg?v=2"
             aria-hidden="true"
           />
           <div className="skin-hero-copy">

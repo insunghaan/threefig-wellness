@@ -42,9 +42,18 @@
    Mobile View (<= 820px): Video Hero + Scroll-triggered Header
    ============================================================ */
 @media (max-width: 820px) {
-  /* Hero Video Replacement */
-  .teaser2-page .teaser2-desktop-hero-pic {
+  /* Hero Video Replacement & Complete Suppression of Desktop/Old Hero Images */
+  .teaser2-page .teaser2-desktop-hero-pic,
+  .teaser2-page .teaser2-desktop-hero-pic *,
+  .teaser2-page .skin-hero-image {
     display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    z-index: -9999 !important;
   }
 
   .teaser2-page .teaser2-hero-video {

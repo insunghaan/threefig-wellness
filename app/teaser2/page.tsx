@@ -38,7 +38,7 @@ export default function Teaser2Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/teaser2-hero-poster.jpg"
+        href="/images/teaser2-hero-poster.jpg?v=2"
         media="(max-width: 820px)"
       />
       <script
