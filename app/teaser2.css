@@ -74,6 +74,14 @@
   line-height: 1.6;
 }
 
+.teaser2-standalone .skin-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 36px;
+}
+
 .teaser2-standalone .skin-hero .skin-button {
   background: #220e08;
   color: #fff !important;
@@ -88,6 +96,10 @@
   background: rgba(34, 14, 8, 0.06);
   color: #352219 !important;
   border: 1px solid rgba(34, 14, 8, 0.12);
+}
+
+.teaser2-standalone .skin-hero .skin-hero-counter strong {
+  color: #220e08 !important;
 }
 
 .teaser2-standalone .skin-hero .skin-hero-scroll {
