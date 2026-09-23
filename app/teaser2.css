@@ -17,8 +17,18 @@
 }
 
 /* Teaser2 Standalone Page (> 820px): Desktop Video Hero + Blush Aesthetics */
-.teaser2-standalone .teaser2-desktop-hero-pic {
+.teaser2-standalone .teaser2-desktop-hero-pic,
+.teaser2-standalone .teaser2-desktop-hero-pic *,
+.teaser2-standalone .skin-hero-image,
+.teaser2-standalone .skin-hero picture {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  z-index: -9999 !important;
 }
 
 .teaser2-standalone .teaser2-desktop-hero-video {

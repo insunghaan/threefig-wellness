@@ -259,13 +259,13 @@ export default function Teaser2Landing() {
           {/* Desktop Hero Video (> 820px) */}
           <video
             className="teaser2-desktop-hero-video"
-            src="/video/final_muted.mp4?v=1"
+            src="/video/final_muted.mp4?v=2"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
-            poster="/images/teaser2-desktop-poster.jpg?v=1"
+            poster="/images/teaser2-desktop-poster.jpg?v=2"
             aria-hidden="true"
           />
           {/* Mobile Hero Video (<= 820px) */}
