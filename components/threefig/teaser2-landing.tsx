@@ -189,7 +189,7 @@ export default function Teaser2Landing() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site teaser2-page">
+    <div className="skin-site teaser2-page teaser2-standalone">
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
@@ -256,26 +256,19 @@ export default function Teaser2Landing() {
 
       <main id="main">
         <section className="skin-hero" ref={heroRef}>
-          <picture className="teaser2-desktop-hero-pic">
-            <source
-              media="(min-width: 821px)"
-              srcSet="/images/threefig-hero-master.png"
-              width={1024}
-              height={576}
-            />
-            <source
-              media="(max-width: 820px)"
-              srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-            />
-            <img
-              className="skin-hero-image"
-              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-              alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
-              width={1024}
-              height={576}
-              loading="lazy"
-            />
-          </picture>
+          {/* Desktop Hero Video (> 820px) */}
+          <video
+            className="teaser2-desktop-hero-video"
+            src="/video/final_muted.mp4?v=1"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/images/teaser2-desktop-poster.jpg?v=1"
+            aria-hidden="true"
+          />
+          {/* Mobile Hero Video (<= 820px) */}
           <video
             className="teaser2-hero-video"
             src="/video/skin_ring_v10f_silent.mp4?v=2"
@@ -290,12 +283,12 @@ export default function Teaser2Landing() {
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
             <h1>
-              Your skin responds to
+              The Smart ring
               <br />
-              <em>more than skincare.</em>
+              <em>for skin wellness</em>
             </h1>
             <p className="skin-hero-lead">
-              The smart ring that quietly connects how your skin feels with sleep, recovery, and body signals over time.
+              Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
             </p>
             <div className="skin-hero-actions">
               <button

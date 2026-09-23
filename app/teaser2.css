@@ -3,13 +3,85 @@
    Allows modifying /teaser2 without altering main landing.css
    ============================================================ */
 
-/* Desktop defaults */
+/* Desktop defaults (> 820px) for teaser2-page (used on main site) */
 .teaser2-page .teaser2-hero-video {
   display: none;
 }
 
 .teaser2-page .teaser2-desktop-hero-pic {
   display: block;
+}
+
+.teaser2-page .teaser2-desktop-hero-video {
+  display: none;
+}
+
+/* Teaser2 Standalone Page (> 820px): Desktop Video Hero + Blush Aesthetics */
+.teaser2-standalone .teaser2-desktop-hero-pic {
+  display: none !important;
+}
+
+.teaser2-standalone .teaser2-desktop-hero-video {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -2;
+}
+
+.teaser2-standalone .skin-hero {
+  background: #f7ebe1;
+  color: #220e08;
+}
+
+.teaser2-standalone .skin-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(248, 238, 230, 0.94) 0%, rgba(248, 238, 230, 0.82) 38%, rgba(248, 238, 230, 0) 68%);
+}
+
+.teaser2-standalone .skin-hero .skin-kicker {
+  color: #8a5a44;
+}
+
+.teaser2-standalone .skin-hero h1 {
+  color: #220e08;
+}
+
+.teaser2-standalone .skin-hero h1 em {
+  color: #6e3d2a;
+}
+
+.teaser2-standalone .skin-hero-lead {
+  color: #4a342c;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.teaser2-standalone .skin-hero .skin-button {
+  background: #220e08;
+  color: #fff !important;
+}
+
+.teaser2-standalone .skin-hero .skin-button:hover {
+  background: #3d1b11;
+  color: #fff !important;
+}
+
+.teaser2-standalone .skin-hero .skin-hero-counter {
+  background: rgba(34, 14, 8, 0.06);
+  color: #352219 !important;
+  border: 1px solid rgba(34, 14, 8, 0.12);
+}
+
+.teaser2-standalone .skin-hero .skin-hero-scroll {
+  color: #6e3d2a !important;
 }
 
 .teaser2-page .teaser2-header-brand {
@@ -45,6 +117,7 @@
   /* Hero Video Replacement & Complete Suppression of Desktop/Old Hero Images */
   .teaser2-page .teaser2-desktop-hero-pic,
   .teaser2-page .teaser2-desktop-hero-pic *,
+  .teaser2-page .teaser2-desktop-hero-video,
   .teaser2-page .skin-hero-image {
     display: none !important;
     opacity: 0 !important;
