@@ -19,7 +19,6 @@ import {
   Utensils,
   X,
 } from "lucide-react";
-import { Brand } from "./visuals";
 import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
 import { PathwayCarousel } from "./pathway-carousel";
@@ -38,6 +37,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import "@/app/teaser2.css";
 
 const signals = [
   { icon: MoonStar, label: "Sleep, timing & rhythm", note: "Continuous ring sensing" },
@@ -68,6 +68,7 @@ export default function Landing() {
   const [message, setMessage] = useState("");
   const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
   const [showFloatingCta, setShowFloatingCta] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const benefitRef = useRef<HTMLDivElement | null>(null);
 
@@ -76,6 +77,9 @@ export default function Landing() {
     if (!heroEl) return;
 
     const handleScrollOrIntersect = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
+
       const heroRect = heroEl.getBoundingClientRect();
       // Hero is considered exited when its bottom edge reaches or passes above the header area (<= 70px)
       const isPastHero = heroRect.bottom <= 70;
@@ -189,15 +193,39 @@ export default function Landing() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site">
+    <div className="skin-site teaser2-page">
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
 
-      <header className="skin-header-wrap">
+      <header
+        className={`skin-header-wrap teaser2-header ${
+          isScrolled || menuOpen ? "is-scrolled" : "is-top"
+        }`}
+      >
         <div className="skin-header">
-          <Link href="/" aria-label="3FIG home" onClick={closeMenu}>
-            <Brand />
+          <Link
+            href="/"
+            aria-label="3FIG home"
+            className="teaser2-header-brand"
+            onClick={closeMenu}
+          >
+            <div className="teaser2-logo-stage">
+              <img
+                src="/images/threefig-logo-white.png"
+                alt="3fig"
+                className="teaser2-logo-white"
+                width="70"
+                height="36"
+              />
+              <img
+                src="/images/threefig-logo.png"
+                alt="3fig"
+                className="teaser2-logo-black"
+                width="70"
+                height="36"
+              />
+            </div>
           </Link>
           <nav
             className={menuOpen ? "skin-nav is-open" : "skin-nav"}
@@ -232,22 +260,37 @@ export default function Landing() {
 
       <main id="main">
         <section className="skin-hero" ref={heroRef}>
-          <picture>
+          <picture className="teaser2-desktop-hero-pic">
             <source
-              media="(max-width: 820px)"
-              srcSet="/images/threefig-hero-mobile.png"
-              width={576}
-              height={1024}
-            />
-            <img
-              className="skin-hero-image"
-              src="/images/threefig-hero-master.png"
-              alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
-              fetchPriority="high"
+              media="(min-width: 821px)"
+              srcSet="/images/threefig-hero-master.png"
               width={1024}
               height={576}
             />
+            <source
+              media="(max-width: 820px)"
+              srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            />
+            <img
+              className="skin-hero-image"
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+              alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
+              width={1024}
+              height={576}
+              loading="lazy"
+            />
           </picture>
+          <video
+            className="teaser2-hero-video"
+            src="/video/skin_ring_v10f_silent.mp4?v=2"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/images/teaser2-hero-poster.jpg?v=2"
+            aria-hidden="true"
+          />
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
             <h1>

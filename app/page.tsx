@@ -9,5 +9,21 @@ const structuredData = {
   ],
 };
 export default function Home() {
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} /><Landing /></>;
+  return (
+    <>
+      <link
+        rel="preload"
+        as="image"
+        href="/images/teaser2-hero-poster.jpg?v=2"
+        media="(max-width: 820px)"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
+      <Landing />
+    </>
+  );
 }
