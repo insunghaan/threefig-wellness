@@ -2078,6 +2078,15 @@
   box-shadow: 0 4px 12px rgba(37, 30, 36, 0.15);
 }
 
+.skin-survey-subhint {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--skin-muted, #796382);
+  margin: -4px 0 10px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
 .skin-survey-cards {
   display: flex;
   flex-direction: column;
@@ -2086,64 +2095,63 @@
 
 .skin-survey-card {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 3px;
+  padding: 13px 16px;
   border-radius: 14px;
-  border: 1px solid rgba(77, 61, 84, 0.14);
+  border: 1px solid rgba(77, 61, 84, 0.16);
   background: #ffffff;
   text-align: left;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
 }
 
 .skin-survey-card:hover {
-  border-color: var(--skin-accent, #796382);
+  border-color: #251e24;
+  background: rgba(37, 30, 36, 0.02);
 }
 
 .skin-survey-card.is-selected {
   border-color: #251e24;
-  background: rgba(37, 30, 36, 0.03);
-  box-shadow: 0 2px 8px rgba(37, 30, 36, 0.08);
+  background: #251e24;
+  box-shadow: 0 4px 14px rgba(37, 30, 36, 0.15);
 }
 
 .skin-survey-card-check {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  border: 1.5px solid rgba(77, 61, 84, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.skin-survey-card.is-selected .skin-survey-card-check {
-  background: #251e24;
-  border-color: #251e24;
-  color: #ffffff;
+  display: none;
 }
 
 .skin-survey-card-text {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  width: 100%;
 }
 
 .skin-survey-card-text strong {
   font-size: 0.88rem;
   color: var(--skin-ink, #251e24);
   font-weight: 600;
+  transition: color 0.15s ease;
 }
 
 .skin-survey-card-text small {
   font-size: 0.78rem;
   color: var(--skin-muted, #68616e);
   line-height: 1.4;
+  transition: color 0.15s ease;
+}
+
+.skin-survey-card.is-selected .skin-survey-card-text strong {
+  color: #ffffff;
+}
+
+.skin-survey-card.is-selected .skin-survey-card-text small {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .skin-survey-submit-btn {
@@ -2241,9 +2249,50 @@
 }
 
 /* EXIT-INTENT RETENTION OFFER */
+@keyframes exitOfferPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.015) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes exitBadgeBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes exitGlowPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(195, 130, 60, 0.14), 0 0 0 1px rgba(225, 175, 120, 0.75);
+  }
+  50% {
+    box-shadow: 0 8px 28px rgba(195, 130, 60, 0.32), 0 0 0 2px rgba(225, 175, 120, 0.95);
+  }
+}
+
 .skin-survey-exit-wrap {
   text-align: center;
   padding: 8px 4px 4px;
+  animation: exitOfferPopIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: center center;
 }
 .skin-survey-exit-header {
   margin-bottom: 22px;
@@ -2261,6 +2310,7 @@
   font-weight: 700;
   letter-spacing: .08em;
   margin-bottom: 12px;
+  animation: exitBadgeBounce 0.7s ease 0.25s 1;
 }
 .skin-survey-exit-title {
   font-family: var(--font-newsreader), "Newsreader", Georgia, serif;
@@ -2297,7 +2347,8 @@
 .skin-survey-exit-perk-card.is-highlighted {
   background: linear-gradient(135deg, #fffbf6 0%, #fff4e8 100%);
   border: 1.5px solid rgba(225, 175, 120, 0.75);
-  box-shadow: 0 4px 20px rgba(195, 130, 60, 0.12);
+  box-shadow: 0 4px 20px rgba(195, 130, 60, 0.14);
+  animation: exitGlowPulse 2.4s ease-in-out infinite;
 }
 .skin-survey-exit-perk-icon {
   flex-shrink: 0;

@@ -28,8 +28,14 @@ export function WaitlistSurveyDialog({
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [intendedUser, setIntendedUser] = useState("");
-  const [primaryFeature, setPrimaryFeature] = useState("");
+  const [primaryFeatures, setPrimaryFeatures] = useState<string[]>([]);
   const [subscriptionPreference, setSubscriptionPreference] = useState("");
+
+  function togglePrimaryFeature(val: string) {
+    setPrimaryFeatures((prev) =>
+      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
+    );
+  }
   
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -37,6 +43,7 @@ export function WaitlistSurveyDialog({
   const [hasShownExitOffer, setHasShownExitOffer] = useState(false);
   const submitting = useRef(false);
   const attributionRef = useRef<Attribution | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -44,6 +51,12 @@ export function WaitlistSurveyDialog({
       setHasShownExitOffer(false);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.scrollTop = 0;
+    }
+  }, [showExitOffer]);
 
   useEffect(() => {
     if (defaultEmail) {
@@ -87,7 +100,7 @@ export function WaitlistSurveyDialog({
             gender: gender || undefined,
             age: age || undefined,
             intended_user: intendedUser || undefined,
-            primary_feature: primaryFeature || undefined,
+            primary_feature: primaryFeatures.length > 0 ? primaryFeatures.join(", ") : undefined,
             subscription_preference: subscriptionPreference || undefined,
           },
         }),
@@ -142,7 +155,7 @@ export function WaitlistSurveyDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="fig-dialog skin-survey-dialog" showCloseButton={true}>
+      <DialogContent ref={dialogRef} className="fig-dialog skin-survey-dialog" showCloseButton={true}>
         {status === "success" ? (
           <div className="skin-survey-success">
             <div className="skin-survey-badge-wrap">
@@ -177,13 +190,13 @@ export function WaitlistSurveyDialog({
             <div className="skin-survey-header skin-survey-exit-header">
               <span className="skin-survey-exit-kicker-pill">
                 <Gift size={14} />
-                <span>BEFORE YOU GO · SPECIAL BONUS</span>
+                <span>WAIT · EXCLUSIVE FOUNDING OFFER</span>
               </span>
               <DialogTitle className="skin-survey-title skin-survey-exit-title">
-                Unlock an extra 20% off your 3FIG ring.
+                Wait — don’t leave your 20% launch discount behind.
               </DialogTitle>
               <DialogDescription className="skin-survey-desc skin-survey-exit-desc">
-                Don’t leave empty-handed. Take 30 seconds to finish your survey and secure both founding privileges:
+                We reserved an extra 20% device discount on top of your Lifetime Free Subscription. Complete the quick survey now so you don’t miss out:
               </DialogDescription>
             </div>
 
@@ -216,7 +229,7 @@ export function WaitlistSurveyDialog({
               className="skin-survey-submit-btn skin-survey-exit-continue-btn"
               onClick={handleResumeSurvey}
             >
-              Continue Survey & Claim 20% Off <ArrowRight size={18} />
+              Keep My Perks & Continue Survey <ArrowRight size={18} />
             </button>
 
             <button
@@ -224,7 +237,7 @@ export function WaitlistSurveyDialog({
               className="skin-survey-exit-dismiss"
               onClick={handleDismiss}
             >
-              Maybe next time
+              Leave anyway without perks
             </button>
           </div>
         ) : (
@@ -331,27 +344,28 @@ export function WaitlistSurveyDialog({
             {/* Question 4: Primary Feature */}
             <div className="skin-survey-group">
               <span className="skin-survey-label">Which feature interests you most?</span>
+              <p className="skin-survey-subhint">Select all that apply</p>
               <div className="skin-survey-cards">
                 {[
                   { value: "Sleep analysis", label: "Sleep analysis", hint: "Circadian rhythm & overnight recovery" },
                   { value: "Stress tracking", label: "Stress tracking", hint: "Daily load & heart rate variability" },
                   { value: "Food & nutrition logging", label: "Food & nutrition logging", hint: "Meal patterns aligned with skin responses" },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    className={`skin-survey-card ${primaryFeature === opt.value ? "is-selected" : ""}`}
-                    onClick={() => setPrimaryFeature(opt.value)}
-                  >
-                    <div className="skin-survey-card-check">
-                      {primaryFeature === opt.value && <Check size={14} />}
-                    </div>
-                    <div className="skin-survey-card-text">
-                      <strong>{opt.label}</strong>
-                      <small>{opt.hint}</small>
-                    </div>
-                  </button>
-                ))}
+                ].map((opt) => {
+                  const isSelected = primaryFeatures.includes(opt.value);
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className={`skin-survey-card ${isSelected ? "is-selected" : ""}`}
+                      onClick={() => togglePrimaryFeature(opt.value)}
+                    >
+                      <div className="skin-survey-card-text">
+                        <strong>{opt.label}</strong>
+                        <small>{opt.hint}</small>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -370,22 +384,22 @@ export function WaitlistSurveyDialog({
                     label: "$8 / month · Premium",
                     hint: "Basic + Menstrual Cycle, Temperature Tracking",
                   },
-                ].map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    className={`skin-survey-card ${subscriptionPreference === opt.value ? "is-selected" : ""}`}
-                    onClick={() => setSubscriptionPreference(opt.value)}
-                  >
-                    <div className="skin-survey-card-check">
-                      {subscriptionPreference === opt.value && <Check size={14} />}
-                    </div>
-                    <div className="skin-survey-card-text">
-                      <strong>{opt.label}</strong>
-                      <small>{opt.hint}</small>
-                    </div>
-                  </button>
-                ))}
+                ].map((opt) => {
+                  const isSelected = subscriptionPreference === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className={`skin-survey-card ${isSelected ? "is-selected" : ""}`}
+                      onClick={() => setSubscriptionPreference(opt.value)}
+                    >
+                      <div className="skin-survey-card-text">
+                        <strong>{opt.label}</strong>
+                        <small>{opt.hint}</small>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
