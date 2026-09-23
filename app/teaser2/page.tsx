@@ -35,6 +35,12 @@ const structuredData = {
 export default function Teaser2Page() {
   return (
     <>
+      <link
+        rel="preload"
+        as="image"
+        href="/images/teaser2-hero-poster.jpg"
+        media="(max-width: 820px)"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

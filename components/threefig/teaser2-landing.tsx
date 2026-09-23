@@ -258,16 +258,15 @@ export default function Teaser2Landing() {
         <section className="skin-hero" ref={heroRef}>
           <picture className="teaser2-desktop-hero-pic">
             <source
-              media="(max-width: 820px)"
-              srcSet="/images/threefig-hero-mobile.png"
-              width={576}
-              height={1024}
+              media="(min-width: 821px)"
+              srcSet="/images/threefig-hero-master.png"
+              width={1024}
+              height={576}
             />
             <img
               className="skin-hero-image"
               src="/images/threefig-hero-master.png"
               alt="A model extending her hand toward the camera, with a polished 3FIG smart ring in focus against warm amber light"
-              fetchPriority="high"
               width={1024}
               height={576}
             />
@@ -279,7 +278,8 @@ export default function Teaser2Landing() {
             muted
             loop
             playsInline
-            poster="/images/threefig-hero-mobile.png"
+            preload="auto"
+            poster="/images/teaser2-hero-poster.jpg"
             aria-hidden="true"
           />
           <div className="skin-hero-copy">
