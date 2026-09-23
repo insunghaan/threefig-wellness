@@ -60,12 +60,33 @@
   color: #8a5a44;
 }
 
-.teaser2-standalone .skin-hero h1 {
+.teaser2-standalone .skin-hero h1,
+.teaser2-standalone .skin-hero .teaser2-hero-title {
   color: #220e08;
+  margin: 22px 0 0;
+  max-width: 560px;
+  line-height: 1;
 }
 
-.teaser2-standalone .skin-hero h1 em {
-  color: #6e3d2a;
+.teaser2-standalone .teaser2-hero-title-text {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+
+.teaser2-standalone .teaser2-hero-title-img {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+  height: auto;
+  object-fit: contain;
+  margin: 0;
 }
 
 .teaser2-standalone .skin-hero-lead {

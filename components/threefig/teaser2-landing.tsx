@@ -282,10 +282,20 @@ export default function Teaser2Landing() {
           />
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
-            <h1>
-              The Smart ring
-              <br />
-              <em>for skin wellness</em>
+            <h1 className="teaser2-hero-title">
+              <span className="teaser2-hero-title-text sr-only">
+                The smart ring. for Skin wellness.
+              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/teaser2-hero-title.png"
+                alt="The smart ring. for Skin wellness."
+                className="teaser2-hero-title-img"
+                width={1024}
+                height={296}
+                fetchPriority="high"
+                decoding="async"
+              />
             </h1>
             <p className="skin-hero-lead">
               Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
