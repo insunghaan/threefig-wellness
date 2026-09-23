@@ -19,7 +19,6 @@ import {
   Utensils,
   X,
 } from "lucide-react";
-import { Brand } from "./visuals";
 import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
 import { PathwayCarousel } from "./pathway-carousel";
@@ -65,6 +64,7 @@ export default function Teaser2Landing() {
   const [message, setMessage] = useState("");
   const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
   const [showFloatingCta, setShowFloatingCta] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
   const benefitRef = useRef<HTMLDivElement | null>(null);
 
@@ -73,6 +73,9 @@ export default function Teaser2Landing() {
     if (!heroEl) return;
 
     const handleScrollOrIntersect = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 20);
+
       const heroRect = heroEl.getBoundingClientRect();
       // Hero is considered exited when its bottom edge reaches or passes above the header area (<= 70px)
       const isPastHero = heroRect.bottom <= 70;
@@ -191,10 +194,34 @@ export default function Teaser2Landing() {
         Skip to content
       </a>
 
-      <header className="skin-header-wrap">
+      <header
+        className={`skin-header-wrap teaser2-header ${
+          isScrolled || menuOpen ? "is-scrolled" : "is-top"
+        }`}
+      >
         <div className="skin-header">
-          <Link href="/teaser2" aria-label="3FIG home" onClick={closeMenu}>
-            <Brand />
+          <Link
+            href="/teaser2"
+            aria-label="3FIG home"
+            className="teaser2-header-brand"
+            onClick={closeMenu}
+          >
+            <div className="teaser2-logo-stage">
+              <img
+                src="/images/threefig-logo-white.png"
+                alt="3fig"
+                className="teaser2-logo-white"
+                width="70"
+                height="36"
+              />
+              <img
+                src="/images/threefig-logo.png"
+                alt="3fig"
+                className="teaser2-logo-black"
+                width="70"
+                height="36"
+              />
+            </div>
           </Link>
           <nav
             className={menuOpen ? "skin-nav is-open" : "skin-nav"}
@@ -229,7 +256,7 @@ export default function Teaser2Landing() {
 
       <main id="main">
         <section className="skin-hero" ref={heroRef}>
-          <picture>
+          <picture className="teaser2-desktop-hero-pic">
             <source
               media="(max-width: 820px)"
               srcSet="/images/threefig-hero-mobile.png"
@@ -245,6 +272,16 @@ export default function Teaser2Landing() {
               height={576}
             />
           </picture>
+          <video
+            className="teaser2-hero-video"
+            src="/video/skin_ring_v10f_silent.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/images/threefig-hero-mobile.png"
+            aria-hidden="true"
+          />
           <div className="skin-hero-copy">
             <p className="skin-kicker">MEET 3FIG</p>
             <h1>
