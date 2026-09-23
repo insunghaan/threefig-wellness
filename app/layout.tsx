@@ -28,10 +28,10 @@ export const metadata: Metadata = {
     siteName: "3FIG",
     images: [
       {
-        url: "/images/threefig-hero-amber.jpg",
-        width: 1024,
-        height: 576,
-        alt: "3FIG – The skin wellness ring",
+        url: "/images/threefig-og.png",
+        width: 1200,
+        height: 630,
+        alt: "3FIG – The Smart ring for Skin wellness.",
       },
     ],
     locale: "en_US",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "3FIG – The skin wellness ring",
     description:
       "3FIG connects sleep, food and stress with how your skin feels, turning everyday signals into one clearer next move.",
-    images: ["/images/threefig-hero-amber.jpg"],
+    images: ["/images/threefig-og.png"],
   },
 };
 

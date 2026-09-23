@@ -190,7 +190,7 @@ export default function Landing() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site teaser2-page teaser2-standalone">
+    <div className="skin-site teaser2-page teaser2-standalone landing-root">
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
