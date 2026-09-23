@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Check, ArrowRight, Sparkles, Loader2, Heart } from "lucide-react";
+import { Check, ArrowRight, Sparkles, Loader2, Heart, BadgePercent, Gift } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -33,8 +33,17 @@ export function WaitlistSurveyDialog({
   
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showExitOffer, setShowExitOffer] = useState(false);
+  const [hasShownExitOffer, setHasShownExitOffer] = useState(false);
   const submitting = useRef(false);
   const attributionRef = useRef<Attribution | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      setShowExitOffer(false);
+      setHasShownExitOffer(false);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (defaultEmail) {
@@ -102,14 +111,37 @@ export function WaitlistSurveyDialog({
     }
   }
 
+  function handleOpenChange(nextOpen: boolean) {
+    if (!nextOpen) {
+      if (status !== "success" && !showExitOffer && !hasShownExitOffer) {
+        setShowExitOffer(true);
+        setHasShownExitOffer(true);
+        return;
+      }
+      handleReset();
+    } else {
+      onOpenChange(true);
+    }
+  }
+
+  function handleResumeSurvey() {
+    setShowExitOffer(false);
+  }
+
+  function handleDismiss() {
+    handleReset();
+  }
+
   function handleReset() {
     setStatus("idle");
     setErrorMessage("");
+    setShowExitOffer(false);
+    setHasShownExitOffer(false);
     onOpenChange(false);
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="fig-dialog skin-survey-dialog" showCloseButton={true}>
         {status === "success" ? (
           <div className="skin-survey-success">
@@ -120,16 +152,16 @@ export function WaitlistSurveyDialog({
             </div>
             <DialogTitle className="skin-survey-title">You’re on the early list.</DialogTitle>
             <DialogDescription className="skin-survey-desc">
-              Thank you for sharing your thoughts. Your early spot is reserved, complete with a 20% launch discount and priority access when reservations open.
+              Thank you for sharing your thoughts. Your early spot is reserved, complete with a 20% launch discount, lifetime free subscription, and priority access when reservations open.
             </DialogDescription>
             <div className="skin-survey-perks">
               <div className="skin-survey-perk-item">
                 <Sparkles size={16} />
-                <span>20% off device at launch</span>
+                <span>Lifetime Free Subscription</span>
               </div>
               <div className="skin-survey-perk-item">
                 <Heart size={16} />
-                <span>Lifetime core updates</span>
+                <span>20% off device at launch</span>
               </div>
             </div>
             <button
@@ -140,14 +172,84 @@ export function WaitlistSurveyDialog({
               Done
             </button>
           </div>
+        ) : showExitOffer ? (
+          <div className="skin-survey-exit-wrap">
+            <div className="skin-survey-header skin-survey-exit-header">
+              <span className="skin-survey-exit-kicker-pill">
+                <Gift size={14} />
+                <span>BEFORE YOU GO · SPECIAL BONUS</span>
+              </span>
+              <DialogTitle className="skin-survey-title skin-survey-exit-title">
+                Unlock an extra 20% off your 3FIG ring.
+              </DialogTitle>
+              <DialogDescription className="skin-survey-desc skin-survey-exit-desc">
+                Don’t leave empty-handed. Take 30 seconds to finish your survey and secure both founding privileges:
+              </DialogDescription>
+            </div>
+
+            <div className="skin-survey-exit-perks">
+              <div className="skin-survey-exit-perk-card is-highlighted">
+                <div className="skin-survey-exit-perk-icon">
+                  <BadgePercent size={20} />
+                </div>
+                <div className="skin-survey-exit-perk-text">
+                  <span className="skin-survey-exit-perk-badge">SPECIAL BONUS</span>
+                  <strong>20% Device Discount at Launch</strong>
+                  <p>Save 20% on the 3FIG smart ring when pre-orders open.</p>
+                </div>
+              </div>
+
+              <div className="skin-survey-exit-perk-card">
+                <div className="skin-survey-exit-perk-icon">
+                  <Sparkles size={20} />
+                </div>
+                <div className="skin-survey-exit-perk-text">
+                  <span className="skin-survey-exit-perk-badge">FOUNDING PERK</span>
+                  <strong>Lifetime Free App Subscription</strong>
+                  <p>Full access to sleep, rhythm, and skin signals with zero monthly fees.</p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="skin-survey-submit-btn skin-survey-exit-continue-btn"
+              onClick={handleResumeSurvey}
+            >
+              Continue Survey & Claim 20% Off <ArrowRight size={18} />
+            </button>
+
+            <button
+              type="button"
+              className="skin-survey-exit-dismiss"
+              onClick={handleDismiss}
+            >
+              Maybe next time
+            </button>
+          </div>
         ) : (
           <form className="skin-survey-form" onSubmit={handleSubmit}>
             <div className="skin-survey-header">
-              <p className="skin-survey-kicker">3FIG EARLY ACCESS</p>
-              <DialogTitle className="skin-survey-title">Help us build 3FIG for you.</DialogTitle>
+              <p className="skin-survey-kicker">3FIG FOUNDING MEMBER EXCLUSIVE</p>
+              <DialogTitle className="skin-survey-title">
+                Claim your Lifetime Free Subscription.
+              </DialogTitle>
               <DialogDescription className="skin-survey-desc">
-                Join our private pre-registration list. Answering these quick questions helps us tailor the experience.
+                Complete this quick 1-minute survey to secure your founding member spot and enjoy free 3FIG subscription for life.
               </DialogDescription>
+
+              <div className="skin-survey-lifetime-callout">
+                <div className="skin-survey-lifetime-icon">
+                  <Sparkles size={20} />
+                </div>
+                <div className="skin-survey-lifetime-content">
+                  <span className="skin-survey-lifetime-pill">FOUNDING MEMBER PERK</span>
+                  <strong className="skin-survey-lifetime-title">100% Free Subscription For Life</strong>
+                  <p className="skin-survey-lifetime-desc">
+                    Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Email Field */}

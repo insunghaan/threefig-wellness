@@ -7,7 +7,6 @@ import { trackEvent } from "./analytics";
 import {
   Activity,
   ArrowRight,
-  BadgePercent,
   BatteryMedium,
   CalendarDays,
   Check,
@@ -431,17 +430,8 @@ export default function Landing() {
             <div
               className="skin-early-benefits"
               role="group"
-              aria-label="Pre-registration benefits: 20% device discount and lifetime subscription"
+              aria-label="Pre-registration founding member perk: Lifetime subscription"
             >
-              <article className="skin-benefit-card">
-                <span className="skin-benefit-icon" aria-hidden="true">
-                  <BadgePercent size={24} />
-                </span>
-                <div>
-                  <span>20% OFF AT LAUNCH</span>
-                  <strong>20% device discount when orders open.</strong>
-                </div>
-              </article>
               <article className="skin-benefit-card skin-benefit-featured" data-featured="true">
                 <span className="skin-benefit-pill">Founding Member Perk</span>
                 <span className="skin-benefit-icon" aria-hidden="true">
