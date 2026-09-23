@@ -1,0 +1,8 @@
+/* ============================================================
+   3FIG Teaser2 Dedicated Stylesheet
+   Allows modifying /teaser2 without altering main landing.css
+   ============================================================ */
+
+.teaser2-page {
+  /* Inherits all .skin-* classes from landing.css */
+}
