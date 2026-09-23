@@ -34,26 +34,34 @@
 .teaser2-standalone .teaser2-desktop-hero-video {
   display: block;
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  z-index: -2;
+  right: max(0px, calc((100% - 1320px) / 2));
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(840px, 52vw);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  z-index: 1;
+  mask-image: linear-gradient(to right, transparent 0%, black 14%, black 90%, transparent 100%),
+              linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 14%, black 90%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-composite: source-in;
 }
 
 .teaser2-standalone .skin-hero {
-  background: #f7ebe1;
+  background: #dab09e;
   color: #220e08;
 }
 
 .teaser2-standalone .skin-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(90deg, rgba(248, 238, 230, 0.94) 0%, rgba(248, 238, 230, 0.82) 38%, rgba(248, 238, 230, 0) 68%);
+  display: none !important;
+}
+
+.teaser2-standalone .skin-hero-copy {
+  position: relative;
+  z-index: 2;
 }
 
 .teaser2-standalone .skin-hero .skin-kicker {
