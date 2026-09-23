@@ -67,6 +67,28 @@ export default function Landing() {
   >("idle");
   const [message, setMessage] = useState("");
   const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
+  const [showFloatingCta, setShowFloatingCta] = useState(false);
+  const heroRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const heroEl = heroRef.current;
+    if (!heroEl) return;
+
+    const handleScrollOrIntersect = () => {
+      const rect = heroEl.getBoundingClientRect();
+      // Hero is considered exited when its bottom edge reaches or passes above the header area (<= 70px)
+      setShowFloatingCta(rect.bottom <= 70);
+    };
+
+    handleScrollOrIntersect();
+    window.addEventListener("scroll", handleScrollOrIntersect, { passive: true });
+    window.addEventListener("resize", handleScrollOrIntersect, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollOrIntersect);
+      window.removeEventListener("resize", handleScrollOrIntersect);
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -142,7 +164,9 @@ export default function Landing() {
     }
   }
 
-  function openWaitlist(placement: "header" | "hero" | "inputs" | "signup") {
+  function openWaitlist(
+    placement: "header" | "hero" | "inputs" | "signup" | "mobile_floating"
+  ) {
     setSurveyOpen(true);
     trackEvent("cta_click", { placement });
     // Count entering the waitlist flow once per page load, across all CTAs.
@@ -197,7 +221,7 @@ export default function Landing() {
       </header>
 
       <main id="main">
-        <section className="skin-hero">
+        <section className="skin-hero" ref={heroRef}>
           <picture>
             <source
               media="(max-width: 820px)"
@@ -480,6 +504,27 @@ export default function Landing() {
           </div>
         </section>
       </main>
+
+      {/* Mobile Floating CTA - emerges when scrolling past hero */}
+      <div
+        className={`skin-mobile-floating-bar${showFloatingCta && !menuOpen && !surveyOpen ? " is-visible" : ""}`}
+        aria-hidden={!showFloatingCta || menuOpen || surveyOpen}
+      >
+        <button
+          className="skin-mobile-floating-btn"
+          type="button"
+          onClick={() => openWaitlist("mobile_floating")}
+          tabIndex={showFloatingCta && !menuOpen && !surveyOpen ? 0 : -1}
+          aria-label="Claim Free Lifetime Access"
+        >
+          <span className="skin-border-beam" aria-hidden="true" />
+          <span>Claim Free Lifetime Access</span>
+          <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>
+            {waitlistCount}
+          </span>
+          <ArrowRight size={16} />
+        </button>
+      </div>
 
       <footer className="skin-footer">
         <p className="skin-footer-copy">Your skin. Your signals. One clearer story.</p>
