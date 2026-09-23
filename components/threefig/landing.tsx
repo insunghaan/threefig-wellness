@@ -69,15 +69,25 @@ export default function Landing() {
   const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
   const [showFloatingCta, setShowFloatingCta] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
+  const benefitRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const heroEl = heroRef.current;
     if (!heroEl) return;
 
     const handleScrollOrIntersect = () => {
-      const rect = heroEl.getBoundingClientRect();
+      const heroRect = heroEl.getBoundingClientRect();
       // Hero is considered exited when its bottom edge reaches or passes above the header area (<= 70px)
-      setShowFloatingCta(rect.bottom <= 70);
+      const isPastHero = heroRect.bottom <= 70;
+
+      let isBenefitReached = false;
+      if (benefitRef.current) {
+        const benefitRect = benefitRef.current.getBoundingClientRect();
+        // Floating button hides when the bottom perk/benefit area enters viewport, and reappears when scrolling back up away from it
+        isBenefitReached = benefitRect.top <= window.innerHeight;
+      }
+
+      setShowFloatingCta(isPastHero && !isBenefitReached);
     };
 
     handleScrollOrIntersect();
@@ -460,6 +470,7 @@ export default function Landing() {
               className="skin-early-benefits"
               role="group"
               aria-label="Pre-registration founding member perk: Lifetime subscription"
+              ref={benefitRef}
             >
               <article className="skin-benefit-card skin-benefit-featured" data-featured="true">
                 <span className="skin-benefit-pill">Founding Member Perk</span>
