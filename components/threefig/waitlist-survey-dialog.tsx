@@ -421,7 +421,9 @@ export function WaitlistSurveyDialog({
                 </>
               ) : (
                 <>
-                  Join Early Access <ArrowRight size={18} />
+                  <span className="skin-border-beam" aria-hidden="true" />
+                  <span>Claim Free Lifetime Access</span>
+                  <ArrowRight size={18} />
                 </>
               )}
             </button>

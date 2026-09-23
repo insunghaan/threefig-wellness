@@ -367,7 +367,7 @@ export default function LandingSections() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button type="submit" aria-label="Join early access">
+            <button type="submit" aria-label="Claim Free Lifetime Access">
               <ArrowRight size={23} />
             </button>
           </form>

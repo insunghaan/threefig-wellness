@@ -179,7 +179,8 @@ export default function Landing() {
             type="button"
             onClick={() => openWaitlist("header")}
           >
-            <span>Join early</span>
+            <span className="skin-border-beam" aria-hidden="true" />
+            <span>Claim Free Lifetime Access</span>
             <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>{waitlistCount}</span>
             <ArrowRight size={16} />
           </button>
@@ -229,7 +230,9 @@ export default function Landing() {
                 type="button"
                 onClick={() => openWaitlist("hero")}
               >
-                Join early <ArrowRight size={18} />
+                <span className="skin-border-beam" aria-hidden="true" />
+                <span>Claim Free Lifetime Access</span>
+                <ArrowRight size={18} />
               </button>
               <div className="skin-hero-counter skin-waitlist-counter" data-waitlist-counter>
                 <span className="skin-counter-dot" aria-hidden="true" />
@@ -304,7 +307,9 @@ export default function Landing() {
                 type="button"
                 onClick={() => openWaitlist("inputs")}
               >
-                Join early <ArrowRight size={18} />
+                <span className="skin-border-beam" aria-hidden="true" />
+                <span>Claim Free Lifetime Access</span>
+                <ArrowRight size={18} />
               </button>
             </div>
           </div>
@@ -466,7 +471,8 @@ export default function Landing() {
                   className="skin-signup-btn"
                   onClick={() => openWaitlist("signup")}
                 >
-                  Join early
+                  <span className="skin-border-beam" aria-hidden="true" />
+                  <span>Claim Free Lifetime Access</span>
                   <ArrowRight size={18} />
                 </button>
               </div>
