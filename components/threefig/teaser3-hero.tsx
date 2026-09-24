@@ -225,7 +225,6 @@ export function Teaser3Hero() {
           <video
             className="teaser3-video"
             src="/video/newhero03.mp4"
-            poster="/images/teaser3-mobile-poster.webp"
             autoPlay
             loop
             muted
