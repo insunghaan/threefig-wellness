@@ -54,7 +54,8 @@
     color: #220e08;
   }
 
-  .teaser2-standalone .skin-hero::before {
+  /* 3fig.io 본링크 Desktop: 좌측 가독성 그라데이션 오버레이 유지 */
+  .teaser2-standalone.landing-root .skin-hero::before {
     content: "";
     display: block !important;
     position: absolute;
@@ -62,6 +63,16 @@
     z-index: -1;
     pointer-events: none;
     background: linear-gradient(90deg, rgba(248, 238, 230, 0.94) 0%, rgba(248, 238, 230, 0.82) 38%, rgba(248, 238, 230, 0) 68%);
+  }
+
+  /* 티져2 (/teaser2): 히어로 영상 위 그라데이션 오버레이 완전 삭제 */
+  .teaser2-standalone:not(.landing-root) .skin-hero::before {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   .teaser2-standalone .skin-hero-copy {
