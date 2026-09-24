@@ -2681,3 +2681,13 @@
   .skin-site *, .skin-site *::before, .skin-site *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
 
+/* Hide waitlist counters across root landing page */
+.landing-root .skin-waitlist-counter,
+.landing-root .skin-header-counter-pill,
+.landing-root .skin-hero-counter,
+.landing-root .skin-signup-counter,
+.landing-root .skin-mobile-floating-counter {
+  display: none !important;
+}
+
+

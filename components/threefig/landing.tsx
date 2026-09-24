@@ -240,7 +240,6 @@ export default function Landing() {
           >
             <span className="skin-border-beam" aria-hidden="true" />
             <span>Claim Free Lifetime Access</span>
-            <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>{waitlistCount}</span>
             <ArrowRight size={16} />
           </button>
           <button
@@ -311,10 +310,6 @@ export default function Landing() {
                 <span>Claim Free Lifetime Access</span>
                 <ArrowRight size={18} />
               </button>
-              <div className="skin-hero-counter skin-waitlist-counter" data-waitlist-counter>
-                <span className="skin-counter-dot" aria-hidden="true" />
-                <span>Founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
-              </div>
             </div>
           </div>
           <a className="skin-hero-scroll" href="#difference">
@@ -536,14 +531,6 @@ export default function Landing() {
               </div>
             ) : (
               <div className="skin-signup-wrap">
-                <div
-                  className="skin-signup-counter skin-waitlist-counter"
-                  id="waitlist-counter"
-                  data-waitlist-counter
-                >
-                  <span className="skin-counter-dot" aria-hidden="true" />
-                  <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
-                </div>
                 <button
                   type="button"
                   className="skin-signup-btn"
@@ -564,17 +551,6 @@ export default function Landing() {
         className={`skin-mobile-floating-bar${showFloatingCta && !menuOpen && !surveyOpen ? " is-visible" : ""}`}
         aria-hidden={!showFloatingCta || menuOpen || surveyOpen}
       >
-        <div
-          className="skin-mobile-floating-counter skin-waitlist-counter"
-          data-waitlist-counter
-          onClick={() => openWaitlist("mobile_floating")}
-          role="button"
-          tabIndex={showFloatingCta && !menuOpen && !surveyOpen ? 0 : -1}
-          aria-label="Limited founding spots"
-        >
-          <span className="skin-counter-dot" aria-hidden="true" />
-          <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
-        </div>
         <button
           className="skin-mobile-floating-btn"
           type="button"
