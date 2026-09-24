@@ -1,0 +1,226 @@
+/* ==========================================================================
+   3FIG DESIGN SYSTEM FOUNDATION: TOKENS & TYPOGRAPHY ROLES
+   Authoritative design tokens, typography scale, spacing, and button variants.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Semantic Colors
+     ------------------------------------------------------------------------ */
+  --tf-color-text-primary: #1e1e1e;
+  --tf-color-text-secondary: #444444;
+  --tf-color-accent-brown: #633a29;
+  --tf-color-surface-light: #ffffff;
+  --tf-color-surface-muted: #f7f8fa;
+  --tf-color-text-inverse: #ffffff;
+  --tf-color-overlay-bg: rgba(0, 0, 0, 0.70);
+  --tf-color-overlay-hover: rgba(0, 0, 0, 0.82);
+  --tf-color-border-subtle: rgba(255, 255, 255, 0.16);
+  --tf-color-border-dark-subtle: rgba(0, 0, 0, 0.08);
+  --tf-color-focus-ring: #111111;
+
+  /* ------------------------------------------------------------------------
+     2. Spacing Scale: 4, 8, 12, 16, 24, 32, 48, 64, 96px
+     ------------------------------------------------------------------------ */
+  --tf-space-1: 4px;
+  --tf-space-2: 8px;
+  --tf-space-3: 12px;
+  --tf-space-4: 16px;
+  --tf-space-5: 24px;
+  --tf-space-6: 32px;
+  --tf-space-7: 48px;
+  --tf-space-8: 64px;
+  --tf-space-9: 96px;
+
+  /* ------------------------------------------------------------------------
+     3. Typography Family
+     ------------------------------------------------------------------------ */
+  --tf-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ==========================================================================
+   SEMANTIC TYPOGRAPHY ROLES
+   ========================================================================== */
+
+/* HeroTitle: The main page headline */
+.tf-role-hero-title {
+  font-family: var(--tf-font-sans);
+  font-size: clamp(54px, 4.9vw, 88px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--tf-color-text-primary);
+  margin: 0;
+}
+
+/* SectionTitle: Major content-section headings */
+.tf-role-section-title {
+  font-family: var(--tf-font-sans);
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--tf-color-text-primary);
+  margin: 0;
+}
+
+/* CardTitle: Feature and card headings */
+.tf-role-card-title {
+  font-family: var(--tf-font-sans);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--tf-color-text-primary);
+  margin: 0;
+}
+
+/* BodyLead: Introductory copy where additional emphasis is appropriate */
+.tf-role-body-lead {
+  font-family: var(--tf-font-sans);
+  font-size: clamp(16px, 1.4vw, 24px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  color: var(--tf-color-text-secondary);
+  max-width: 660px;
+  margin: 0;
+}
+
+/* Body: Standard explanatory text */
+.tf-role-body {
+  font-family: var(--tf-font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--tf-color-text-secondary);
+  max-width: 640px;
+  margin: 0;
+}
+
+/* Caption: Secondary information and plain supporting text */
+.tf-role-caption {
+  font-family: var(--tf-font-sans);
+  font-size: clamp(13px, 0.92vw, 16.5px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--tf-color-text-primary);
+  text-decoration: none;
+}
+
+/* ButtonLabel: Action labels */
+.tf-role-button-label {
+  font-family: var(--tf-font-sans);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--tf-color-text-inverse);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   REUSABLE BUTTON STYLES & STATES
+   Primary (Solid-black pill) & Overlay (Translucent pill over media)
+   ========================================================================== */
+.tf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 9999px;
+  font-family: var(--tf-font-sans);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border: none;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Visible keyboard-focus treatment distinct from resting border */
+.tf-btn:focus-visible {
+  outline: 2px solid var(--tf-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Active / pressed state */
+.tf-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Disabled state */
+.tf-btn:disabled,
+.tf-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Loading state */
+.tf-btn.is-loading {
+  cursor: wait;
+  pointer-events: none;
+}
+
+/* Variant 1: Primary (Solid-black pill, White label, No heavy shadow, No border) */
+.tf-btn-primary {
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+}
+
+.tf-btn-primary:hover:not(:disabled) {
+  background-color: #222222;
+}
+
+.tf-btn-primary:focus-visible {
+  outline-color: #000000;
+}
+
+/* Variant 2: Overlay (Dark translucent pill, No permanent decorative border) */
+.tf-btn-overlay {
+  background-color: var(--tf-color-overlay-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  color: var(--tf-color-text-inverse);
+  box-shadow: none;
+}
+
+.tf-btn-overlay:hover:not(:disabled) {
+  background-color: var(--tf-color-overlay-hover);
+}
+
+.tf-btn-overlay:focus-visible {
+  outline-color: #ffffff;
+}
+
+/* Button Accessory Slot (Hero Ring image cutout) */
+.tf-btn-accessory-slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* Button Arrow */
+.tf-btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.tf-btn:hover:not(:disabled) .tf-btn-arrow {
+  transform: translateX(2px);
+}
