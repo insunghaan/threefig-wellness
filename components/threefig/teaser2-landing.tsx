@@ -23,6 +23,7 @@ import { reflectionDisclosure } from "@/lib/threefig/reflections";
 import { ReflectionCarousel } from "./reflection-carousel";
 import { PathwayCarousel } from "./pathway-carousel";
 import { PatternPreview } from "./pattern-preview";
+import { Teaser2Features } from "./teaser2-features";
 import { SkinDifferenceSection } from "./skin-difference-section";
 import { SkinBalanceSlider } from "./skin-balance-slider";
 import { EvidenceMobileCarousel } from "./evidence-carousel";
@@ -323,9 +324,10 @@ export default function Teaser2Landing() {
 
         {/* The 3FIG Difference: Three Signals. One Skin Balance. */}
         <SkinDifferenceSection />
+        <Teaser2Features />
 
         {/* Skin Balance Index: Dedicated Horizontal Slider (NOW / WHY / NEXT) */}
-        <SkinBalanceSlider />
+        <SkinBalanceSlider showProductPreviews />
 
         {/* Repositioned Sleep / Food / Stress as Inputs into Skin Rhythm */}
         <section id="inputs" className="skin-pathways" aria-labelledby="inputs-title">

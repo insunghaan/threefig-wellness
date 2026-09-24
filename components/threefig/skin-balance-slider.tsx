@@ -16,6 +16,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
+import { Teaser2BalancePreview } from './teaser2-balance-preview';
+
 interface BalanceSlide {
   id: string;
   step: string;
@@ -95,7 +97,7 @@ const balanceSlides: BalanceSlide[] = [
   },
 ];
 
-export function SkinBalanceSlider() {
+export function SkinBalanceSlider({ showProductPreviews = false }: { showProductPreviews?: boolean }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sidePadding, setSidePadding] = useState<number | null>(null);
@@ -381,16 +383,30 @@ export function SkinBalanceSlider() {
         }}
       >
         <DialogContent
-          className="skin-pathway-modal-content border-none p-0 overflow-hidden text-white"
+          className={`skin-pathway-modal-content border-none p-0 overflow-hidden text-white ${showProductPreviews ? "t2-balance-modal" : ""}`}
           style={{
             maxWidth: '560px',
+            ...(showProductPreviews ? { maxHeight: 'calc(100dvh - 32px)', overflowY: 'auto' as const } : {}),
             borderRadius: '28px',
-            backgroundColor: '#1b1220',
+            backgroundColor: showProductPreviews ? '#f6f2f6' : '#1b1220',
             boxShadow: '0 24px 64px rgba(15, 8, 22, 0.55)',
             border: '1px solid rgba(255, 255, 255, 0.15)',
           }}
         >
-          {activePopupItem && (
+          {activePopupItem && showProductPreviews && (
+            <div className="t2-balance-simple-body">
+              <DialogTitle className="sr-only">{activePopupItem.badge} product preview</DialogTitle>
+              <Teaser2BalancePreview id={activePopupItem.id} />
+              <DialogDescription className="t2-balance-simple-description">
+                {activePopupItem.id === 'now'
+                  ? 'See your Skin Balance Index alongside your latest skin check-in.'
+                  : activePopupItem.id === 'why'
+                    ? 'Look at sleep and the notes you log together. Notice patterns without assuming a cause.'
+                    : 'Choose one small routine to try, then check in with your skin the next day.'}
+              </DialogDescription>
+            </div>
+          )}
+          {activePopupItem && !showProductPreviews && (
             <div className="relative flex flex-col">
               {/* Modal banner image */}
               <div className="relative w-full h-[220px] overflow-hidden">

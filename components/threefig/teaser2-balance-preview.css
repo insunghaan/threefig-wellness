@@ -1,0 +1,26 @@
+.t2-balance-modal .t2-balance-preview{position:relative;z-index:2;align-self:center;width:min(320px,100%);margin:0 auto;padding:20px 22px 14px;border:1px solid #ffffffb8;border-radius:20px;background:linear-gradient(135deg,#f9f5f8,#eee5ee);backdrop-filter:blur(18px);box-shadow:0 15px 40px #19101a26;color:#392f3c;transform:none;pointer-events:none}
+.t2-balance-modal .t2-balance-preview-head{display:flex;justify-content:space-between;font-size:8px;letter-spacing:.09em;color:#625467;font-weight:600;gap:12px}
+.t2-balance-modal .t2-balance-mini-label{font-size:9px;letter-spacing:.09em;margin:20px 0 10px;color:#66566a}
+.t2-balance-modal .t2-balance-mini-score{display:flex;align-items:baseline;gap:8px}
+.t2-balance-modal .t2-balance-mini-score>strong{font-size:62px;font-family:var(--font-display),Georgia,serif;font-weight:400;line-height:1}
+.t2-balance-modal .t2-balance-mini-score>span{font-size:12px;color:#6d6171}
+.t2-balance-modal .t2-balance-mini-score>small{margin-left:auto;background:#e2e9df;color:#495b43;border-radius:20px;padding:5px 8px;font-size:9px}
+.t2-balance-modal .t2-balance-mini-track{height:3px;background:#dad0de;border-radius:3px;margin-top:17px}
+.t2-balance-modal .t2-balance-mini-track i{display:block;width:82%;height:100%;background:#897394;border-radius:inherit}
+.t2-balance-modal .t2-balance-mini-footer{border-top:1px solid #76608024;padding-top:12px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px}
+.t2-balance-modal .t2-balance-mini-footer strong{font-weight:500}
+.t2-balance-modal .t2-balance-mini-disclaimer{font-size:8px;color:#736679;margin-top:12px}
+.t2-balance-modal .t2-balance-mini-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;margin-top:15px;font-size:11px}
+.t2-balance-modal .t2-balance-mini-row strong{font-weight:500}
+.t2-balance-modal .t2-balance-mini-row i{height:4px;background:#a694b0;border-radius:4px;display:block;flex-basis:100%;max-width:76%}
+.t2-balance-modal .t2-balance-mini-row+.t2-balance-mini-row i{background:#c6a59a;max-width:58%}
+.t2-balance-modal .t2-balance-bedtime{display:flex;align-items:center;gap:14px;color:#6d567c;margin:18px 0}
+.t2-balance-modal .t2-balance-bedtime strong{font-size:38px;line-height:1;font-weight:400;letter-spacing:-.04em}
+.t2-balance-modal .t2-balance-bedtime small{font-size:12px;letter-spacing:0}
+.t2-balance-modal .t2-balance-mini-task{font-size:12px;color:#504255}
+@media(max-width:767px){.t2-balance-modal .t2-balance-preview{padding:20px;width:100%}}
+
+.t2-balance-modal .t2-balance-simple-body{padding:48px 28px 32px;display:flex;flex-direction:column;align-items:center;gap:24px}
+.t2-balance-modal .t2-balance-simple-description{max-width:340px;margin:0;text-align:center;color:#68616e;font-size:15px;line-height:1.7}
+.t2-balance-modal>button{color:#514157}
+@media(max-width:480px){.t2-balance-modal .t2-balance-simple-body{padding:44px 22px 28px}}
