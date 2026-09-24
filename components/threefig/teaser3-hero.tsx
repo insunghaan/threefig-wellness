@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getSimulatedWaitlistCount } from "@/lib/threefig/waitlist-counter";
 import { Teaser3WaitlistDialog } from "./teaser3-waitlist-dialog";
@@ -9,6 +9,15 @@ import { ThreeFigButton } from "./threefig-button";
 export function Teaser3Hero() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLightSurface, setIsLightSurface] = useState(false);
+  const [isHandoffHidden, setIsHandoffHidden] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
+
+  const desktopVideoRef = useRef<HTMLVideoElement | null>(null);
+  const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
+  const mobileMediaRef = useRef<HTMLDivElement | null>(null);
+
   const [signupCount, setSignupCount] = useState<number | null>(() => {
     try {
       const initial = getSimulatedWaitlistCount();
@@ -18,6 +27,20 @@ export function Teaser3Hero() {
     }
   });
 
+  // Track active viewport (mobile vs desktop) to prevent duplicate downloads
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 860px)");
+    setIsMobileView(mql.matches);
+
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsMobileView(e.matches);
+    };
+
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  // Fetch simulated waitlist count on intervals
   useEffect(() => {
     let isMounted = true;
 
@@ -44,12 +67,150 @@ export function Teaser3Hero() {
     };
   }, []);
 
+  // Video playback management: pause when offscreen or tab is hidden, resume when visible
+  useEffect(() => {
+    const activeVideo = isMobileView ? mobileVideoRef.current : desktopVideoRef.current;
+    if (!activeVideo) return;
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        activeVideo.pause();
+      } else {
+        activeVideo.play().catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            activeVideo.play().catch(() => {});
+          } else {
+            activeVideo.pause();
+          }
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(activeVideo);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      observer.disconnect();
+    };
+  }, [isMobileView]);
+
+  // Contrast observer: determines if mobile dock is over dark video or light background
+  useEffect(() => {
+    const target = mobileMediaRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          // If the hero video intersects the dock's bottom area, dock is over dark surface
+          setIsLightSurface(!entry.isIntersecting);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -76px 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [isMobileView]);
+
+  // Benefits CTA handoff observer: hides persistent dock when inline [data-benefits-cta] is visible
+  useEffect(() => {
+    let obs: IntersectionObserver | null = null;
+
+    const setupObserver = () => {
+      const target = document.querySelector("[data-benefits-cta]");
+      if (!target) return;
+
+      if (obs) obs.disconnect();
+
+      obs = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            setIsHandoffHidden(entry.isIntersecting);
+          }
+        },
+        {
+          root: null,
+          rootMargin: "0px 0px -76px 0px",
+          threshold: [0, 0.2],
+        }
+      );
+
+      obs.observe(target);
+    };
+
+    setupObserver();
+
+    // Check periodically or on DOM mutations in case the benefits section mounts later
+    const mutObs = new MutationObserver(() => {
+      setupObserver();
+    });
+    mutObs.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      if (obs) obs.disconnect();
+      mutObs.disconnect();
+    };
+  }, []);
+
+  // Conceal dock when virtual keyboard appears or input is focused
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        setIsKeyboardOpen(true);
+      }
+    };
+
+    const handleFocusOut = () => {
+      setIsKeyboardOpen(false);
+    };
+
+    document.addEventListener("focusin", handleFocusIn);
+    document.addEventListener("focusout", handleFocusOut);
+
+    const vv = window.visualViewport;
+    const handleResize = () => {
+      if (vv) {
+        setIsKeyboardOpen(vv.height < window.innerHeight * 0.75);
+      }
+    };
+
+    if (vv) {
+      vv.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      document.removeEventListener("focusin", handleFocusIn);
+      document.removeEventListener("focusout", handleFocusOut);
+      if (vv) {
+        vv.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
+
   const handleOpenWaitlist = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     setDialogOpen(true);
   };
 
   const closeMenu = () => setMenuOpen(false);
+
+  // Floating dock is hidden if waitlist dialog is open, handoff target is in view, or keyboard is open
+  const isDockHidden = dialogOpen || isHandoffHidden || isKeyboardOpen;
 
   return (
     <div className="teaser3-root">
@@ -91,14 +252,16 @@ export function Teaser3Hero() {
                 aria-label="Count me in"
                 ringAccessory={
                   <span className="teaser3-btn-ring-box">
-                    <img
-                      src="/images/threefig-ring-cutout-tight.webp"
-                      alt=""
-                      className="teaser3-btn-ring-img"
-                      width={64}
-                      height={45}
-                      aria-hidden="true"
-                    />
+                    <span className="teaser3-ring-float-wrapper">
+                      <img
+                        src="/images/threefig-ring-cutout-tight.webp"
+                        alt=""
+                        className="teaser3-btn-ring-img"
+                        width={64}
+                        height={45}
+                        aria-hidden="true"
+                      />
+                    </span>
                   </span>
                 }
               >
@@ -114,33 +277,37 @@ export function Teaser3Hero() {
           </div>
         </section>
 
-        {/* Right Column: 45% Hero Video */}
+        {/* Right Column: 45% Hero Video Panel */}
         <section className="teaser3-video-col" aria-label="3FIG Smart Ring Video Preview">
           <video
+            ref={desktopVideoRef}
             className="teaser3-video"
-            src="/video/newhero03.mp4"
             poster="/images/teaser3-desktop-poster.webp"
             autoPlay
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-hidden="true"
-          />
+            suppressHydrationWarning
+          >
+            {isMobileView === false && (
+              <source src="/video/teaser3-hero-desktop.mp4" type="video/mp4" />
+            )}
+          </video>
         </section>
       </div>
 
       {/* ====================================================================
-          MOBILE VIEWPORT (Stacked: White Copy Top + 4:5 Media Bottom)
+          MOBILE VIEWPORT: Viewport-aware Flex Column Structure
           ==================================================================== */}
       <div className="teaser3-mobile-wrap">
-        {/* Top White Section */}
-        <section className="teaser3-mobile-top">
-          {/* Mobile Header Row: Logo with Coral Dot + 3-line Menu Button */}
+        {/* Mobile Header: Logo near top, all-black logo */}
+        <div className="teaser3-mobile-header-container">
           <header className="teaser3-mobile-header-row">
             <Link href="/teaser3" className="teaser3-mobile-logo" aria-label="3FIG Home">
               <img
-                src="/images/threefig-logo-coral.png"
+                src="/images/threefig-logo.png"
                 alt="3fig"
                 className="teaser3-mobile-logo-img"
                 width={88}
@@ -206,42 +373,69 @@ export function Teaser3Hero() {
               </button>
             </nav>
           )}
+        </div>
 
-          {/* Mobile Title & Description */}
-          <div className="teaser3-mobile-content-group">
-            <h1 className="teaser3-title tf-role-hero-title">
-              <span className="teaser3-title-dark">The smart ring</span>
-              <span className="teaser3-title-brown">for skin wellness</span>
-            </h1>
+        {/* Flexible Space: Absorbs extra vertical space between header & copy on tall screens */}
+        <div className="teaser3-mobile-flex-spacer" aria-hidden="true" />
 
-            <p className="teaser3-desc tf-role-body-lead">
-              Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
-            </p>
-          </div>
-        </section>
+        {/* Mobile Headline & Description in Normal Flow */}
+        <div className="teaser3-mobile-content-group">
+          <h1 className="teaser3-title tf-role-hero-title">
+            <span className="teaser3-title-dark">The smart ring</span>
+            <span className="teaser3-title-brown">for skin wellness</span>
+          </h1>
 
-        {/* Bottom Media Section (Full-width, close to 4:5 ratio) */}
-        <section className="teaser3-mobile-media-col" aria-label="3FIG Video Preview">
+          <p className="teaser3-desc tf-role-body-lead">
+            Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+          </p>
+        </div>
+
+        {/* Bottom Video Section: 4:5 aspect ratio, meets viewport bottom on tall screens */}
+        <section
+          ref={mobileMediaRef}
+          className="teaser3-mobile-media-col"
+          data-theme="dark"
+          aria-label="3FIG Video Preview"
+        >
           <video
+            ref={mobileVideoRef}
             className="teaser3-video"
-            src="/video/newhero03.mp4"
+            poster="/images/teaser3-mobile-poster.webp"
             autoPlay
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-hidden="true"
-          />
+            suppressHydrationWarning
+          >
+            {isMobileView === true && (
+              <source src="/video/teaser3-hero-mobile.mp4" type="video/mp4" />
+            )}
+          </video>
+        </section>
+      </div>
 
-          {/* Horizontally Overlaid Mobile CTA Row (Anchored to media bottom) */}
-          <div className="teaser3-mobile-cta-row">
-            <ThreeFigButton
-              variant="overlay"
-              className="teaser3-mobile-btn"
-              onClick={handleOpenWaitlist}
-              aria-label="Count me in"
-              ringAccessory={
-                <span className="teaser3-mobile-ring-box">
+      {/* ====================================================================
+          PERSISTENT MOBILE CTA DOCK: Fixed to Viewport Bottom
+          ==================================================================== */}
+      <aside
+        className={`teaser3-mobile-dock${
+          isLightSurface ? " is-light-surface" : " is-dark-surface"
+        }${isDockHidden ? " is-hidden" : ""}`}
+        aria-hidden={isDockHidden}
+        aria-label="Waitlist registration"
+      >
+        <div className="teaser3-mobile-dock-inner">
+          <ThreeFigButton
+            variant="overlay"
+            className="teaser3-mobile-btn"
+            onClick={handleOpenWaitlist}
+            tabIndex={isDockHidden ? -1 : 0}
+            aria-label="Count me in"
+            ringAccessory={
+              <span className="teaser3-mobile-ring-box">
+                <span className="teaser3-ring-float-wrapper">
                   <img
                     src="/images/threefig-ring-cutout-tight.webp"
                     alt=""
@@ -251,19 +445,19 @@ export function Teaser3Hero() {
                     aria-hidden="true"
                   />
                 </span>
-              }
-            >
-              Count me in
-            </ThreeFigButton>
-
-            {signupCount !== null && (
-              <span className="teaser3-mobile-count-text">
-                {signupCount.toLocaleString()} on the waitlist.
               </span>
-            )}
-          </div>
-        </section>
-      </div>
+            }
+          >
+            Count me in
+          </ThreeFigButton>
+
+          {signupCount !== null && (
+            <span className="teaser3-mobile-count-text">
+              {signupCount.toLocaleString()} on the waitlist.
+            </span>
+          )}
+        </div>
+      </aside>
 
       {/* Interactive Waitlist Dialog */}
       <Teaser3WaitlistDialog

@@ -50,3 +50,7 @@ next-env.d.ts
 # Teaser2 local export package
 teaser2-package/
 *.zip
+
+# Scratch directory
+scratch/
+

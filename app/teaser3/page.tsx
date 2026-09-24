@@ -17,12 +17,19 @@ export default function Teaser3Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/threefig-logo-coral.png"
+        href="/images/threefig-logo.png"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/teaser3-mobile-poster.webp"
+        type="image/webp"
       />
       <link
         rel="preload"
         as="image"
         href="/images/threefig-ring-cutout-tight.webp"
+        type="image/webp"
       />
       <Teaser3Hero />
     </>

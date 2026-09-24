@@ -180,6 +180,30 @@
   transform: translateY(-0.5px);
 }
 
+/* Dedicated Inner Wrapper for Floating Ring Animation */
+.teaser3-ring-float-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  animation: teaser3RingFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes teaser3RingFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teaser3-ring-float-wrapper {
+    animation: none !important;
+  }
+}
+
 /* Desktop Button Label */
 .teaser3-desktop-btn .tf-role-button-label {
   font-family: var(--tf-font-sans);
@@ -236,31 +260,34 @@
 }
 
 /* ==========================================================================
-   4. MOBILE VIEWPORT: NATURAL SAFE SPACING (Status-Bar Spacer Removed)
+   4. MOBILE VIEWPORT: NATURAL SAFE SPACING & VIEWPORT MIN-HEIGHT
    ========================================================================== */
 .teaser3-mobile-wrap {
   display: none;
   width: 100%;
   max-width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
   flex-direction: column;
   background-color: var(--tf-color-surface-light);
   overflow-x: hidden;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  position: relative;
 }
 
-/* Top White Header and Copy Section: Ordinary 16-20px top padding (safe-area aware) */
-.teaser3-mobile-top {
+/* Mobile Header Container: Logo near top, safe-area aware */
+.teaser3-mobile-header-container {
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
   padding-top: max(18px, env(safe-area-inset-top, 18px));
   padding-left: clamp(20px, 5.5vw, 28px);
   padding-right: clamp(20px, 5.5vw, 28px);
-  padding-bottom: 24px;
-  background: var(--tf-color-surface-light);
+  flex-shrink: 0;
+  z-index: 20;
   position: relative;
-  z-index: 10;
-  overflow-x: hidden;
 }
 
 /* Header Interactive Row: Vertically Centered Logo + Menu Control */
@@ -280,7 +307,7 @@
   flex-shrink: 0;
 }
 
-/* Logo: Approximately 76-84px wide */
+/* Logo: All-black logo, ~76-84px wide */
 .teaser3-mobile-logo-img {
   display: block;
   width: clamp(76px, 20vw, 84px);
@@ -371,31 +398,42 @@
   }
 }
 
-/* Header-to-Headline Spacing: Distinct layout value (moves upward naturally) */
-.teaser3-mobile-content-group {
-  margin-top: clamp(28px, 8vw, 36px);
-  box-sizing: border-box;
+/* Flexible Space: Absorbs additional vertical space between header and copy on tall viewports */
+.teaser3-mobile-flex-spacer {
+  flex: 1 1 0px;
+  min-height: clamp(20px, 5vw, 32px);
   width: 100%;
 }
 
-/* Mobile Headline: Scales cleanly without horizontal overflow */
-.teaser3-mobile-top .teaser3-title {
+/* Mobile Content Group: Headline & description in normal flow, consistent copy-to-video gap */
+.teaser3-mobile-content-group {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: clamp(20px, 5.5vw, 28px);
+  padding-right: clamp(20px, 5.5vw, 28px);
+  margin: 0;
+  margin-bottom: clamp(16px, 4.2vw, 22px); /* Consistent copy-to-video gap */
+}
+
+/* Mobile Headline */
+.teaser3-mobile-content-group .teaser3-title {
   font-size: clamp(31px, 8.8vw, 40px);
   line-height: 1.05;
   letter-spacing: -0.03em;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.teaser3-mobile-top .teaser3-title-dark,
-.teaser3-mobile-top .teaser3-title-brown {
+.teaser3-mobile-content-group .teaser3-title-dark,
+.teaser3-mobile-content-group .teaser3-title-brown {
   white-space: normal;
   display: block;
 }
 
-.teaser3-mobile-top .teaser3-desc {
+.teaser3-mobile-content-group .teaser3-desc {
   font-size: 15px;
   line-height: 1.45;
   color: var(--tf-color-text-secondary);
@@ -404,14 +442,17 @@
   width: 100%;
 }
 
-/* Bottom Media Section (Full-width, 4:5 proportion, media begins naturally upward) */
+/* Mobile Video Container: 4:5 aspect ratio, sits at bottom of hero flex column */
 .teaser3-mobile-media-col {
   position: relative;
   width: 100%;
   max-width: 100vw;
-  height: clamp(460px, 125vw, 610px);
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
   overflow: hidden;
   background-color: #f0ebe4;
+  margin: 0;
+  padding: 0;
 }
 
 .teaser3-mobile-media-col .teaser3-video {
@@ -423,24 +464,56 @@
 }
 
 /* ==========================================================================
-   5. MOBILE: EXACT CTA PROPORTIONS & PLAIN TEXT WAITLIST COUNT
+   5. PERSISTENT MOBILE CTA DOCK: FIXED TO VIEWPORT BOTTOM
    ========================================================================== */
-.teaser3-mobile-cta-row {
-  position: absolute;
-  bottom: clamp(28px, 7vw, 38px);
-  left: clamp(18px, 5vw, 24px);
-  right: clamp(18px, 5vw, 24px);
+.teaser3-mobile-dock {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40; /* Above page content, below dialogs */
+  padding-left: clamp(16px, 5vw, 24px);
+  padding-right: clamp(16px, 5vw, 24px);
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease;
+}
+
+@media (max-width: 860px) {
+  .teaser3-mobile-dock {
+    display: block;
+  }
+}
+
+.teaser3-mobile-dock.is-hidden {
+  transform: translateY(calc(100% + 40px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.teaser3-mobile-dock.is-hidden * {
+  pointer-events: none !important;
+}
+
+.teaser3-mobile-dock.is-hidden .teaser3-ring-float-wrapper {
+  animation-play-state: paused;
+}
+
+.teaser3-mobile-dock-inner {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
-  z-index: 10;
-  box-sizing: border-box;
-  flex-wrap: nowrap;
+  pointer-events: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 @media (max-width: 345px) {
-  .teaser3-mobile-cta-row {
+  .teaser3-mobile-dock-inner {
     flex-wrap: wrap;
     row-gap: 8px;
   }
@@ -517,13 +590,12 @@
   color: #ffffff !important;
 }
 
-/* Mobile Supporting Waitlist Count: Plain Selectable Text, No Underline */
+/* Mobile Supporting Waitlist Count: Plain Selectable Text, No Underline, Non-clickable */
 .teaser3-mobile-count-text {
   font-family: var(--tf-font-sans);
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1;
-  color: #ffffff;
   white-space: nowrap;
   user-select: text;
   -webkit-user-select: text;
@@ -533,6 +605,18 @@
   margin: 0;
   display: inline-flex;
   align-items: center;
+  transition: color 200ms ease;
+}
+
+/* Surface-based contrast */
+.teaser3-mobile-dock.is-dark-surface .teaser3-mobile-count-text {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.teaser3-mobile-dock.is-light-surface .teaser3-mobile-count-text {
+  color: #24140e;
+  text-shadow: none;
 }
 
 /* ==========================================================================
@@ -540,7 +624,7 @@
    ========================================================================== */
 @media (max-width: 860px) {
   .teaser3-root {
-    overflow-y: auto;
+    overflow-y: visible;
     overflow-x: hidden;
     height: auto;
     min-height: 100vh;
