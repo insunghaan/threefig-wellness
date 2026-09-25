@@ -522,7 +522,7 @@
   display: none;
 }
 
-.teaser2-mobile-slide {
+.teaser2-value-mobile-slide {
   flex: 0 0 85vw;
   max-width: 360px;
   scroll-snap-align: center;
@@ -531,21 +531,21 @@
   gap: 16px;
 }
 
-.teaser2-mobile-slide-header {
+.teaser2-value-mobile-slide-header {
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 0 4px;
 }
 
-.teaser2-mobile-slide-num {
+.teaser2-value-mobile-slide-num {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #8F7265;
 }
 
-.teaser2-mobile-slide-title {
+.teaser2-value-mobile-slide-title {
   font-family: var(--font-serif);
   font-size: 1.55rem;
   font-weight: 300;
@@ -554,7 +554,7 @@
   margin: 0;
 }
 
-.teaser2-mobile-slide-subtitle {
+.teaser2-value-mobile-slide-subtitle {
   font-size: 0.98rem;
   font-weight: 500;
   line-height: 1.35;
@@ -562,14 +562,14 @@
   margin: 2px 0 0;
 }
 
-.teaser2-mobile-slide-desc {
+.teaser2-value-mobile-slide-desc {
   font-size: 0.92rem;
   line-height: 1.5;
   color: rgba(34, 14, 8, 0.7);
   margin: 2px 0 0;
 }
 
-.teaser2-mobile-slide-ui {
+.teaser2-value-mobile-slide-ui {
   width: 100%;
 }
 
@@ -598,7 +598,7 @@
 }
 
 /* ------------------------------------------------------------
-   SQUARE STAGE BOX FRAMING SURFACE
+   SQUARE STAGE BOX FRAMING SURFACE (LIGHT EDITORIAL STAGES)
    ------------------------------------------------------------ */
 .teaser2-stage-box {
   width: 100%;
@@ -613,31 +613,32 @@
   transition: transform 0.35s ease, box-shadow 0.35s ease;
   position: relative;
   overflow: hidden;
+  background: #F4EFEB;
 }
 
 .teaser2-stage-box:hover {
   transform: translateY(-2px);
 }
 
-/* 1. Skin Balance Stage: Muted Blush / Warm Rose */
+/* 1. Skin Balance Stage: Light Pale Blush / Warm Ivory Editorial Stage */
 .teaser2-stage-balance {
-  background: radial-gradient(circle at 50% 38%, #9E7068 0%, #885B54 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 28px 64px -14px rgba(110, 50, 40, 0.38);
+  background: radial-gradient(circle at 50% 35%, #FAF4F0 0%, #EFE6E0 100%);
+  border: 1px solid rgba(190, 150, 140, 0.24);
+  box-shadow: 0 20px 48px -12px rgba(110, 50, 40, 0.08);
 }
 
-/* 2. 7-Day Patterns Stage: Soft Mauve / Warm Neutral */
+/* 2. 7-Day Patterns Stage: Light Muted Taupe / Soft Neutral Stage */
 .teaser2-stage-patterns {
-  background: radial-gradient(circle at 50% 38%, #8C737E 0%, #755C66 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 28px 64px -14px rgba(80, 50, 65, 0.38);
+  background: radial-gradient(circle at 50% 35%, #F6F2EE 0%, #EAE4DE 100%);
+  border: 1px solid rgba(160, 140, 150, 0.24);
+  box-shadow: 0 20px 48px -12px rgba(80, 50, 65, 0.08);
 }
 
-/* 3. Tonight's Move Stage: Muted Clay / Dusty Brown / Restrained Warm Tone */
+/* 3. Tonight's Move Stage: Light Warm Ivory / Soft Beige-Terracotta Stage */
 .teaser2-stage-move {
-  background: radial-gradient(circle at 50% 38%, #84655B 0%, #6E4F46 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 28px 64px -14px rgba(80, 50, 40, 0.38);
+  background: radial-gradient(circle at 50% 35%, #F8F3ED 0%, #ECE4D9 100%);
+  border: 1px solid rgba(170, 140, 120, 0.24);
+  box-shadow: 0 20px 48px -12px rgba(80, 50, 30, 0.08);
 }
 
 @media (max-width: 767px) {
@@ -677,6 +678,36 @@
   opacity: 1;
   transform: translateY(0);
   transition: transform 0.4s ease;
+}
+
+/* 1. Skin Balance: Soft Blush / Rose */
+.teaser2-glass-balance {
+  background: linear-gradient(145deg, rgba(188, 126, 118, 0.94) 0%, rgba(158, 100, 92, 0.96) 100%);
+  box-shadow: 
+    0 24px 52px -12px rgba(120, 50, 42, 0.32),
+    inset 0 2px 3px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.25),
+    inset 0 0 24px rgba(255, 255, 255, 0.12);
+}
+
+/* 2. 7-Day Patterns: Muted Mauve / Dusty Plum */
+.teaser2-glass-patterns {
+  background: linear-gradient(145deg, rgba(144, 120, 134, 0.94) 0%, rgba(118, 94, 108, 0.96) 100%);
+  box-shadow: 
+    0 24px 52px -12px rgba(85, 45, 70, 0.32),
+    inset 0 2px 3px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.25),
+    inset 0 0 24px rgba(255, 255, 255, 0.12);
+}
+
+/* 3. Tonight's Move: Warm Clay / Muted Terracotta / Soft Brown */
+.teaser2-glass-move {
+  background: linear-gradient(145deg, rgba(154, 118, 104, 0.94) 0%, rgba(128, 92, 80, 0.96) 100%);
+  box-shadow: 
+    0 24px 52px -12px rgba(95, 55, 40, 0.32),
+    inset 0 2px 3px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.25),
+    inset 0 0 24px rgba(255, 255, 255, 0.12);
 }
 
 /* Header & Pills */
@@ -1266,13 +1297,26 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* 01. WEAR OVERLAY */
-.teaser2-wear-overlay {
-  width: 330px;
-  padding: 24px 26px;
+/* ------------------------------------------------------------
+   STORY RAIL OVERLAYS (SHARED STACK ARCHITECTURE)
+   All 3 slides share identical Primary + Secondary balance:
+   - Slide 01: Overnight Signals + Daily Rhythm
+   - Slide 02: Today's Skin + Daily Context
+   - Slide 03: 7-Day Patterns + Tonight's Move
+   ------------------------------------------------------------ */
+.teaser2-rail-stack {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  width: 340px;
+}
+
+/* 01. WEAR STACK (OVERNIGHT SIGNALS + DAILY RHYTHM) */
+.teaser2-wear-primary {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .teaser2-overlay-metrics-list {
@@ -1318,10 +1362,10 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 14px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.5s ease, transform 0.5s ease;
@@ -1344,7 +1388,7 @@
 }
 
 .teaser2-overlay-sleep-val {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #FFFFFF;
 }
@@ -1354,13 +1398,61 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* 02. CHECK-IN OVERLAY */
-.teaser2-checkin-overlay {
-  width: 330px;
-  padding: 24px 26px;
+/* Secondary 01: Daily Rhythm */
+.teaser2-wear-secondary {
+  padding: 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.is-revealed .teaser2-wear-secondary {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.teaser2-wear-rhythm-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.teaser2-wear-rhythm-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.teaser2-wear-rhythm-label {
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.teaser2-wear-rhythm-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.teaser2-wear-rhythm-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* 02. CHECK-IN STACK (TODAY'S SKIN + DAILY CONTEXT) */
+.teaser2-checkin-primary {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .teaser2-overlay-prompt-block {
@@ -1414,37 +1506,6 @@
   stroke: #220E08;
 }
 
-.teaser2-overlay-note-block {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 8px 12px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.is-revealed .teaser2-overlay-note-block {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.teaser2-overlay-note-label {
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.teaser2-overlay-note-pill {
-  font-size: 11px;
-  font-weight: 600;
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.18);
-  padding: 2px 8px;
-  border-radius: 9999px;
-}
-
 .teaser2-overlay-footnote {
   font-size: 11.5px;
   color: rgba(255, 255, 255, 0.65);
@@ -1457,12 +1518,45 @@
   opacity: 1;
 }
 
-/* 03. CONNECT STACK (DUAL PANELS) */
-.teaser2-rail-connect-stack {
+/* Secondary 02: Daily Context */
+.teaser2-checkin-secondary {
+  padding: 14px 18px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: 340px;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.is-revealed .teaser2-checkin-secondary {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.teaser2-checkin-context-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.teaser2-checkin-context-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.teaser2-checkin-context-tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #220E08;
+  background: #FFFFFF;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .teaser2-connect-primary {
@@ -1630,12 +1724,19 @@
 
 /* ============================================================
    MOBILE INTERACTION (< 900px)
+   - Refined story card carousel with next-slide peek
+   - All slides render at full 100% opacity
+   - Natural content height (Slide 01, 02, and 03 all balanced with secondary cards)
+   - Hardware-accelerated sliding on swipe & arrow clicks
    ============================================================ */
 .teaser2-story-mobile-wrap {
   display: block;
   width: 100%;
-  padding: 0 20px;
+  max-width: 100vw;
+  margin: 32px 0 0;
+  padding: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 @media (min-width: 900px) {
@@ -1644,13 +1745,61 @@
   }
 }
 
-.teaser2-mobile-slide {
-  position: relative;
-  border-radius: 26px;
+.teaser2-story-mobile-viewport {
+  width: 100%;
   overflow: hidden;
-  min-height: 580px;
-  box-shadow: 0 16px 48px rgba(34, 14, 8, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.teaser2-story-mobile-track {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1);
+  will-change: transform;
+  box-sizing: border-box;
+  --pad: 20px;
+  --gap: 16px;
+  --slide-w: min(calc(100vw - 64px), 380px);
+  --offset-1: calc(var(--slide-w) + var(--gap) - ((100vw - var(--slide-w)) / 2 - var(--pad)));
+  --offset-2: calc(2 * (var(--slide-w) + var(--gap)) - (100vw - 2 * var(--pad) - var(--slide-w)));
+  padding: 0 var(--pad);
+  gap: var(--gap);
+}
+
+@media (max-width: 360px) {
+  .teaser2-story-mobile-track {
+    --pad: 14px;
+    --gap: 12px;
+    --slide-w: calc(100vw - 44px);
+  }
+}
+
+.teaser2-story-mobile-track[data-active-slide="0"] {
+  transform: translateX(0);
+}
+
+.teaser2-story-mobile-track[data-active-slide="1"] {
+  transform: translateX(calc(-1 * var(--offset-1)));
+}
+
+.teaser2-story-mobile-track[data-active-slide="2"] {
+  transform: translateX(calc(-1 * var(--offset-2)));
+}
+
+.teaser2-how-mobile-slide {
+  flex: 0 0 var(--slide-w);
+  width: var(--slide-w);
+  min-width: 0;
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #181210;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 18px rgba(34, 14, 8, 0.05);
+  opacity: 1 !important; /* Full 100% opacity always */
 }
 
 .teaser2-mobile-media-wrap {
@@ -1658,6 +1807,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
 .teaser2-mobile-scrim {
@@ -1665,9 +1815,9 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(16, 10, 8, 0.78) 0%,
-    rgba(18, 12, 10, 0.5) 45%,
-    rgba(22, 14, 12, 0.88) 100%
+    rgba(16, 10, 8, 0.82) 0%,
+    rgba(18, 12, 10, 0.6) 42%,
+    rgba(22, 14, 12, 0.92) 100%
   );
   pointer-events: none;
 }
@@ -1675,57 +1825,167 @@
 .teaser2-mobile-content {
   position: relative;
   z-index: 2;
-  min-height: 580px;
-  padding: 30px 22px;
+  padding: 24px 18px 22px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 16px;
   box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 360px) {
+  .teaser2-mobile-content {
+    padding: 20px 14px 18px;
+    gap: 12px;
+  }
 }
 
 .teaser2-mobile-editorial {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+}
+
+.teaser2-mobile-editorial .teaser2-slide-theme {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-bottom: 2px;
+}
+
+.teaser2-mobile-editorial .teaser2-slide-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 6.5vw, 30px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #FAF8F5;
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+.teaser2-mobile-editorial .teaser2-slide-body {
+  font-size: 13px;
+  line-height: 1.48;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0;
 }
 
 .teaser2-mobile-ui-slot {
-  margin: 18px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.teaser2-mobile-ui-slot .teaser2-wear-overlay,
-.teaser2-mobile-ui-slot .teaser2-checkin-overlay,
-.teaser2-mobile-ui-slot .teaser2-rail-connect-stack {
   width: 100%;
-  max-width: 320px;
-}
-
-.teaser2-mobile-action-bar {
   display: flex;
   justify-content: center;
 }
 
-.teaser2-mobile-detail-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9999px;
-  padding: 8px 18px;
-  color: #FFFFFF;
-  font-size: 12.5px;
-  font-weight: 600;
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.2s ease;
-}
+/* Mobile-adapted UI Overlays */
+@media (max-width: 899px) {
+  .teaser2-mobile-ui-slot .teaser2-rail-stack {
+    width: 100%;
+    max-width: 100%;
+    gap: 8px;
+  }
 
-.teaser2-mobile-detail-trigger:active {
-  transform: scale(0.97);
-  background: rgba(255, 255, 255, 0.25);
+  .teaser2-mobile-ui-slot .teaser2-rail-glass-overlay {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      inset 0 1px 1px rgba(255, 255, 255, 0.35),
+      0 4px 16px rgba(0, 0, 0, 0.14);
+  }
+
+  /* Slide 1: Wear Overlay */
+  .teaser2-mobile-ui-slot .teaser2-wear-primary {
+    padding: 13px 15px 11px;
+    gap: 9px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-header {
+    margin-bottom: 4px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-metrics-list {
+    gap: 6px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-metric-row {
+    padding-bottom: 5px;
+    font-size: 12px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-summary-card {
+    padding: 7px 11px;
+    border-radius: 10px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-wear-secondary {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-wear-rhythm-strip {
+    padding: 6px 10px;
+  }
+
+  /* Slide 2: Check-in Overlay */
+  .teaser2-mobile-ui-slot .teaser2-checkin-primary {
+    padding: 13px 15px 11px;
+    gap: 9px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-prompt-block {
+    gap: 6px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-chips-grid {
+    gap: 6px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-chip {
+    padding: 6px 10px;
+    font-size: 11.5px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-checkin-secondary {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-checkin-context-row {
+    padding: 6px 10px;
+  }
+
+  /* Slide 3: Connect Overlay */
+  .teaser2-mobile-ui-slot .teaser2-connect-primary {
+    padding: 13px 15px 11px;
+    gap: 9px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-legend-row {
+    gap: 12px;
+    font-size: 10px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-connect-secondary {
+    padding: 10px 14px;
+    gap: 4px;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-move-title {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .teaser2-mobile-ui-slot .teaser2-overlay-move-reason {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  /* Navigation below */
+  .teaser2-rail-controls-bar {
+    margin-top: 20px;
+  }
 }
 
 /* Reduced motion accessibility */

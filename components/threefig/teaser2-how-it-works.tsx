@@ -7,15 +7,7 @@ import {
   ArrowRight,
   Check,
   Moon,
-  Plus,
-  X,
 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 
 /* ------------------------------------------------------------
    UI OVERLAY 01: OVERNIGHT SIGNALS (WEAR)
@@ -28,36 +20,69 @@ function WearOverlayUI({ active }: { active: boolean }) {
   ];
 
   return (
-    <div className={`teaser2-rail-glass-overlay teaser2-wear-overlay ${active ? "is-revealed" : ""}`}>
-      <div className="teaser2-overlay-header">
-        <span className="teaser2-overlay-title">OVERNIGHT SIGNALS</span>
-        <span className="teaser2-overlay-live-dot" aria-hidden="true" />
-      </div>
-
-      <div className="teaser2-overlay-metrics-list">
-        {metricRows.map((row, idx) => (
-          <div
-            key={row.name}
-            className="teaser2-overlay-metric-row"
-            style={{
-              transitionDelay: active ? `${0.22 + idx * 0.08}s` : "0s",
-            }}
-          >
-            <span className="teaser2-overlay-metric-name">{row.name}</span>
-            <span className="teaser2-overlay-metric-status">{row.status}</span>
-          </div>
-        ))}
-      </div>
-
-      <div
-        className="teaser2-overlay-summary-card"
-        style={{ transitionDelay: active ? "0.52s" : "0s" }}
-      >
-        <div className="teaser2-overlay-sleep-time">
-          <span className="teaser2-overlay-sleep-label">Overnight sleep</span>
-          <strong className="teaser2-overlay-sleep-val">7h 42m asleep</strong>
+    <div className={`teaser2-rail-stack teaser2-wear-stack ${active ? "is-revealed" : ""}`}>
+      {/* Primary: Overnight Signals */}
+      <div className="teaser2-rail-glass-overlay teaser2-wear-primary">
+        <div className="teaser2-overlay-header">
+          <span className="teaser2-overlay-title">OVERNIGHT SIGNALS</span>
+          <span className="teaser2-overlay-live-dot" aria-hidden="true" />
         </div>
-        <span className="teaser2-overlay-microcopy">Building your baseline.</span>
+
+        <div className="teaser2-overlay-metrics-list">
+          {metricRows.map((row, idx) => (
+            <div
+              key={row.name}
+              className="teaser2-overlay-metric-row"
+              style={{
+                transitionDelay: active ? `${0.22 + idx * 0.08}s` : "0s",
+              }}
+            >
+              <span className="teaser2-overlay-metric-name">{row.name}</span>
+              <span className="teaser2-overlay-metric-status">{row.status}</span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="teaser2-overlay-summary-card"
+          style={{ transitionDelay: active ? "0.48s" : "0s" }}
+        >
+          <div className="teaser2-overlay-sleep-time">
+            <span className="teaser2-overlay-sleep-label">Overnight sleep</span>
+            <strong className="teaser2-overlay-sleep-val">7h 42m asleep</strong>
+          </div>
+          <span className="teaser2-overlay-microcopy">Building your baseline.</span>
+        </div>
+      </div>
+
+      {/* Secondary: Daily Rhythm */}
+      <div
+        className="teaser2-rail-glass-overlay teaser2-wear-secondary"
+        style={{ transitionDelay: active ? "0.42s" : "0s" }}
+      >
+        <div className="teaser2-overlay-header">
+          <span className="teaser2-overlay-title">DAILY RHYTHM</span>
+          <span className="teaser2-overlay-badge">24-hour</span>
+        </div>
+
+        <div className="teaser2-wear-rhythm-strip">
+          <div className="teaser2-wear-rhythm-item">
+            <span className="teaser2-wear-rhythm-label">Sleep</span>
+            <strong className="teaser2-wear-rhythm-val">7h 42m</strong>
+          </div>
+          <div className="teaser2-wear-rhythm-divider" aria-hidden="true" />
+          <div className="teaser2-wear-rhythm-item">
+            <span className="teaser2-wear-rhythm-label">Recovery</span>
+            <strong className="teaser2-wear-rhythm-val">Steady</strong>
+          </div>
+          <div className="teaser2-wear-rhythm-divider" aria-hidden="true" />
+          <div className="teaser2-wear-rhythm-item">
+            <span className="teaser2-wear-rhythm-label">Movement</span>
+            <strong className="teaser2-wear-rhythm-val">On track</strong>
+          </div>
+        </div>
+
+        <p className="teaser2-overlay-footnote">Signals build context across your day.</p>
       </div>
     </div>
   );
@@ -70,47 +95,60 @@ function CheckInOverlayUI({ active }: { active: boolean }) {
   const options = ["Calm", "Dry", "Sensitive", "Irritated"];
 
   return (
-    <div className={`teaser2-rail-glass-overlay teaser2-checkin-overlay ${active ? "is-revealed" : ""}`}>
-      <div className="teaser2-overlay-header">
-        <span className="teaser2-overlay-title">TODAY’S SKIN</span>
-        <span className="teaser2-overlay-badge">Logged by you</span>
-      </div>
-
-      <div className="teaser2-overlay-prompt-block">
-        <p className="teaser2-overlay-prompt-label">How does it feel?</p>
-        <div className="teaser2-overlay-chips-grid">
-          {options.map((opt, idx) => {
-            const isSelected = opt === "Calm";
-            return (
-              <div
-                key={opt}
-                className={`teaser2-overlay-chip ${isSelected ? "is-selected" : ""}`}
-                style={{
-                  transitionDelay: active ? `${0.25 + idx * 0.06}s` : "0s",
-                }}
-              >
-                {isSelected && <Check size={12} className="teaser2-overlay-chip-icon" aria-hidden="true" />}
-                <span>{opt}</span>
-              </div>
-            );
-          })}
+    <div className={`teaser2-rail-stack teaser2-checkin-stack ${active ? "is-revealed" : ""}`}>
+      {/* Primary: Today's Skin */}
+      <div className="teaser2-rail-glass-overlay teaser2-checkin-primary">
+        <div className="teaser2-overlay-header">
+          <span className="teaser2-overlay-title">TODAY’S SKIN</span>
+          <span className="teaser2-overlay-badge">Logged by you</span>
         </div>
+
+        <div className="teaser2-overlay-prompt-block">
+          <p className="teaser2-overlay-prompt-label">How does it feel?</p>
+          <div className="teaser2-overlay-chips-grid">
+            {options.map((opt, idx) => {
+              const isSelected = opt === "Calm";
+              return (
+                <div
+                  key={opt}
+                  className={`teaser2-overlay-chip ${isSelected ? "is-selected" : ""}`}
+                  style={{
+                    transitionDelay: active ? `${0.22 + idx * 0.06}s` : "0s",
+                  }}
+                >
+                  {isSelected && <Check size={12} className="teaser2-overlay-chip-icon" aria-hidden="true" />}
+                  <span>{opt}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <p
+          className="teaser2-overlay-footnote"
+          style={{ transitionDelay: active ? "0.48s" : "0s" }}
+        >
+          Takes a few seconds.
+        </p>
       </div>
 
+      {/* Secondary: Daily Context */}
       <div
-        className="teaser2-overlay-note-block"
-        style={{ transitionDelay: active ? "0.52s" : "0s" }}
+        className="teaser2-rail-glass-overlay teaser2-checkin-secondary"
+        style={{ transitionDelay: active ? "0.42s" : "0s" }}
       >
-        <span className="teaser2-overlay-note-label">Anything worth noting?</span>
-        <span className="teaser2-overlay-note-pill">Late meal</span>
-      </div>
+        <div className="teaser2-overlay-header">
+          <span className="teaser2-overlay-title">DAILY CONTEXT</span>
+          <span className="teaser2-overlay-badge">Optional</span>
+        </div>
 
-      <p
-        className="teaser2-overlay-footnote"
-        style={{ transitionDelay: active ? "0.62s" : "0s" }}
-      >
-        Takes a few seconds.
-      </p>
+        <div className="teaser2-checkin-context-row">
+          <span className="teaser2-checkin-context-label">Anything worth noting?</span>
+          <span className="teaser2-checkin-context-tag">Late meal</span>
+        </div>
+
+        <p className="teaser2-overlay-footnote">Add context only when it matters.</p>
+      </div>
     </div>
   );
 }
@@ -146,7 +184,7 @@ function ConnectOverlayUI({ active }: { active: boolean }) {
   const skinPathD = "M 20,78 L 56,68 L 92,70 L 128,58 L 164,54 L 200,42 L 236,48";
 
   return (
-    <div className={`teaser2-rail-connect-stack ${active ? "is-revealed" : ""}`}>
+    <div className={`teaser2-rail-stack teaser2-connect-stack ${active ? "is-revealed" : ""}`}>
       {/* Primary: 7-Day Patterns */}
       <div className="teaser2-rail-glass-overlay teaser2-connect-primary">
         <div className="teaser2-overlay-header">
@@ -339,7 +377,6 @@ const STORY_SLIDES: StorySlide[] = [
    ------------------------------------------------------------ */
 export function Teaser2HowItWorks() {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [mobileDetailSlide, setMobileDetailSlide] = useState<StorySlide | null>(null);
   const touchStartX = useRef<number | null>(null);
 
   const prevSlide = () => {
@@ -465,48 +502,58 @@ export function Teaser2HowItWorks() {
       </div>
 
       {/* ============================================================
-          MOBILE: ONE LARGE STORY CARD WITH PEAKING NEXT SLIDE
+          MOBILE: ONE POLISHED STORY CARD AT A TIME (FULL USABLE WIDTH)
+          - Exactly one slide visible (zero peek left/right)
+          - Natural sizing to content (no wasteful empty height)
+          - Hardware-accelerated sliding on swipe & arrow clicks
           ============================================================ */}
       <div
         className="teaser2-story-mobile-wrap"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className="teaser2-mobile-slide is-active">
-          <div className="teaser2-mobile-media-wrap" style={{ position: "absolute", inset: 0 }}>
-            <Image
-              src={currentSlide.imageSrc}
-              alt={currentSlide.imageAlt}
-              fill
-              sizes="90vw"
-              className="teaser2-slide-img"
-              priority
-            />
-            <div className="teaser2-mobile-scrim" aria-hidden="true" />
-          </div>
+        <div className="teaser2-story-mobile-viewport">
+          <div
+            className="teaser2-story-mobile-track"
+            data-active-slide={activeSlide}
+          >
+            {STORY_SLIDES.map((slide, idx) => {
+              const isActive = activeSlide === idx;
 
-          <div className="teaser2-mobile-content">
-            <div className="teaser2-mobile-editorial">
-              <span className="teaser2-slide-theme">{currentSlide.themeLabel}</span>
-              <h3 className="teaser2-slide-headline">{currentSlide.headline}</h3>
-              <p className="teaser2-slide-body">{currentSlide.bodyCopy}</p>
-            </div>
+              return (
+                <div
+                  key={slide.id}
+                  className={`teaser2-how-mobile-slide ${isActive ? "is-active" : ""}`}
+                  aria-hidden={!isActive}
+                >
+                  {/* Background Photography Layer */}
+                  <div className="teaser2-mobile-media-wrap">
+                    <Image
+                      src={slide.imageSrc}
+                      alt={slide.imageAlt}
+                      fill
+                      sizes="(max-width: 600px) 100vw, 540px"
+                      className="teaser2-slide-img"
+                      priority
+                    />
+                    <div className="teaser2-mobile-scrim" aria-hidden="true" />
+                  </div>
 
-            <div className="teaser2-mobile-ui-slot">
-              {currentSlide.uiOverlay(true)}
-            </div>
+                  {/* Content Layer: Natural vertical flow without empty gaps */}
+                  <div className="teaser2-mobile-content">
+                    <div className="teaser2-mobile-editorial">
+                      <span className="teaser2-slide-theme">{slide.themeLabel}</span>
+                      <h3 className="teaser2-slide-headline">{slide.headline}</h3>
+                      <p className="teaser2-slide-body">{slide.bodyCopy}</p>
+                    </div>
 
-            <div className="teaser2-mobile-action-bar">
-              <button
-                type="button"
-                className="teaser2-mobile-detail-trigger"
-                onClick={() => setMobileDetailSlide(currentSlide)}
-                aria-label={`View full details for ${currentSlide.headline}`}
-              >
-                <Plus size={14} aria-hidden="true" />
-                <span>Learn how this works</span>
-              </button>
-            </div>
+                    <div className="teaser2-mobile-ui-slot">
+                      {slide.uiOverlay(isActive)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -539,64 +586,6 @@ export function Teaser2HowItWorks() {
           </button>
         </div>
       </div>
-
-      {/* ============================================================
-          UNIFIED MOBILE BOTTOM SHEET MODAL (OPTIONAL DEEP DIVE)
-          ============================================================ */}
-      <Dialog
-        open={Boolean(mobileDetailSlide)}
-        onOpenChange={(open) => {
-          if (!open) setMobileDetailSlide(null);
-        }}
-      >
-        <DialogContent
-          className="teaser2-unified-dialog"
-          showCloseButton={false}
-          aria-describedby="how-modal-desc"
-        >
-          {mobileDetailSlide && (
-            <div className="teaser2-dialog-content-inner">
-              <div className="teaser2-dialog-top-bar">
-                <span className="teaser2-dialog-eyebrow">
-                  {mobileDetailSlide.themeLabel}
-                </span>
-                <button
-                  type="button"
-                  className="teaser2-dialog-close-btn"
-                  onClick={() => setMobileDetailSlide(null)}
-                  aria-label="Close details"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-
-              <DialogTitle className="teaser2-dialog-title">
-                {mobileDetailSlide.headline}
-              </DialogTitle>
-
-              <DialogDescription id="how-modal-desc" className="teaser2-dialog-body">
-                <span className="teaser2-dialog-para">
-                  {mobileDetailSlide.bodyCopy}
-                </span>
-              </DialogDescription>
-
-              <div className="teaser2-dialog-visual-box">
-                {mobileDetailSlide.uiOverlay(true)}
-              </div>
-
-              <div className="teaser2-dialog-actions">
-                <button
-                  type="button"
-                  className="teaser2-dialog-primary-btn"
-                  onClick={() => setMobileDetailSlide(null)}
-                >
-                  <span>Close</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }

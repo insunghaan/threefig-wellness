@@ -443,7 +443,7 @@ export function Teaser2ValueSection() {
           {storyData.map((item, idx) => (
             <div
               key={item.id}
-              className={`teaser2-mobile-slide ${
+              className={`teaser2-value-mobile-slide ${
                 mobileActiveIdx === idx ? "is-active" : ""
               }`}
             >
