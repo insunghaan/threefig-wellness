@@ -101,6 +101,24 @@ export function Teaser3Hero() {
     };
   }, [isMobileView]);
 
+  // Pause background hero playback while modal is open, resume when closed and appropriate
+  useEffect(() => {
+    const activeVideo = isMobileView ? mobileVideoRef.current : desktopVideoRef.current;
+    if (!activeVideo) return;
+
+    if (dialogOpen) {
+      activeVideo.pause();
+    } else {
+      const prefersReduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!prefersReduced && !document.hidden) {
+        activeVideo.play().catch(() => {});
+      }
+    }
+  }, [dialogOpen, isMobileView]);
+
   // Contrast observer: determines if mobile dock is over dark video or light background
   useEffect(() => {
     const target = mobileMediaRef.current;

@@ -1,13 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Check, ArrowRight, Sparkles, Loader2, Heart, BadgePercent, Gift } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Check, ArrowRight, Loader2, X } from "lucide-react";
+import { Dialog as DialogPrimitive } from "radix-ui";
 import { trackEvent } from "./analytics";
 import { captureBrowserAttribution, type Attribution } from "@/lib/threefig/attribution";
 
@@ -18,6 +13,10 @@ export interface Teaser3WaitlistDialogProps {
   onSuccess?: () => void;
 }
 
+type DialogView = "signup" | "exit-offer" | "confirmed" | "already-registered";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function Teaser3WaitlistDialog({
   open,
   onOpenChange,
@@ -25,38 +24,21 @@ export function Teaser3WaitlistDialog({
   onSuccess,
 }: Teaser3WaitlistDialogProps) {
   const [email, setEmail] = useState(defaultEmail);
-  const [step, setStep] = useState<"email" | "confirmed">("email");
-  const [gender, setGender] = useState("");
-  const [age, setAge] = useState("");
-  const [intendedUser, setIntendedUser] = useState("");
-  const [primaryFeatures, setPrimaryFeatures] = useState<string[]>([]);
-  const [surveySaved, setSurveySaved] = useState(false);
-
-  function togglePrimaryFeature(val: string) {
-    setPrimaryFeatures((prev) =>
-      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
-    );
-  }
-
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [surveyStatus, setSurveyStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [view, setView] = useState<DialogView>("signup");
+  const [inputStatus, setInputStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [showExitOffer, setShowExitOffer] = useState(false);
   const submitting = useRef(false);
   const attributionRef = useRef<Attribution | null>(null);
-  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Reset or initialize state whenever modal opens
   useEffect(() => {
     if (open) {
-      setShowExitOffer(false);
+      setView("signup");
+      setErrorMessage("");
+      setInputStatus("idle");
     }
   }, [open]);
-
-  useEffect(() => {
-    if (dialogRef.current) {
-      dialogRef.current.scrollTop = 0;
-    }
-  }, [showExitOffer, step]);
 
   useEffect(() => {
     if (defaultEmail) {
@@ -66,19 +48,26 @@ export function Teaser3WaitlistDialog({
 
   useEffect(() => {
     attributionRef.current = captureBrowserAttribution();
+    if (typeof window !== "undefined") {
+      (window as unknown as { __setTeaser3DialogView?: (v: DialogView) => void }).__setTeaser3DialogView = setView;
+    }
   }, []);
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting.current) return;
+
     const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+    if (!cleanEmail || !EMAIL_PATTERN.test(cleanEmail)) {
       setErrorMessage("Please enter a valid email address.");
+      if (emailInputRef.current) {
+        emailInputRef.current.focus();
+      }
       return;
     }
 
     submitting.current = true;
-    setStatus("submitting");
+    setInputStatus("submitting");
     setErrorMessage("");
 
     try {
@@ -107,334 +96,267 @@ export function Teaser3WaitlistDialog({
 
       if (result.created === true) {
         trackEvent("generate_lead", { lead_source: "teaser3_waitlist" });
+        setView("confirmed");
+      } else {
+        // Already registered email
+        setView("already-registered");
       }
 
-      setStatus("success");
-      setStep("confirmed");
+      setInputStatus("idle");
       if (onSuccess) onSuccess();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
       setErrorMessage(msg);
-      setStatus("error");
+      setInputStatus("error");
+      if (emailInputRef.current) {
+        emailInputRef.current.focus();
+      }
     } finally {
       submitting.current = false;
     }
   }
 
-  async function handleSurveySubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSurveyStatus("submitting");
-    try {
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          survey: {
-            gender: gender || undefined,
-            age_group: age || undefined,
-            intended_user: intendedUser || undefined,
-            primary_features: primaryFeatures.length ? primaryFeatures : undefined,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Unable to save survey.");
-      }
-      setSurveyStatus("success");
-      setSurveySaved(true);
-    } catch {
-      setSurveyStatus("error");
-    }
-  }
-
+  // Handle open/close requests from Radix (ESC, overlay click)
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
-      const exitShown = typeof window !== "undefined" && sessionStorage.getItem("t3_exit_shown") === "1";
-      if (step === "email" && status !== "success" && !showExitOffer && !exitShown) {
+      const exitShown =
+        typeof window !== "undefined" && sessionStorage.getItem("t3_exit_shown") === "1";
+
+      // If user attempts to close from signup view without success and hasn't seen exit offer yet
+      if (view === "signup" && !exitShown) {
         if (typeof window !== "undefined") {
           sessionStorage.setItem("t3_exit_shown", "1");
         }
-        setShowExitOffer(true);
-        return;
+        setView("exit-offer");
+        return; // Keep dialog open, show exit offer inside same frame
       }
-      handleClose();
+
+      handleCloseFinal();
     } else {
       onOpenChange(true);
     }
   }
 
-  function handleClose() {
-    setShowExitOffer(false);
+  // Final dismissal closing the modal completely
+  function handleCloseFinal() {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("t3_exit_shown", "1");
+    }
     onOpenChange(false);
   }
 
+  // From exit offer: return to signup view to claim the 20% offer
+  function handleClaimOffer() {
+    setView("signup");
+    setTimeout(() => {
+      if (emailInputRef.current) {
+        emailInputRef.current.focus();
+      }
+    }, 50);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent ref={dialogRef} className="fig-dialog skin-survey-dialog teaser3-waitlist-dialog" showCloseButton={true}>
-        {showExitOffer ? (
-          <div className="skin-survey-exit-wrap">
-            <div className="skin-survey-exit-badge">
-              <BadgePercent size={18} />
-              <span>SPECIAL FOUNDING OFFER</span>
-            </div>
-            <DialogTitle className="skin-survey-exit-title">
-              Wait! Don&apos;t miss your 20% hardware discount.
-            </DialogTitle>
-            <DialogDescription className="skin-survey-exit-desc">
-              Join the launch list today to guarantee 20% off your 3FIG smart ring, plus lifetime free app membership upon release.
-            </DialogDescription>
-            <div className="skin-survey-exit-actions">
-              <button
-                type="button"
-                className="skin-survey-submit-btn"
-                onClick={() => setShowExitOffer(false)}
+    <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="teaser3-dialog-overlay" />
+        <DialogPrimitive.Content
+          className="teaser3-dialog-content"
+          aria-describedby="t3-dialog-description"
+        >
+          {/* Minimum 44x44px accessible close control */}
+          <button
+            type="button"
+            className="teaser3-dialog-close"
+            onClick={() => handleOpenChange(false)}
+            aria-label="Close dialog"
+          >
+            <X size={20} aria-hidden="true" />
+          </button>
+
+          {/* VIEW 1: INITIAL SIGNUP */}
+          {view === "signup" && (
+            <div className="teaser3-dialog-inner">
+              <span className="teaser3-dialog-eyebrow">3FIG EARLY ACCESS</span>
+              <DialogPrimitive.Title className="teaser3-dialog-title">
+                App access. Free for life.
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description
+                id="t3-dialog-description"
+                className="teaser3-dialog-desc"
               >
-                Claim My 20% Discount
-              </button>
-              <button
-                type="button"
-                className="skin-survey-skip-btn"
-                onClick={handleClose}
-              >
-                No thanks, I will pay full price
-              </button>
-            </div>
-          </div>
-        ) : step === "confirmed" ? (
-          <div className="skin-survey-confirmed-wrap">
-            <div className="skin-survey-confirmed-header">
-              <div className="skin-survey-success-icon">
-                <Check size={28} />
+                Join the launch list to reserve your founding member spot and enjoy free 3FIG app access for life.
+              </DialogPrimitive.Description>
+
+              <div className="teaser3-dialog-condition">
+                <p>
+                  Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis. Ring purchase required upon launch.
+                </p>
               </div>
-              <DialogTitle className="skin-survey-title">
-                You&apos;re on the founding member list!
-              </DialogTitle>
-              <DialogDescription className="skin-survey-desc">
-                Your spot is confirmed for <strong>{email}</strong>. We&apos;ve reserved your 100% Free Lifetime App Subscription.
-              </DialogDescription>
-            </div>
 
-            <div className="skin-survey-perk-summary">
-              <div className="skin-survey-perk-item">
-                <Gift size={18} />
-                <span>Lifetime free app subscription secured</span>
-              </div>
-              <div className="skin-survey-perk-item">
-                <Sparkles size={18} />
-                <span>Priority access when ring hardware opens</span>
-              </div>
-            </div>
-
-            {!surveySaved ? (
-              <form className="skin-survey-form teaser3-post-reg-survey" onSubmit={handleSurveySubmit}>
-                <div className="teaser3-survey-intro">
-                  <p className="skin-survey-kicker">OPTIONAL 30-SECOND SURVEY</p>
-                  <p className="teaser3-survey-intro-text">
-                    Help us shape the 3FIG experience for your skin routine.
-                  </p>
+              <form onSubmit={handleEmailSubmit} noValidate className="teaser3-dialog-form">
+                <div className="teaser3-dialog-field">
+                  <label htmlFor="t3-waitlist-email" className="teaser3-dialog-label">
+                    Email address
+                  </label>
+                  <input
+                    ref={emailInputRef}
+                    id="t3-waitlist-email"
+                    type="email"
+                    autoComplete="email"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    className={`teaser3-dialog-input ${errorMessage ? "has-error" : ""}`}
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (errorMessage) setErrorMessage("");
+                    }}
+                    disabled={inputStatus === "submitting"}
+                    aria-describedby={errorMessage ? "t3-email-error" : undefined}
+                    aria-invalid={errorMessage ? true : undefined}
+                    required
+                  />
+                  {errorMessage && (
+                    <p id="t3-email-error" className="teaser3-dialog-error" role="alert">
+                      {errorMessage}
+                    </p>
+                  )}
                 </div>
 
-                {/* Gender */}
-                <div className="skin-survey-group">
-                  <label className="skin-survey-label">What is your gender?</label>
-                  <div className="skin-survey-options-grid">
-                    {[
-                      { val: "female", label: "Female" },
-                      { val: "male", label: "Male" },
-                      { val: "non_binary", label: "Non-binary" },
-                      { val: "prefer_not", label: "Prefer not to say" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.val}
-                        type="button"
-                        className={`skin-survey-chip ${gender === opt.val ? "is-selected" : ""}`}
-                        onClick={() => setGender(opt.val)}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Age */}
-                <div className="skin-survey-group">
-                  <label className="skin-survey-label">What is your age?</label>
-                  <div className="skin-survey-options-grid">
-                    {[
-                      { val: "under_20", label: "Under 20" },
-                      { val: "20_29", label: "20–29" },
-                      { val: "30_39", label: "30–39" },
-                      { val: "40_49", label: "40–49" },
-                      { val: "50_plus", label: "50+" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.val}
-                        type="button"
-                        className={`skin-survey-chip ${age === opt.val ? "is-selected" : ""}`}
-                        onClick={() => setAge(opt.val)}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Intended User */}
-                <div className="skin-survey-group">
-                  <label className="skin-survey-label">Who is this ring for?</label>
-                  <div className="skin-survey-options-grid">
-                    {[
-                      { val: "myself", label: "Myself" },
-                      { val: "partner", label: "Partner / Spouse" },
-                      { val: "family", label: "Family member" },
-                      { val: "gift", label: "Gift" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.val}
-                        type="button"
-                        className={`skin-survey-chip ${intendedUser === opt.val ? "is-selected" : ""}`}
-                        onClick={() => setIntendedUser(opt.val)}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Primary Features */}
-                <div className="skin-survey-group">
-                  <label className="skin-survey-label">Which features interest you most? (Select all that apply)</label>
-                  <div className="skin-survey-options-grid">
-                    {[
-                      { val: "sleep_skin", label: "Sleep & Skin Recovery" },
-                      { val: "stress_hrv", label: "Stress & HRV Tracking" },
-                      { val: "food_pattern", label: "Food & Flareup Patterns" },
-                      { val: "balance_score", label: "Daily Skin Balance Score" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.val}
-                        type="button"
-                        className={`skin-survey-chip ${primaryFeatures.includes(opt.val) ? "is-selected" : ""}`}
-                        onClick={() => togglePrimaryFeature(opt.val)}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="teaser3-survey-actions">
-                  <button
-                    type="submit"
-                    className="skin-survey-submit-btn"
-                    disabled={surveyStatus === "submitting"}
-                  >
-                    {surveyStatus === "submitting" ? (
-                      <>
-                        <Loader2 className="animate-spin" size={16} />
-                        Saving...
-                      </>
-                    ) : (
-                      "Complete & Save"
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    className="skin-survey-skip-btn"
-                    onClick={handleClose}
-                  >
-                    Skip for now
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="teaser3-dialog-btn-primary"
+                  disabled={inputStatus === "submitting"}
+                >
+                  {inputStatus === "submitting" ? (
+                    <>
+                      <Loader2 className="teaser3-dialog-spinner" size={18} />
+                      <span>Saving your spot...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Count me in</span>
+                      <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
+                    </>
+                  )}
+                </button>
               </form>
-            ) : (
-              <div className="teaser3-survey-done">
-                <p>Thank you for your feedback!</p>
+
+              <p className="teaser3-dialog-privacy">
+                No spam. Unsubscribe anytime. We respect your privacy.
+              </p>
+            </div>
+          )}
+
+          {/* VIEW 2: EXIT OFFER */}
+          {view === "exit-offer" && (
+            <div className="teaser3-dialog-inner">
+              <span className="teaser3-dialog-eyebrow">YOUR EARLY ACCESS OFFER</span>
+              <DialogPrimitive.Title className="teaser3-dialog-title">
+                Start with 20% off.
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description
+                id="t3-dialog-description"
+                className="teaser3-dialog-desc"
+              >
+                Join the launch list today to guarantee 20% off your 3FIG smart ring, plus lifetime free app membership upon release.
+              </DialogPrimitive.Description>
+
+              <div className="teaser3-dialog-condition">
+                <p>
+                  Zero monthly membership fees for all core wellness signals, rhythm analysis, and skin insights. 20% discount applied automatically at ring launch.
+                </p>
+              </div>
+
+              <div className="teaser3-dialog-exit-actions">
                 <button
                   type="button"
-                  className="skin-survey-submit-btn skin-survey-done-btn"
-                  onClick={handleClose}
+                  className="teaser3-dialog-btn-primary"
+                  onClick={handleClaimOffer}
                 >
-                  Done
+                  <span>Claim my offer</span>
+                  <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
+                </button>
+
+                <button
+                  type="button"
+                  className="teaser3-dialog-btn-secondary"
+                  onClick={handleCloseFinal}
+                >
+                  Not now
                 </button>
               </div>
-            )}
-          </div>
-        ) : (
-          <form className="skin-survey-form teaser3-email-first-form" onSubmit={handleEmailSubmit}>
-            <div className="skin-survey-header">
-              <p className="skin-survey-kicker">3FIG FOUNDING MEMBER EXCLUSIVE</p>
-              <DialogTitle className="skin-survey-title">
-                Claim your Lifetime Free App Subscription.
-              </DialogTitle>
-              <DialogDescription className="skin-survey-desc">
-                Join the early list to secure your founding member spot and enjoy free 3FIG app subscription for life.
-              </DialogDescription>
+            </div>
+          )}
 
-              <div className="skin-survey-lifetime-callout">
-                <div className="skin-survey-lifetime-icon">
-                  <Sparkles size={20} />
+          {/* VIEW 3: CONFIRMED SUCCESS */}
+          {view === "confirmed" && (
+            <div className="teaser3-dialog-inner">
+              <span className="teaser3-dialog-eyebrow">FOUNDING MEMBER RESERVED</span>
+              <DialogPrimitive.Title className="teaser3-dialog-title">
+                You’re on the launch list.
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description
+                id="t3-dialog-description"
+                className="teaser3-dialog-desc"
+              >
+                Your spot is confirmed{email ? <> for <strong>{email}</strong></> : ""}. We’ve reserved your free lifetime app subscription and priority launch access.
+              </DialogPrimitive.Description>
+
+              <div className="teaser3-dialog-perks">
+                <div className="teaser3-dialog-perk-row">
+                  <Check size={18} className="teaser3-dialog-check-icon" />
+                  <span>Lifetime free app subscription secured</span>
                 </div>
-                <div className="skin-survey-lifetime-content">
-                  <span className="skin-survey-lifetime-pill">FOUNDING MEMBER PERK</span>
-                  <strong className="skin-survey-lifetime-title">100% Free App Subscription For Life</strong>
-                  <p className="skin-survey-lifetime-desc">
-                    Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis. (Ring purchase required upon launch).
-                  </p>
+                <div className="teaser3-dialog-perk-row">
+                  <Check size={18} className="teaser3-dialog-check-icon" />
+                  <span>Priority access when ring hardware opens</span>
                 </div>
               </div>
+
+              <button
+                type="button"
+                className="teaser3-dialog-btn-primary"
+                onClick={handleCloseFinal}
+              >
+                Got it
+              </button>
             </div>
+          )}
 
-            {/* Email Field */}
-            <div className="skin-survey-group">
-              <label htmlFor="t3-survey-email" className="skin-survey-label">
-                Email Address <span className="skin-survey-required">*</span>
-              </label>
-              <input
-                id="t3-survey-email"
-                type="email"
-                className="skin-survey-input"
-                placeholder="you@example.com"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={status === "submitting"}
-                autoFocus
-              />
+          {/* VIEW 4: ALREADY REGISTERED */}
+          {view === "already-registered" && (
+            <div className="teaser3-dialog-inner">
+              <span className="teaser3-dialog-eyebrow">ALREADY RESERVED</span>
+              <DialogPrimitive.Title className="teaser3-dialog-title">
+                You’re already on the list.
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description
+                id="t3-dialog-description"
+                className="teaser3-dialog-desc"
+              >
+                {email ? <strong>{email}</strong> : "This email"} is already registered as a founding member with lifetime app access secured.
+              </DialogPrimitive.Description>
+
+              <div className="teaser3-dialog-perks">
+                <div className="teaser3-dialog-perk-row">
+                  <Check size={18} className="teaser3-dialog-check-icon" />
+                  <span>Lifetime free app subscription reserved</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="teaser3-dialog-btn-primary"
+                onClick={handleCloseFinal}
+              >
+                Got it
+              </button>
             </div>
-
-            {errorMessage && (
-              <p className="skin-survey-error" role="alert">
-                {errorMessage}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="skin-survey-submit-btn"
-              disabled={status === "submitting"}
-            >
-              {status === "submitting" ? (
-                <>
-                  <Loader2 className="animate-spin" size={16} />
-                  Claiming your spot...
-                </>
-              ) : (
-                <>
-                  Claim Free Lifetime Access
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-
-            <p className="skin-survey-footer-note">
-              No spam. Unsubscribe anytime. We never sell your personal information.
-            </p>
-          </form>
-        )}
-      </DialogContent>
-    </Dialog>
+          )}
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
