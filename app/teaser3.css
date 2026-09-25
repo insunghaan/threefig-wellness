@@ -1006,7 +1006,7 @@
     border-top-right-radius: 24px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    padding: 28px 24px calc(24px + env(safe-area-inset-bottom, 16px)) 24px;
+    padding: 28px 24px calc(22px + env(safe-area-inset-bottom, 16px)) 24px;
     box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
     animation: teaser3DialogSheetSlideUp 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     overscroll-behavior: contain;
@@ -1014,7 +1014,7 @@
   }
 
   .teaser3-dialog-inner {
-    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 0;
   }
 
   .teaser3-dialog-title {
@@ -1034,7 +1034,7 @@
     padding-top: 22px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 12px));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 10px));
   }
 
   .teaser3-dialog-title {
@@ -1136,6 +1136,115 @@
   .teaser3-dialog-spinner {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   SECTION 8: SCROLL-DISCOVERY CUE
+   Subtle secondary cue: "A little more below" with downward arrow
+   ========================================================================== */
+
+.teaser3-scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 6px 0;
+  margin: 0;
+  font-family: var(--tf-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--tf-color-text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 0.22s ease, visibility 0.22s ease, color 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.teaser3-scroll-cue:hover {
+  color: var(--tf-color-text-primary);
+}
+
+.teaser3-scroll-cue:focus-visible {
+  outline: 2px solid var(--tf-color-focus-ring);
+  outline-offset: 3px;
+}
+
+/* Hidden state: completely inaccessible and non-clickable, no layout shift */
+.teaser3-scroll-cue.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Arrow bounce: 2 cycles of 2-3px vertical movement, then stationary */
+.teaser3-scroll-cue-arrow {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  color: inherit;
+  flex-shrink: 0;
+  animation: teaser3CueArrowBounce 1.8s ease-in-out 2 forwards;
+}
+
+@keyframes teaser3CueArrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2.5px);
+  }
+}
+
+/* Desktop Placement: 20-24px below CTA/count row, left-aligned with CTA */
+.teaser3-desktop-cue-wrap {
+  margin-top: 22px;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* Mobile Placement: 12-16px ABOVE fixed CTA dock, left-aligned with CTA */
+.teaser3-mobile-cue-wrap {
+  position: absolute;
+  left: 24px;
+  bottom: calc(100% + 14px);
+  z-index: 20;
+  pointer-events: auto;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.teaser3-mobile-cue-wrap.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Mobile contrast adaptivity based on whether dock is over dark video or light surface */
+.teaser3-mobile-dock.is-dark-surface .teaser3-scroll-cue {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.teaser3-mobile-dock.is-dark-surface .teaser3-scroll-cue:hover {
+  color: #ffffff;
+}
+
+.teaser3-mobile-dock.is-light-surface .teaser3-scroll-cue {
+  color: var(--tf-color-text-secondary);
+}
+
+.teaser3-mobile-dock.is-light-surface .teaser3-scroll-cue:hover {
+  color: var(--tf-color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .teaser3-scroll-cue-arrow {
+    animation: none !important;
   }
 }
 

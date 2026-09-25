@@ -10,6 +10,11 @@ export interface Teaser3WaitlistDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultEmail?: string;
+  emailDraft?: string;
+  onEmailDraftChange?: (email: string) => void;
+  selectedOffer?: string | null;
+  onOfferSelect?: (offer: string | null) => void;
+  triggerElement?: HTMLElement | null;
   onSuccess?: () => void;
 }
 
@@ -21,9 +26,21 @@ export function Teaser3WaitlistDialog({
   open,
   onOpenChange,
   defaultEmail = "",
+  emailDraft,
+  onEmailDraftChange,
+  selectedOffer,
+  onOfferSelect,
+  triggerElement,
   onSuccess,
 }: Teaser3WaitlistDialogProps) {
-  const [email, setEmail] = useState(defaultEmail);
+  const [internalEmail, setInternalEmail] = useState(defaultEmail);
+  const email = emailDraft !== undefined ? emailDraft : internalEmail;
+
+  const updateEmail = (val: string) => {
+    setInternalEmail(val);
+    onEmailDraftChange?.(val);
+  };
+
   const [view, setView] = useState<DialogView>("signup");
   const [inputStatus, setInputStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,7 +48,7 @@ export function Teaser3WaitlistDialog({
   const attributionRef = useRef<Attribution | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Reset or initialize state whenever modal opens
+  // Reset view & errors when opened, but keep email draft intact
   useEffect(() => {
     if (open) {
       setView("signup");
@@ -41,10 +58,10 @@ export function Teaser3WaitlistDialog({
   }, [open]);
 
   useEffect(() => {
-    if (defaultEmail) {
-      setEmail(defaultEmail);
+    if (defaultEmail && emailDraft === undefined) {
+      setInternalEmail(defaultEmail);
     }
-  }, [defaultEmail]);
+  }, [defaultEmail, emailDraft]);
 
   useEffect(() => {
     attributionRef.current = captureBrowserAttribution();
@@ -52,6 +69,30 @@ export function Teaser3WaitlistDialog({
       (window as unknown as { __setTeaser3DialogView?: (v: DialogView) => void }).__setTeaser3DialogView = setView;
     }
   }, []);
+
+  // Restore focus to original trigger without unexpected scrolling
+  function handleRestoreFocus() {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        let target = triggerElement;
+        if (
+          !target ||
+          !document.body.contains(target) ||
+          target.getAttribute("aria-hidden") === "true" ||
+          target.tabIndex === -1 ||
+          (target as HTMLButtonElement).disabled
+        ) {
+          const isMobile = typeof window !== "undefined" && window.innerWidth <= 860;
+          target = isMobile
+            ? (document.querySelector(".teaser3-mobile-btn") as HTMLElement)
+            : (document.querySelector(".teaser3-desktop-btn") as HTMLElement);
+        }
+        if (target && typeof target.focus === "function") {
+          target.focus({ preventScroll: true });
+        }
+      }, 70);
+    });
+  }
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -78,12 +119,18 @@ export function Teaser3WaitlistDialog({
       const clientLanguage =
         typeof navigator !== "undefined" ? navigator.language || "" : "";
 
+      const currentAttribution = attributionRef.current || captureBrowserAttribution();
+      const payloadAttribution = selectedOffer
+        ? { ...currentAttribution, offer: selectedOffer }
+        : currentAttribution;
+
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: cleanEmail,
-          attribution: attributionRef.current || captureBrowserAttribution(),
+          attribution: payloadAttribution,
+          survey: selectedOffer ? { subscription_preference: selectedOffer } : undefined,
           client_timezone: clientTimezone,
           client_language: clientLanguage,
         }),
@@ -95,8 +142,13 @@ export function Teaser3WaitlistDialog({
       }
 
       if (result.created === true) {
-        trackEvent("generate_lead", { lead_source: "teaser3_waitlist" });
+        trackEvent("generate_lead", {
+          lead_source: "teaser3_waitlist",
+          offer: selectedOffer || "standard",
+        });
         setView("confirmed");
+        // Clear draft only on successful submission
+        updateEmail("");
       } else {
         // Already registered email
         setView("already-registered");
@@ -145,14 +197,15 @@ export function Teaser3WaitlistDialog({
     onOpenChange(false);
   }
 
-  // From exit offer: return to signup view to claim the 20% offer
+  // From exit offer: return to signup view to claim the 20% offer, preserving draft
   function handleClaimOffer() {
+    onOfferSelect?.("early_20_off");
     setView("signup");
     setTimeout(() => {
       if (emailInputRef.current) {
         emailInputRef.current.focus();
       }
-    }, 50);
+    }, 60);
   }
 
   return (
@@ -162,6 +215,10 @@ export function Teaser3WaitlistDialog({
         <DialogPrimitive.Content
           className="teaser3-dialog-content"
           aria-describedby="t3-dialog-description"
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            handleRestoreFocus();
+          }}
         >
           {/* Minimum 44x44px accessible close control */}
           <button
@@ -189,7 +246,9 @@ export function Teaser3WaitlistDialog({
 
               <div className="teaser3-dialog-condition">
                 <p>
-                  Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis. Ring purchase required upon launch.
+                  {selectedOffer === "early_20_off"
+                    ? "20% ring discount applied upon launch. Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis."
+                    : "Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis. Ring purchase required upon launch."}
                 </p>
               </div>
 
@@ -209,7 +268,7 @@ export function Teaser3WaitlistDialog({
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      updateEmail(e.target.value);
                       if (errorMessage) setErrorMessage("");
                     }}
                     disabled={inputStatus === "submitting"}

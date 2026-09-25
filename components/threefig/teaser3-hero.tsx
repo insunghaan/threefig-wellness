@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { ArrowDown } from "lucide-react";
 import { getSimulatedWaitlistCount } from "@/lib/threefig/waitlist-counter";
 import { Teaser3WaitlistDialog } from "./teaser3-waitlist-dialog";
 import { ThreeFigButton } from "./threefig-button";
@@ -13,6 +14,15 @@ export function Teaser3Hero() {
   const [isHandoffHidden, setIsHandoffHidden] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
+
+  // Email draft and selected offer preserved above popup content across reopens
+  const [emailDraft, setEmailDraft] = useState("");
+  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  // Scroll discovery cue contract & lifecycle
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const [hasNextSection, setHasNextSection] = useState(false);
 
   const desktopVideoRef = useRef<HTMLVideoElement | null>(null);
   const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -220,8 +230,79 @@ export function Teaser3Hero() {
     };
   }, []);
 
+  // Scroll discovery cue destination contract & detection
+  // Hidden unless a meaningful next section exists or test preview is enabled
+  useEffect(() => {
+    const checkNext = () => {
+      const urlParams =
+        typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search)
+          : null;
+      const forceCue =
+        urlParams?.get("preview_cue") === "1" ||
+        (window as unknown as { __forceTeaser3ScrollCue?: boolean }).__forceTeaser3ScrollCue;
+
+      const dest =
+        document.getElementById("teaser3-content") ||
+        document.querySelector("[data-scroll-destination]");
+      setHasNextSection(Boolean(dest) || Boolean(forceCue));
+    };
+
+    checkNext();
+    if (typeof window !== "undefined") {
+      (window as unknown as { __setTeaser3NextContentAvailable?: (val: boolean) => void }).__setTeaser3NextContentAvailable = (val: boolean) => {
+        setHasNextSection(val);
+      };
+    }
+
+    const observer = new MutationObserver(checkNext);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // Track scroll threshold (24px) - dismiss cue for remainder of visit
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (window.scrollY > 24) {
+      setHasScrolled(true);
+      return;
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY > 24) {
+        setHasScrolled(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleScrollToNext = () => {
+    setHasScrolled(true);
+    const destination =
+      document.getElementById("teaser3-content") ||
+      document.querySelector("[data-scroll-destination]");
+
+    if (destination) {
+      destination.scrollIntoView({ behavior: "smooth" });
+      if (destination instanceof HTMLElement) {
+        destination.setAttribute("tabIndex", "-1");
+        destination.focus({ preventScroll: true });
+      }
+    }
+  };
+
   const handleOpenWaitlist = (e?: React.MouseEvent) => {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+      if (e.currentTarget instanceof HTMLElement) {
+        triggerRef.current = e.currentTarget;
+      }
+    } else if (typeof document !== "undefined") {
+      triggerRef.current = (document.activeElement as HTMLElement) || null;
+    }
     setDialogOpen(true);
   };
 
@@ -229,6 +310,7 @@ export function Teaser3Hero() {
 
   // Floating dock is hidden if waitlist dialog is open, handoff target is in view, or keyboard is open
   const isDockHidden = dialogOpen || isHandoffHidden || isKeyboardOpen;
+  const isCueVisible = hasNextSection && !hasScrolled && !dialogOpen;
 
   return (
     <div className="teaser3-root">
@@ -292,6 +374,23 @@ export function Teaser3Hero() {
                 </span>
               )}
             </div>
+
+            {/* Desktop Scroll-Discovery Cue: 20-24px below CTA/count row, left-aligned */}
+            {hasNextSection && (
+              <div className="teaser3-desktop-cue-wrap">
+                <button
+                  type="button"
+                  className={`teaser3-scroll-cue${isCueVisible ? "" : " is-hidden"}`}
+                  onClick={handleScrollToNext}
+                  tabIndex={isCueVisible ? 0 : -1}
+                  aria-hidden={!isCueVisible}
+                  aria-label="Scroll to discover more content below"
+                >
+                  <span>A little more below</span>
+                  <ArrowDown size={15} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
@@ -444,6 +543,25 @@ export function Teaser3Hero() {
         aria-hidden={isDockHidden}
         aria-label="Waitlist registration"
       >
+        {/* Mobile Scroll-Discovery Cue: 12-16px ABOVE fixed CTA dock, left-aligned */}
+        {hasNextSection && (
+          <div
+            className={`teaser3-mobile-cue-wrap${isCueVisible && !isDockHidden ? "" : " is-hidden"}`}
+            aria-hidden={!isCueVisible || isDockHidden}
+          >
+            <button
+              type="button"
+              className="teaser3-scroll-cue"
+              onClick={handleScrollToNext}
+              tabIndex={isCueVisible && !isDockHidden ? 0 : -1}
+              aria-label="Scroll to discover more content below"
+            >
+              <span>A little more below</span>
+              <ArrowDown size={15} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
         <div className="teaser3-mobile-dock-inner">
           <ThreeFigButton
             variant="overlay"
@@ -477,10 +595,15 @@ export function Teaser3Hero() {
         </div>
       </aside>
 
-      {/* Interactive Waitlist Dialog */}
+      {/* Interactive Waitlist Dialog with preserved draft, offer, and trigger focus */}
       <Teaser3WaitlistDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+        emailDraft={emailDraft}
+        onEmailDraftChange={setEmailDraft}
+        selectedOffer={selectedOffer}
+        onOfferSelect={setSelectedOffer}
+        triggerElement={triggerRef.current}
       />
     </div>
   );
