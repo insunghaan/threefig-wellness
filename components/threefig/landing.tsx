@@ -37,7 +37,6 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import "@/app/teaser2.css";
 
 const signals = [
   { icon: MoonStar, label: "Sleep, timing & rhythm", note: "Continuous ring sensing" },
