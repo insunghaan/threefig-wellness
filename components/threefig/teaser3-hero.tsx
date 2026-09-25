@@ -20,8 +20,14 @@ export function Teaser3Hero() {
   const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  // Scroll discovery cue contract & lifecycle
-  const [hasScrolled, setHasScrolled] = useState(false);
+  // Scroll discovery cue & floating CTA lifecycle
+  // If page restores at an already-scrolled position (>24px), activate hasScrolled immediately without flash
+  const [hasScrolled, setHasScrolled] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.scrollY > 24;
+    }
+    return false;
+  });
   const [hasNextSection, setHasNextSection] = useState(true);
 
   const desktopVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -251,16 +257,18 @@ export function Teaser3Hero() {
     }
   }, []);
 
-  // Track scroll threshold (24px) - dismiss cue for remainder of visit
+  // Track scroll threshold (24px) - dismiss cue and reveal CTA for remainder of visit
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     if (window.scrollY > 24) {
       setHasScrolled(true);
-      return;
     }
 
     const handleScroll = () => {
+      // Ignore scroll inside modal dialogs
+      if (dialogOpen) return;
+
       if (window.scrollY > 24) {
         setHasScrolled(true);
       }
@@ -268,7 +276,7 @@ export function Teaser3Hero() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [dialogOpen]);
 
   const handleScrollToNext = () => {
     setHasScrolled(true);
@@ -276,8 +284,14 @@ export function Teaser3Hero() {
       document.getElementById("teaser3-content") ||
       document.querySelector("[data-scroll-destination]");
 
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     if (destination) {
-      destination.scrollIntoView({ behavior: "smooth" });
+      destination.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
       if (destination instanceof HTMLElement) {
         destination.setAttribute("tabIndex", "-1");
         destination.focus({ preventScroll: true });
@@ -286,7 +300,7 @@ export function Teaser3Hero() {
       // Smoothly scroll down so user immediately experiences discovery motion
       window.scrollBy({
         top: Math.min(window.innerHeight * 0.75, 450),
-        behavior: "smooth",
+        behavior: prefersReducedMotion ? "auto" : "smooth",
       });
     }
   };
@@ -305,9 +319,16 @@ export function Teaser3Hero() {
 
   const closeMenu = () => setMenuOpen(false);
 
-  // Floating dock is hidden if waitlist dialog is open, handoff target is in view, or keyboard is open
-  const isDockHidden = dialogOpen || isHandoffHidden || isKeyboardOpen;
-  const isCueVisible = hasNextSection && !hasScrolled && !dialogOpen;
+  // Coordinated Mobile States:
+  // - Initial landing (!hasScrolled): Show centered scroll cue only, hide CTA
+  // - After scroll (hasScrolled): Reveal floating CTA dock (slides up), hide scroll cue
+  const showMobileCue = !hasScrolled && !dialogOpen && !isKeyboardOpen;
+  const showMobileCta = hasScrolled && !dialogOpen && !isHandoffHidden && !isKeyboardOpen;
+
+  // Desktop States:
+  // - CTA is always visible
+  // - Cue is visible initially and hides after scroll (>24px) or during dialog
+  const isDesktopCueVisible = hasNextSection && !hasScrolled && !dialogOpen;
 
   return (
     <div className="teaser3-root">
@@ -372,19 +393,19 @@ export function Teaser3Hero() {
               )}
             </div>
 
-            {/* Desktop Scroll-Discovery Cue: 20-24px below CTA/count row, left-aligned */}
+            {/* Desktop Scroll-Discovery Cue: 44-48px below CTA/count row, left-aligned */}
             {hasNextSection && (
               <div className="teaser3-desktop-cue-wrap">
                 <button
                   type="button"
-                  className={`teaser3-scroll-cue${isCueVisible ? "" : " is-hidden"}`}
+                  className={`teaser3-scroll-cue teaser3-scroll-cue-desktop${isDesktopCueVisible ? "" : " is-hidden"}`}
                   onClick={handleScrollToNext}
-                  tabIndex={isCueVisible ? 0 : -1}
-                  aria-hidden={!isCueVisible}
+                  tabIndex={isDesktopCueVisible ? 0 : -1}
+                  aria-hidden={!isDesktopCueVisible}
                   aria-label="Scroll to discover more content below"
                 >
                   <span>A little more below</span>
-                  <ArrowDown size={15} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
+                  <ArrowDown size={16} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
                 </button>
               </div>
             )}
@@ -531,43 +552,45 @@ export function Teaser3Hero() {
       </div>
 
       {/* ====================================================================
-          PERSISTENT MOBILE CTA DOCK: Fixed to Viewport Bottom
+          COORDINATED MOBILE OVERLAYS: Fixed to Viewport Bottom
+          - Initial landing (!hasScrolled): Centered scroll cue only
+          - After scroll (hasScrolled): Floating CTA dock (slides up)
           ==================================================================== */}
+
+      {/* 1. Mobile Initial Scroll Cue (Centered horizontally, anchored 20px above bottom safe area) */}
+      <div
+        className={`teaser3-mobile-cue-fixed${showMobileCue ? " is-visible" : " is-hidden"}`}
+        aria-hidden={!showMobileCue}
+      >
+        <button
+          type="button"
+          className="teaser3-scroll-cue teaser3-scroll-cue-mobile"
+          onClick={handleScrollToNext}
+          tabIndex={showMobileCue ? 0 : -1}
+          aria-label="Scroll to discover more content below"
+        >
+          <span>A little more below</span>
+          <ArrowDown size={16} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
+        </button>
+      </div>
+
+      {/* 2. Mobile Floating CTA Dock (Slides upward after scroll) */}
       <aside
         className={`teaser3-mobile-dock${
           isLightSurface ? " is-light-surface" : " is-dark-surface"
-        }${isDockHidden ? " is-hidden" : ""}`}
-        aria-hidden={isDockHidden}
+        }${showMobileCta ? " is-revealed" : " is-collapsed"}`}
+        aria-hidden={!showMobileCta}
         aria-label="Waitlist registration"
       >
-        {/* Mobile Scroll-Discovery Cue: 12-16px ABOVE fixed CTA dock, left-aligned */}
-        {hasNextSection && (
-          <div
-            className={`teaser3-mobile-cue-wrap${isCueVisible && !isDockHidden ? "" : " is-hidden"}`}
-            aria-hidden={!isCueVisible || isDockHidden}
-          >
-            <button
-              type="button"
-              className="teaser3-scroll-cue"
-              onClick={handleScrollToNext}
-              tabIndex={isCueVisible && !isDockHidden ? 0 : -1}
-              aria-label="Scroll to discover more content below"
-            >
-              <span>A little more below</span>
-              <ArrowDown size={15} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
-            </button>
-          </div>
-        )}
-
         <div className="teaser3-mobile-dock-inner">
           <ThreeFigButton
             variant="overlay"
             className="teaser3-mobile-btn"
             onClick={handleOpenWaitlist}
-            tabIndex={isDockHidden ? -1 : 0}
+            tabIndex={showMobileCta ? 0 : -1}
             aria-label="Count me in"
             ringAccessory={
-              <span className="teaser3-mobile-ring-box">
+              <span className={`teaser3-mobile-ring-box${showMobileCta ? " is-active" : " is-paused"}`}>
                 <span className="teaser3-ring-float-wrapper">
                   <img
                     src="/images/threefig-ring-cutout-tight.webp"
