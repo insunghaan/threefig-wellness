@@ -1,37 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { captureBrowserAttribution, type Attribution } from "@/lib/threefig/attribution";
 import { trackEvent } from "./analytics";
-import {
-  Activity,
-  ArrowRight,
-  BatteryMedium,
-  CalendarDays,
-  Check,
-  HeartPulse,
-  Menu,
-  MoonStar,
-  ShieldCheck,
-  Sparkles,
-  Thermometer,
-  Utensils,
-  X,
-} from "lucide-react";
-import { reflectionDisclosure } from "@/lib/threefig/reflections";
-import { ReflectionCarousel } from "./reflection-carousel";
-import { PathwayCarousel } from "./pathway-carousel";
-import { PatternPreview } from "./pattern-preview";
-import { Teaser2Features } from "./teaser2-features";
-import { SkinDifferenceSection } from "./skin-difference-section";
-import { SkinBalanceSlider } from "./skin-balance-slider";
-import { EvidenceMobileCarousel } from "./evidence-carousel";
-import { WaitlistSurveyDialog } from "./waitlist-survey-dialog";
-import {
-  getSimulatedWaitlistCount,
-  syncWaitlistCounters,
-} from "@/lib/threefig/waitlist-counter";
+import { ArrowRight, Menu, X } from "lucide-react";
+import { Teaser2ValueSection } from "./teaser2-value-section";
+import { Teaser2HowItWorks } from "./teaser2-how-it-works";
+import { Teaser2Science } from "./teaser2-science";
+import { Teaser2Testimonials } from "./teaser2-testimonials";
+import { Teaser2Faq } from "./teaser2-faq";
+import { Teaser2WaitlistDialog } from "./teaser2-waitlist-dialog";
 import {
   Dialog,
   DialogContent,
@@ -40,32 +19,20 @@ import {
 } from "@/components/ui/dialog";
 import "@/app/teaser2.css";
 
-const signals = [
-  { icon: MoonStar, label: "Sleep, timing & rhythm", note: "Continuous ring sensing" },
-  { icon: HeartPulse, label: "Resting heart rate & HRV", note: "Continuous ring sensing" },
-  { icon: Thermometer, label: "Temperature shifts", note: "Continuous ring sensing" },
-  { icon: Activity, label: "Movement & recovery", note: "Continuous ring sensing" },
-  { icon: Sparkles, label: "Skin check-ins", note: "Lightweight 2-second note" },
-  { icon: Utensils, label: "Meal notes", note: "Optional check-in" },
-];
-
 export default function Teaser2Landing() {
   const attribution = useRef<Attribution | null>(null);
   const signupStarted = useRef(false);
-  const submitting = useRef(false);
-  useEffect(() => { attribution.current = captureBrowserAttribution(); }, []);
+
+  useEffect(() => {
+    attribution.current = captureBrowserAttribution();
+  }, []);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [surveyOpen, setSurveyOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error"
-  >("idle");
-  const [message, setMessage] = useState("");
-  const [waitlistCount, setWaitlistCount] = useState<string>("-/3,000");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [showFloatingCta, setShowFloatingCta] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
   const heroRef = useRef<HTMLElement | null>(null);
   const benefitRef = useRef<HTMLDivElement | null>(null);
 
@@ -73,114 +40,37 @@ export default function Teaser2Landing() {
     const heroEl = heroRef.current;
     if (!heroEl) return;
 
-    const handleScrollOrIntersect = () => {
+    const handleScrollOrResize = () => {
       const scrollY = window.scrollY;
       setIsScrolled(scrollY > 20);
 
       const heroRect = heroEl.getBoundingClientRect();
-      // Hero is considered exited when its bottom edge reaches or passes above the header area (<= 70px)
       const isPastHero = heroRect.bottom <= 70;
 
       let isBenefitReached = false;
       if (benefitRef.current) {
         const benefitRect = benefitRef.current.getBoundingClientRect();
-        // Floating button hides when the bottom perk/benefit area enters viewport, and reappears when scrolling back up away from it
         isBenefitReached = benefitRect.top <= window.innerHeight;
       }
 
       setShowFloatingCta(isPastHero && !isBenefitReached);
     };
 
-    handleScrollOrIntersect();
-    window.addEventListener("scroll", handleScrollOrIntersect, { passive: true });
-    window.addEventListener("resize", handleScrollOrIntersect, { passive: true });
+    handleScrollOrResize();
+    window.addEventListener("scroll", handleScrollOrResize, { passive: true });
+    window.addEventListener("resize", handleScrollOrResize, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScrollOrIntersect);
-      window.removeEventListener("resize", handleScrollOrIntersect);
+      window.removeEventListener("scroll", handleScrollOrResize);
+      window.removeEventListener("resize", handleScrollOrResize);
     };
   }, []);
-
-  useEffect(() => {
-    let mounted = true;
-
-    async function fetchServerCount() {
-      try {
-        const res = await fetch("/api/waitlist/count", { cache: "no-store" });
-        if (res.ok) {
-          const data = (await res.json()) as { formatted?: string };
-          if (mounted && data?.formatted) {
-            setWaitlistCount(data.formatted);
-            syncWaitlistCounters(data.formatted);
-            return;
-          }
-        }
-      } catch {
-        // Fallback to client-side calculated count
-      }
-      if (mounted) {
-        const fallback = getSimulatedWaitlistCount().formatted;
-        setWaitlistCount(fallback);
-        syncWaitlistCounters(fallback);
-      }
-    }
-
-    fetchServerCount();
-    const interval = setInterval(fetchServerCount, 15000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
-  }, []);
-
-  async function joinWaitlist(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (submitting.current) return;
-    submitting.current = true;
-    setStatus("submitting");
-    setMessage("");
-    try {
-      const clientTimezone =
-        typeof Intl !== "undefined"
-          ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
-          : "";
-      const clientLanguage =
-        typeof navigator !== "undefined" ? navigator.language || "" : "";
-
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          company,
-          attribution: attribution.current || captureBrowserAttribution(),
-          client_timezone: clientTimezone,
-          client_language: clientLanguage,
-        }),
-      });
-      const result = (await response.json()) as { message?: string; error?: string; created?: boolean };
-      if (!response.ok) throw new Error(result.error || "Please try again.");
-      if (result.created === true) trackEvent("generate_lead", { lead_source: "waitlist" });
-      setStatus("success");
-      setMessage(result.message || "You’re on the list.");
-    } catch (error) {
-      setStatus("error");
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "We couldn’t save your email. Please try again.",
-      );
-    } finally {
-      submitting.current = false;
-    }
-  }
 
   function openWaitlist(
-    placement: "header" | "hero" | "inputs" | "signup" | "mobile_floating"
+    placement: "header" | "hero" | "brand_moment" | "ring" | "signup" | "mobile_floating"
   ) {
-    setSurveyOpen(true);
+    setDialogOpen(true);
     trackEvent("cta_click", { placement });
-    // Count entering the waitlist flow once per page load, across all CTAs.
     if (!signupStarted.current) {
       signupStarted.current = true;
       trackEvent("signup_start", { placement });
@@ -190,17 +80,20 @@ export default function Teaser2Landing() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <div className="skin-site teaser2-page teaser2-standalone">
+    <div className="teaser2-page teaser2-standalone">
       <a className="skin-skip" href="#main">
         Skip to content
       </a>
 
+      {/* ============================================================
+          HEADER
+          ============================================================ */}
       <header
-        className={`skin-header-wrap teaser2-header ${
+        className={`teaser2-header ${
           isScrolled || menuOpen ? "is-scrolled" : "is-top"
         }`}
       >
-        <div className="skin-header">
+        <div className="teaser2-header-inner">
           <Link
             href="/teaser2"
             aria-label="3FIG home"
@@ -224,86 +117,64 @@ export default function Teaser2Landing() {
               />
             </div>
           </Link>
+
           <nav
-            className={menuOpen ? "skin-nav is-open" : "skin-nav"}
+            className={menuOpen ? "teaser2-nav is-open" : "teaser2-nav"}
             aria-label="Main navigation"
           >
-            <a href="#rhythm" onClick={closeMenu}>Skin Rhythm</a>
-            <a href="#inputs" onClick={closeMenu}>The inputs</a>
+            <a href="#value" onClick={closeMenu}>What you get</a>
+            <a href="#how-it-works" onClick={closeMenu}>How it works</a>
             <a href="#ring" onClick={closeMenu}>The ring</a>
-            <a href="#evidence" onClick={closeMenu}>The science</a>
+            <a href="#science" onClick={closeMenu}>Skin science</a>
+            <a href="#faq" onClick={closeMenu}>FAQ</a>
           </nav>
-          <button
-            className="skin-header-cta"
-            type="button"
-            onClick={() => openWaitlist("header")}
-          >
-            <span className="skin-border-beam" aria-hidden="true" />
-            <span>Claim Free Lifetime Access</span>
-            <span className="skin-header-counter-pill skin-waitlist-counter" data-waitlist-counter>{waitlistCount}</span>
-            <ArrowRight size={16} />
-          </button>
-          <button
-            className="skin-menu"
-            type="button"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </button>
+
+          <div className="teaser2-header-right">
+            <button
+              className="teaser2-header-cta"
+              type="button"
+              onClick={() => openWaitlist("header")}
+            >
+              <span className="skin-border-beam" aria-hidden="true" />
+              <span className="teaser2-cta-text-full">Claim Free Lifetime Access</span>
+              <span className="teaser2-cta-text-short">Free Lifetime Access</span>
+              <ArrowRight size={15} />
+            </button>
+
+            <button
+              className="teaser2-menu-btn"
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </header>
 
       <main id="main">
-        <section className="skin-hero" ref={heroRef}>
-          {/* Desktop Hero Video (> 820px) */}
-          <video
-            className="teaser2-desktop-hero-video"
-            src="/video/final_muted.mp4?v=2"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/images/teaser2-desktop-poster.jpg?v=2"
-            aria-hidden="true"
-          />
-          {/* Mobile Hero Video (<= 820px) */}
-          <video
-            className="teaser2-hero-video"
-            src="/video/skin_ring_v10f_silent.mp4?v=2"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/images/teaser2-hero-poster.jpg?v=2"
-            aria-hidden="true"
-          />
-          <div className="skin-hero-copy">
-            <p className="skin-kicker">MEET 3FIG</p>
+        {/* ============================================================
+            01 — HERO (FULL VIEWPORT, SOLID COLOR PLACEHOLDER)
+            ============================================================ */}
+        <section className="teaser2-hero" ref={heroRef}>
+          {/* Future desktop & mobile cover photography slots into this container */}
+          <div className="teaser2-hero-bg" aria-hidden="true" />
+
+          <div className="teaser2-hero-content">
+            <p className="teaser2-eyebrow">THE SKIN WELLNESS RING</p>
             <h1 className="teaser2-hero-title">
-              <span className="teaser2-hero-title-text sr-only">
-                The smart ring. for Skin wellness.
-              </span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/teaser2-hero-title.png"
-                alt="The smart ring. for Skin wellness."
-                className="teaser2-hero-title-img"
-                width={1024}
-                height={296}
-                fetchPriority="high"
-                decoding="async"
-              />
+              The smart ring.<br />
+              <em>For skin wellness.</em>
             </h1>
-            <p className="skin-hero-lead">
-              Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+            <p className="teaser2-hero-lead">
+              Sleep, recovery, and your skin check-ins — one clearer picture of what your skin responds to.
             </p>
-            <div className="skin-hero-actions">
+
+            <div className="teaser2-hero-actions">
               <button
-                className="skin-button"
+                className="teaser2-hero-btn"
                 type="button"
                 onClick={() => openWaitlist("hero")}
               >
@@ -311,79 +182,41 @@ export default function Teaser2Landing() {
                 <span>Claim Free Lifetime Access</span>
                 <ArrowRight size={18} />
               </button>
-              <div className="skin-hero-counter skin-waitlist-counter" data-waitlist-counter>
-                <span className="skin-counter-dot" aria-hidden="true" />
-                <span>Founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
-              </div>
+
+              <p className="teaser2-hero-microcopy">
+                Membership free for life. Ring sold separately.
+              </p>
             </div>
           </div>
-          <a className="skin-hero-scroll" href="#difference">
-            See how it works <span>↓</span>
-          </a>
         </section>
 
-        {/* The 3FIG Difference: Three Signals. One Skin Balance. */}
-        <SkinDifferenceSection />
-        <Teaser2Features />
+        {/* ============================================================
+            02 — PRODUCT EXPERIENCE (HORIZONTAL SLIDER)
+            ============================================================ */}
+        <Teaser2ValueSection />
 
-        {/* Skin Balance Index: Dedicated Horizontal Slider (NOW / WHY / NEXT) */}
-        <SkinBalanceSlider showProductPreviews />
+        {/* ============================================================
+            03 — HOW IT WORKS (HORIZONTAL SLIDER)
+            ============================================================ */}
+        <Teaser2HowItWorks />
 
-        {/* Repositioned Sleep / Food / Stress as Inputs into Skin Rhythm */}
-        <section id="inputs" className="skin-pathways" aria-labelledby="inputs-title">
-          <div className="skin-shell">
-            <div className="skin-pattern-intro">
-              <div className="skin-section-heading">
-                <p className="skin-kicker">THE EVERYDAY INPUTS</p>
-                <h2 id="inputs-title">
-                  Life in dialogue<br />
-                  <em>with your skin.</em>
-                </h2>
-                <p>
-                  Sleep, temperature and recovery are sensed continuously by the ring.
-                  Food is a lightweight, optional note whenever you choose to add context.
-                  Together, they shape the rhythm 3FIG interprets for you.
-                </p>
-              </div>
-              <PatternPreview />
-            </div>
-          </div>
-          <PathwayCarousel />
-        </section>
-
-        <section id="ring" className="skin-ring-section">
-          <div
-            className="skin-ring-photo"
-            role="img"
-            aria-label="A polished black smart ring balanced on dark sculptural stone"
-          />
-          <div className="skin-ring-copy">
-            <p className="skin-kicker">THE SENSING FOUNDATION</p>
-            <h2>
-              Always on.<br />
-              <em>Never in the way.</em>
+        {/* ============================================================
+            04 — MID-PAGE BRAND MOMENT (TYPOGRAPHIC COLOR FIELD RESET)
+            ============================================================ */}
+        <section className="teaser2-brand-moment-section" aria-label="Brand reflection">
+          <div className="teaser2-brand-moment-content">
+            <h2 className="teaser2-brand-moment-title">
+              Life happens.<br />
+              <em>Skin notices.</em>
             </h2>
-            <p>
-              The ring is the sensing layer. Skin Rhythm is the interpretation layer.
-              Crafted in featherlight titanium with multi-day battery life, 3FIG tracks
-              physiological baselines 24/7 so your skin’s story becomes legible.
+            <p className="teaser2-brand-moment-lead">
+              3FIG helps you notice what tends to come with it.
             </p>
-            <div className="skin-signal-grid">
-              {signals.map(({ icon: Icon, label, note }) => (
-                <div key={label} className="skin-signal-item">
-                  <div className="skin-signal-item-header">
-                    <Icon className="skin-signal-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
-                    <strong className="skin-signal-label">{label}</strong>
-                  </div>
-                  <span className="skin-signal-note">{note}</span>
-                </div>
-              ))}
-            </div>
-            <div className="skin-ring-cta">
+            <div className="teaser2-brand-moment-actions">
               <button
-                className="skin-button"
+                className="teaser2-brand-moment-btn"
                 type="button"
-                onClick={() => openWaitlist("inputs")}
+                onClick={() => openWaitlist("brand_moment")}
               >
                 <span className="skin-border-beam" aria-hidden="true" />
                 <span>Claim Free Lifetime Access</span>
@@ -393,234 +226,137 @@ export default function Teaser2Landing() {
           </div>
         </section>
 
-        <section className="skin-reflections" aria-labelledby="reflections-title" aria-describedby="reflections-disclosure">
-          <div className="skin-shell">
-            <div className="skin-section-heading">
-              <p className="skin-kicker">BETA PARTICIPANT PERSPECTIVES</p>
-              <h2 id="reflections-title">
-                Less guessing.<br />
-                <em>More understanding.</em>
+        {/* ============================================================
+            05 — HARDWARE (IMAGE-LED COMPOSITION)
+            ============================================================ */}
+        <section id="ring" className="teaser2-hardware-section" aria-labelledby="ring-title">
+          <div className="teaser2-hardware-container">
+            <div className="teaser2-hardware-media">
+              <img
+                src="/images/teaser2-ring-still-life.webp"
+                alt="Polished silver 3FIG smart ring standing upright on sculptural dark charcoal stone"
+                className="teaser2-hardware-img"
+                loading="eager"
+                decoding="sync"
+                width={744}
+                height={952}
+              />
+            </div>
+            <div className="teaser2-hardware-copy">
+              <p className="teaser2-eyebrow">THE SENSING FOUNDATION</p>
+              <h2 id="ring-title" className="teaser2-section-title">
+                Always on.<br />
+                <em>Never in the way.</em>
               </h2>
-              <p id="reflections-disclosure" className="skin-reflection-disclosure">{reflectionDisclosure}</p>
-            </div>
-          </div>
-          <ReflectionCarousel />
-        </section>
+              <p className="teaser2-section-lead">
+                Featherlight titanium engineered for effortless 24/7 wear.
+              </p>
 
-        <section id="evidence" className="skin-evidence skin-shell">
-          <div className="skin-evidence-intro">
-            <p className="skin-kicker">THE SKIN–BODY CONNECTION</p>
-            <h2 id="evidence-title">
-              Different signals.<br />
-              <em>One connected system.</em>
-            </h2>
-            <p>
-              The latest reviews keep pointing in the same direction: sleep,
-              nutrition and stress interact with pathways relevant to skin
-              function and aging. 3FIG is designed to turn those everyday
-              signals into context you can use — never a diagnosis.
-            </p>
-            <div className="skin-evidence-note">
-              <span>THE TAKEAWAY</span>
-              <strong>Your skin doesn’t live in a separate tab.</strong>
-            </div>
-          </div>
-          {/* Desktop Study Cards */}
-          <div className="skin-study-list skin-desktop-studies">
-            <a
-              href="https://pubmed.ncbi.nlm.nih.gov/42641586/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>01 · SLEEP</span>
-              <h3>A 2026 review maps sleep and circadian rhythm to skin barrier, immune activity and repair.</h3>
-              <p>Biegański et al. · Sleep Medicine Reviews · 2026</p>
-              <ArrowRight />
-            </a>
-            <a
-              href="https://pubmed.ncbi.nlm.nih.gov/42389732/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>02 · NUTRITION</span>
-              <h3>A 2026 review finds nutrition can influence glycation, oxidative stress and pathways involved in skin aging.</h3>
-              <p>Piquero-Casals et al. · Frontiers in Aging · 2026</p>
-              <ArrowRight />
-            </a>
-            <a
-              href="https://pubmed.ncbi.nlm.nih.gov/41962101/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <span>03 · STRESS</span>
-              <h3>A 2026 review links chronic stress pathways with oxidative stress, matrix breakdown and impaired barrier function.</h3>
-              <p>Ahmed et al. · Wiadomości Lekarskie · 2026</p>
-              <ArrowRight />
-            </a>
-          </div>
-
-          {/* Mobile Evidence 3-Slide Carousel */}
-          <div className="skin-mobile-studies">
-            <EvidenceMobileCarousel />
-          </div>
-          <p className="skin-study-caveat">
-            Research on sleep, nutrition and stress informs our approach.
-            These studies examine the skin–body connection, not 3FIG’s effectiveness.
-          </p>
-        </section>
-
-        <section className="skin-story">
-          <div className="skin-story-number" aria-hidden="true">3</div>
-          <div className="skin-story-copy">
-            <p className="skin-kicker">WHY 3FIG</p>
-            <h2>
-              Not more data.<br />
-              <em>More meaning.</em>
-            </h2>
-            <p>
-              Skin rarely changes for one reason. Sleep slips. Meals shift.
-              Stress stacks up. Most tools record the moments, then leave you to
-              connect them.
-            </p>
-            <p>
-              3FIG is designed to bring those signals into one clear pattern —
-              so the day feels less like a puzzle, and the next step feels more
-              like yours.
-            </p>
-            <p className="skin-small-print">
-              One ring. Three pathways. A picture that gets more personal with
-              every day.
-            </p>
-          </div>
-        </section>
-
-        <section id="updates" className="skin-updates">
-          <div className="skin-update-motion" aria-hidden="true">
-            <span className="skin-update-light skin-update-light-a" />
-            <span className="skin-update-light skin-update-light-b" />
-            <span className="skin-update-light skin-update-light-c" />
-          </div>
-          <div className="skin-update-content">
-            <p className="skin-kicker">YOUR NEXT CHAPTER, WITH 3FIG</p>
-            <h2>
-              A little closer.<br />
-              <em>To your everyday.</em>
-            </h2>
-            <p>
-              Be among the first to meet 3FIG. Join the launch list for thoughtful
-              updates, early access and a little something to welcome you.
-            </p>
-            <div
-              className="skin-early-benefits"
-              role="group"
-              aria-label="Pre-registration founding member perk: Lifetime subscription"
-              ref={benefitRef}
-            >
-              <article className="skin-benefit-card skin-benefit-featured" data-featured="true">
-                <span className="skin-benefit-pill">Founding Member Perk</span>
-                <span className="skin-benefit-icon" aria-hidden="true">
-                  <Sparkles size={24} />
-                </span>
-                <div>
-                  <span>LIFETIME SUBSCRIPTION</span>
-                  <strong>Free subscription for life as a founding member.</strong>
+              <div className="teaser2-hardware-benefits">
+                <div className="teaser2-hardware-benefit-item">
+                  <strong>Sleep-friendly</strong>
+                  <span>Discreet sensors with zero screen or vibration to disturb your rest.</span>
                 </div>
-              </article>
-            </div>
-            {status === "success" ? (
-              <div className="skin-form-success" role="status">
-                <Check size={22} />
-                <div>
-                  <strong>{message}</strong>
-                  <span>Only the news worth opening.</span>
+                <div className="teaser2-hardware-benefit-item">
+                  <strong>Everyday-ready</strong>
+                  <span>Water-resistant titanium built for daily showers and workouts.</span>
+                </div>
+                <div className="teaser2-hardware-benefit-item">
+                  <strong>Quiet by design</strong>
+                  <span>Continuous background sensing with multi-day battery life.</span>
                 </div>
               </div>
-            ) : (
-              <div className="skin-signup-wrap">
-                <div
-                  className="skin-signup-counter skin-waitlist-counter"
-                  id="waitlist-counter"
-                  data-waitlist-counter
-                >
-                  <span className="skin-counter-dot" aria-hidden="true" />
-                  <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
-                </div>
-                <button
-                  type="button"
-                  className="skin-signup-btn"
-                  onClick={() => openWaitlist("signup")}
-                >
-                  <span className="skin-border-beam" aria-hidden="true" />
-                  <span>Claim Free Lifetime Access</span>
-                  <ArrowRight size={18} />
-                </button>
-              </div>
-            )}
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================
+            06 — SCIENCE (EDITORIAL LINKS)
+            ============================================================ */}
+        <Teaser2Science />
+
+        {/* ============================================================
+            07 — TESTIMONIALS (EARLY VOICES)
+            ============================================================ */}
+        <Teaser2Testimonials />
+
+        {/* ============================================================
+            08 — FAQ (QUIET UTILITY)
+            ============================================================ */}
+        <Teaser2Faq />
+
+        {/* ============================================================
+            09 — FINAL CTA (CONVERSION MOMENT)
+            ============================================================ */}
+        <section id="updates" className="teaser2-final-section" aria-labelledby="conversion-title">
+          <div className="teaser2-final-motion" aria-hidden="true">
+            <span className="teaser2-final-light teaser2-final-light-a" />
+            <span className="teaser2-final-light teaser2-final-light-b" />
+          </div>
+          <div className="teaser2-final-content">
+            <p className="teaser2-eyebrow">FOUNDING MEMBER ACCESS</p>
+            <h2 id="conversion-title" className="teaser2-final-title">
+              Your membership.<br />
+              <em>Free for life.</em>
+            </h2>
+            <p className="teaser2-final-lead">
+              Join early and keep your 3FIG membership free for life.
+            </p>
+
+            <div className="teaser2-final-actions" ref={benefitRef}>
+              <button
+                type="button"
+                className="teaser2-final-btn"
+                onClick={() => openWaitlist("signup")}
+              >
+                <span className="skin-border-beam" aria-hidden="true" />
+                <span>Claim Free Lifetime Access</span>
+                <ArrowRight size={18} />
+              </button>
+              <p className="teaser2-final-microcopy">
+                Ring sold separately.
+              </p>
+            </div>
           </div>
         </section>
       </main>
 
-      {/* Mobile Floating CTA - emerges when scrolling past hero */}
-      <div
-        className={`skin-mobile-floating-bar${showFloatingCta && !menuOpen && !surveyOpen ? " is-visible" : ""}`}
-        aria-hidden={!showFloatingCta || menuOpen || surveyOpen}
-      >
-        <div
-          className="skin-mobile-floating-counter skin-waitlist-counter"
-          data-waitlist-counter
-          onClick={() => openWaitlist("mobile_floating")}
-          role="button"
-          tabIndex={showFloatingCta && !menuOpen && !surveyOpen ? 0 : -1}
-          aria-label="Limited founding spots"
-        >
-          <span className="skin-counter-dot" aria-hidden="true" />
-          <span>Limited founding spots: <strong className="skin-counter-val">{waitlistCount}</strong></span>
+      {/* ============================================================
+          FOOTER (FULL-WIDTH EDGE-TO-EDGE)
+          ============================================================ */}
+      <footer className="teaser2-footer">
+        <div className="teaser2-footer-inner">
+          <button
+            type="button"
+            className="teaser2-footer-privacy-btn"
+            onClick={() => setPrivacyOpen(true)}
+          >
+            Privacy &amp; Analytics
+          </button>
+          <span className="teaser2-footer-copyright">© 2026 3FIG</span>
         </div>
-        <button
-          className="skin-mobile-floating-btn"
-          type="button"
-          onClick={() => openWaitlist("mobile_floating")}
-          tabIndex={showFloatingCta && !menuOpen && !surveyOpen ? 0 : -1}
-          aria-label="Claim Free Lifetime Access"
-        >
-          <span className="skin-border-beam" aria-hidden="true" />
-          <span>Claim Free Lifetime Access</span>
-          <ArrowRight size={18} />
-        </button>
-      </div>
-
-      <footer className="skin-footer">
-        <p className="skin-footer-copy">Your skin. Your signals. One clearer story.</p>
-        <span className="skin-footer-copyright">© 2026 3FIG</span>
       </footer>
 
+      {/* Privacy Dialog */}
       <Dialog open={privacyOpen} onOpenChange={setPrivacyOpen}>
         <DialogContent className="fig-dialog skin-privacy-dialog">
           <DialogTitle>Your inbox. Your call.</DialogTitle>
           <DialogDescription>
-            Join the launch list and we’ll keep your email only to send
-            occasional 3FIG product updates. We never sell it. Leave anytime.
+            Join the launch list and we’ll keep your email only to send occasional 3FIG product updates. We never sell it. Leave anytime.
           </DialogDescription>
           <p>
-            We use Google Analytics and Microsoft Clarity to understand website usage, and the Meta Pixel to measure visits and successful new waitlist registrations from our ads. We do not include your email address or survey answers in Meta event parameters.
-            Campaign attribution is remembered in your browser for up to 90 days and
-            saved with your signup to help us understand how people find 3FIG.
+            We use Google Analytics and Microsoft Clarity to understand website usage, and the Meta Pixel to measure visits and successful new waitlist registrations from our ads. We do not include your email address in Meta event parameters.
           </p>
           <p>
-            3FIG supports everyday wellness. It does not diagnose, prevent
-            or treat medical conditions.
+            3FIG supports everyday wellness. It does not diagnose, prevent or treat medical conditions.
           </p>
         </DialogContent>
       </Dialog>
 
-      <WaitlistSurveyDialog
-        open={surveyOpen}
-        onOpenChange={setSurveyOpen}
-        defaultEmail={email}
-        onSuccess={() => {
-          setStatus("success");
-          setMessage("You’re in. Welcome to the 3FIG launch list.");
-        }}
+      {/* Dedicated Waitlist Dialog with 2-step registration & hidden 20% exit offer */}
+      <Teaser2WaitlistDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
       />
     </div>
   );

@@ -38,20 +38,12 @@ export default function Teaser2Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/teaser2-desktop-poster.jpg?v=2"
-        media="(min-width: 821px)"
+        href="/images/threefig-editorial-model-v4.webp"
       />
       <link
         rel="preload"
         as="image"
-        href="/images/teaser2-hero-title.png"
-        media="(min-width: 821px)"
-      />
-      <link
-        rel="preload"
-        as="image"
-        href="/images/teaser2-hero-poster.jpg?v=2"
-        media="(max-width: 820px)"
+        href="/images/threefig-ring-still-life-v4.webp"
       />
       <script
         type="application/ld+json"
