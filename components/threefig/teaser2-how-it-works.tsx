@@ -320,6 +320,229 @@ function ConnectOverlayUI({ active }: { active: boolean }) {
 }
 
 /* ------------------------------------------------------------
+   SIMPLIFIED MOBILE UI OVERLAYS (SINGLE-SURFACE DESIGN)
+   - Wear: 1 compact signals component with integrated summary
+   - Check-in: 1 compact check-in component with integrated context row
+   - Connect: 1 merged Pattern + Action component
+   ------------------------------------------------------------ */
+
+/* Mobile 01: Overnight Signals (Wear) */
+function MobileWearOverlayUI({ active }: { active: boolean }) {
+  const metricRows = [
+    { name: "Sleep rhythm", status: "TRACKED" },
+    { name: "Resting HR & HRV", status: "TRACKED" },
+    { name: "Temperature shifts", status: "TRACKED" },
+  ];
+
+  return (
+    <div className={`teaser2-mobile-single-card teaser2-m-wear-card ${active ? "is-revealed" : ""}`}>
+      <div className="teaser2-m-card-header">
+        <span className="teaser2-m-card-title">OVERNIGHT SIGNALS</span>
+        <span className="teaser2-overlay-live-dot" aria-hidden="true" />
+      </div>
+
+      <div className="teaser2-m-metrics-list">
+        {metricRows.map((row, idx) => (
+          <div
+            key={row.name}
+            className="teaser2-m-metric-row"
+            style={{ transitionDelay: active ? `${0.18 + idx * 0.07}s` : "0s" }}
+          >
+            <span className="teaser2-m-metric-name">{row.name}</span>
+            <span className="teaser2-m-metric-status">{row.status}</span>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="teaser2-m-wear-bottom"
+        style={{ transitionDelay: active ? "0.42s" : "0s" }}
+      >
+        <div className="teaser2-m-wear-sleep-stat">
+          <strong className="teaser2-m-wear-sleep-val">7h 42m asleep</strong>
+        </div>
+        <span className="teaser2-m-wear-baseline">Baseline building</span>
+      </div>
+    </div>
+  );
+}
+
+/* Mobile 02: Today's Skin (Check In) */
+function MobileCheckInOverlayUI({ active }: { active: boolean }) {
+  const options = ["Calm", "Dry", "Sensitive", "Irritated"];
+
+  return (
+    <div className={`teaser2-mobile-single-card teaser2-m-checkin-card ${active ? "is-revealed" : ""}`}>
+      <div className="teaser2-m-card-header">
+        <span className="teaser2-m-card-title">TODAY’S SKIN</span>
+        <span className="teaser2-overlay-badge">Logged by you</span>
+      </div>
+
+      <div className="teaser2-m-prompt-block">
+        <p className="teaser2-m-prompt-label">How does it feel?</p>
+        <div className="teaser2-m-chips-grid">
+          {options.map((opt, idx) => {
+            const isSelected = opt === "Calm";
+            return (
+              <div
+                key={opt}
+                className={`teaser2-m-chip ${isSelected ? "is-selected" : ""}`}
+                style={{ transitionDelay: active ? `${0.18 + idx * 0.06}s` : "0s" }}
+              >
+                {isSelected && (
+                  <Check size={12} className="teaser2-m-chip-icon" aria-hidden="true" />
+                )}
+                <span>{opt}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div
+        className="teaser2-m-context-integrated-row"
+        style={{ transitionDelay: active ? "0.42s" : "0s" }}
+      >
+        <span className="teaser2-m-context-label">Context</span>
+        <span className="teaser2-m-context-tag">Late meal</span>
+      </div>
+    </div>
+  );
+}
+
+/* Mobile 03: Pattern Insight + Tonight's Move (Connect) */
+function MobileConnectOverlayUI({ active }: { active: boolean }) {
+  const rawClipId = useId();
+  const clipId = `m-connect-clip-${rawClipId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
+  const sleepPoints: [number, number][] = [
+    [16, 44],
+    [48, 36],
+    [80, 44],
+    [112, 30],
+    [144, 33],
+    [176, 18],
+    [208, 22],
+  ];
+
+  const skinPoints: [number, number][] = [
+    [16, 50],
+    [48, 43],
+    [80, 45],
+    [112, 37],
+    [144, 35],
+    [176, 27],
+    [208, 31],
+  ];
+
+  const sleepPathD = "M 16,44 L 48,36 L 80,44 L 112,30 L 144,33 L 176,18 L 208,22";
+  const skinPathD = "M 16,50 L 48,43 L 80,45 L 112,37 L 144,35 L 176,27 L 208,31";
+
+  return (
+    <div className={`teaser2-mobile-single-card teaser2-m-connect-card ${active ? "is-revealed" : ""}`}>
+      {/* Upper Section: Pattern Insight */}
+      <div className="teaser2-m-card-header">
+        <span className="teaser2-m-card-title">PATTERN INSIGHT</span>
+        <div className="teaser2-m-legend-row">
+          <div className="teaser2-m-legend-item">
+            <span className="teaser2-m-legend-line-solid" />
+            <span>Sleep</span>
+          </div>
+          <div className="teaser2-m-legend-item">
+            <span className="teaser2-m-legend-line-dashed" />
+            <span>Skin</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="teaser2-m-chart-wrap">
+        <svg className="teaser2-m-chart-svg" viewBox="0 0 224 74" aria-hidden="true">
+          <defs>
+            <clipPath id={clipId}>
+              <rect
+                x="0"
+                y="0"
+                width={active ? "224" : "0"}
+                height="74"
+                style={{ transition: "width 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.22s" }}
+              />
+            </clipPath>
+          </defs>
+
+          {/* Reference gridlines */}
+          <line x1="10" x2="214" y1="16" y2="16" className="teaser2-overlay-grid-line" />
+          <line x1="10" x2="214" y1="38" y2="38" className="teaser2-overlay-grid-line" />
+
+          {/* Curves */}
+          <path d={sleepPathD} className="teaser2-overlay-path-sleep" clipPath={`url(#${clipId})`} />
+          <path d={skinPathD} className="teaser2-overlay-path-skin" strokeDasharray="4 3" clipPath={`url(#${clipId})`} />
+
+          {/* Nodes */}
+          {sleepPoints.map(([cx, cy], i) => (
+            <circle
+              key={`m-sl-${i}`}
+              cx={cx}
+              cy={cy}
+              r="2.6"
+              className="teaser2-overlay-ring-node"
+              style={{
+                opacity: active ? 1 : 0,
+                transition: `opacity 0.25s ease ${0.35 + i * 0.05}s`,
+              }}
+            />
+          ))}
+          {skinPoints.map(([cx, cy], i) => (
+            <circle
+              key={`m-sk-${i}`}
+              cx={cx}
+              cy={cy}
+              r="2.4"
+              className="teaser2-overlay-dot-node"
+              style={{
+                opacity: active ? 1 : 0,
+                transition: `opacity 0.25s ease ${0.4 + i * 0.05}s`,
+              }}
+            />
+          ))}
+
+          {/* Weekday axis */}
+          {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
+            <text key={i} x={16 + i * 32} y="68" textAnchor="middle" className="teaser2-overlay-axis-text">
+              {d}
+            </text>
+          ))}
+        </svg>
+      </div>
+
+      <p className="teaser2-m-pattern-caption">
+        Sleep consistency and skin comfort moved together this week.
+      </p>
+
+      {/* Divider */}
+      <div className="teaser2-m-card-divider" aria-hidden="true" />
+
+      {/* Action Focal Point */}
+      <div className="teaser2-m-move-section">
+        <div className="teaser2-m-move-header">
+          <span className="teaser2-m-card-title">TONIGHT’S MOVE</span>
+          <div className="teaser2-m-time-tag">
+            <Moon size={11} aria-hidden="true" />
+            <span>10:20 PM</span>
+          </div>
+        </div>
+
+        <h4 className="teaser2-m-move-headline">
+          Wind down 20 mins earlier.
+        </h4>
+        <p className="teaser2-m-move-subtext">
+          A steadier bedtime may support a more consistent recovery pattern.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------
    STORY SLIDE DATA
    ------------------------------------------------------------ */
 interface StorySlide {
@@ -328,9 +551,11 @@ interface StorySlide {
   themeLabel: string;
   headline: string;
   bodyCopy: string;
+  mobileBodyCopy?: string;
   imageSrc: string;
   imageAlt: string;
   uiOverlay: (active: boolean) => React.ReactNode;
+  mobileUiOverlay?: (active: boolean) => React.ReactNode;
 }
 
 const STORY_SLIDES: StorySlide[] = [
@@ -341,10 +566,13 @@ const STORY_SLIDES: StorySlide[] = [
     headline: "Wear it.",
     bodyCopy:
       "3FIG quietly tracks supported body signals while you sleep, move, and go about your day.",
+    mobileBodyCopy:
+      "3FIG quietly tracks supported body signals while you sleep, move, and go about your day.",
     imageSrc: "/images/threefig-pathway-01-sleep.webp",
     imageAlt:
       "A calm waking morning scene with an adult woman resting naturally on linen bedding, the 3FIG smart ring comfortably visible.",
     uiOverlay: (active) => <WearOverlayUI active={active} />,
+    mobileUiOverlay: (active) => <MobileWearOverlayUI active={active} />,
   },
   {
     id: "check-in",
@@ -353,10 +581,13 @@ const STORY_SLIDES: StorySlide[] = [
     headline: "Check in.",
     bodyCopy:
       "A few quick taps capture how your skin feels today — without turning your routine into homework.",
+    mobileBodyCopy:
+      "A few quick taps capture how your skin feels today.",
     imageSrc: "/images/threefig-pathway-04-rhythm.webp",
     imageAlt:
       "An intimate self-reflection moment with clean morning sunlight touching healthy skin, wearing the 3FIG ring naturally.",
     uiOverlay: (active) => <CheckInOverlayUI active={active} />,
+    mobileUiOverlay: (active) => <MobileCheckInOverlayUI active={active} />,
   },
   {
     id: "connect",
@@ -365,10 +596,13 @@ const STORY_SLIDES: StorySlide[] = [
     headline: "Connect it.",
     bodyCopy:
       "3FIG brings your body signals and skin check-ins together to help meaningful patterns stand out.",
+    mobileBodyCopy:
+      "3FIG brings your body signals and skin check-ins together to help meaningful patterns stand out.",
     imageSrc: "/images/threefig-balance-now-knit.webp",
     imageAlt:
       "A calm evening winding down at home, resting comfortably in soft knitwear with the 3FIG ring naturally visible.",
     uiOverlay: (active) => <ConnectOverlayUI active={active} />,
+    mobileUiOverlay: (active) => <MobileConnectOverlayUI active={active} />,
   },
 ];
 
@@ -544,11 +778,13 @@ export function Teaser2HowItWorks() {
                     <div className="teaser2-mobile-editorial">
                       <span className="teaser2-slide-theme">{slide.themeLabel}</span>
                       <h3 className="teaser2-slide-headline">{slide.headline}</h3>
-                      <p className="teaser2-slide-body">{slide.bodyCopy}</p>
+                      <p className="teaser2-slide-body">
+                        {slide.mobileBodyCopy || slide.bodyCopy}
+                      </p>
                     </div>
 
                     <div className="teaser2-mobile-ui-slot">
-                      {slide.uiOverlay(isActive)}
+                      {slide.mobileUiOverlay ? slide.mobileUiOverlay(isActive) : slide.uiOverlay(isActive)}
                     </div>
                   </div>
                 </div>
