@@ -22,7 +22,7 @@ export function Teaser3Hero() {
 
   // Scroll discovery cue contract & lifecycle
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [hasNextSection, setHasNextSection] = useState(false);
+  const [hasNextSection, setHasNextSection] = useState(true);
 
   const desktopVideoRef = useRef<HTMLVideoElement | null>(null);
   const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -230,22 +230,17 @@ export function Teaser3Hero() {
     };
   }, []);
 
-  // Scroll discovery cue destination contract & detection
-  // Hidden unless a meaningful next section exists or test preview is enabled
+  // Scroll discovery cue contract & detection
+  // Active by default for immediate user discovery
   useEffect(() => {
     const checkNext = () => {
-      const urlParams =
-        typeof window !== "undefined"
-          ? new URLSearchParams(window.location.search)
-          : null;
-      const forceCue =
-        urlParams?.get("preview_cue") === "1" ||
-        (window as unknown as { __forceTeaser3ScrollCue?: boolean }).__forceTeaser3ScrollCue;
-
-      const dest =
-        document.getElementById("teaser3-content") ||
-        document.querySelector("[data-scroll-destination]");
-      setHasNextSection(Boolean(dest) || Boolean(forceCue));
+      // Keep active by default; if developer explicitly sets false, respect it
+      const forceHide = (window as unknown as { __hideTeaser3ScrollCue?: boolean }).__hideTeaser3ScrollCue;
+      if (forceHide) {
+        setHasNextSection(false);
+      } else {
+        setHasNextSection(true);
+      }
     };
 
     checkNext();
@@ -254,10 +249,6 @@ export function Teaser3Hero() {
         setHasNextSection(val);
       };
     }
-
-    const observer = new MutationObserver(checkNext);
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
   }, []);
 
   // Track scroll threshold (24px) - dismiss cue for remainder of visit
@@ -291,6 +282,12 @@ export function Teaser3Hero() {
         destination.setAttribute("tabIndex", "-1");
         destination.focus({ preventScroll: true });
       }
+    } else {
+      // Smoothly scroll down so user immediately experiences discovery motion
+      window.scrollBy({
+        top: Math.min(window.innerHeight * 0.75, 450),
+        behavior: "smooth",
+      });
     }
   };
 

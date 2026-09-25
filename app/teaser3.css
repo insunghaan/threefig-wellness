@@ -1147,17 +1147,17 @@
 .teaser3-scroll-cue {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   background: transparent;
   border: none;
   padding: 6px 0;
   margin: 0;
   font-family: var(--tf-font-sans);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: -0.01em;
-  color: var(--tf-color-text-secondary);
+  color: #55504a;
   cursor: pointer;
   text-decoration: none;
   border-radius: 4px;
@@ -1167,7 +1167,7 @@
 }
 
 .teaser3-scroll-cue:hover {
-  color: var(--tf-color-text-primary);
+  color: #111111;
 }
 
 .teaser3-scroll-cue:focus-visible {
@@ -1213,8 +1213,8 @@
 .teaser3-mobile-cue-wrap {
   position: absolute;
   left: 24px;
-  bottom: calc(100% + 14px);
-  z-index: 20;
+  bottom: calc(100% + 12px);
+  z-index: 30;
   pointer-events: auto;
   transition: opacity 0.22s ease, visibility 0.22s ease;
 }
@@ -1225,21 +1225,23 @@
   pointer-events: none;
 }
 
-/* Mobile contrast adaptivity based on whether dock is over dark video or light surface */
-.teaser3-mobile-dock.is-dark-surface .teaser3-scroll-cue {
-  color: rgba(255, 255, 255, 0.82);
+/* Mobile contrast: text shadow guarantees readability over video content */
+.teaser3-mobile-dock .teaser3-scroll-cue {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75), 0 0 8px rgba(0, 0, 0, 0.4);
 }
 
-.teaser3-mobile-dock.is-dark-surface .teaser3-scroll-cue:hover {
+.teaser3-mobile-dock .teaser3-scroll-cue:hover {
   color: #ffffff;
 }
 
 .teaser3-mobile-dock.is-light-surface .teaser3-scroll-cue {
-  color: var(--tf-color-text-secondary);
+  color: #332f2b;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
 }
 
 .teaser3-mobile-dock.is-light-surface .teaser3-scroll-cue:hover {
-  color: var(--tf-color-text-primary);
+  color: #111111;
 }
 
 @media (prefers-reduced-motion: reduce) {
