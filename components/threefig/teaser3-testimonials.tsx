@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 interface TestimonialItem {
   id: string;
   quote: string;
   author: string;
   descriptor: string;
+  avatarSrc: string;
 }
 
 const testimonials: TestimonialItem[] = [
@@ -16,6 +18,7 @@ const testimonials: TestimonialItem[] = [
       "Most wearables give you a hundred recovery scores that mean nothing for your skin. Connecting sleep baselines to how my skin actually behaves in the morning is the first time health tracking felt genuinely relevant.",
     author: "Elena R.",
     descriptor: "Beta participant & design director, London",
+    avatarSrc: "/images/teaser3-avatar-elena.webp",
   },
   {
     id: "marcus",
@@ -23,6 +26,7 @@ const testimonials: TestimonialItem[] = [
       "I used to guess why my skin felt sensitized some weeks and calm others. Having overnight heart rate variability and temperature shifts alongside my daily check-ins showed me patterns I'd never linked on my own.",
     author: "Marcus C.",
     descriptor: "Beta participant & runner with reactive skin, Austin",
+    avatarSrc: "/images/teaser3-avatar-marcus.webp",
   },
   {
     id: "sophie",
@@ -30,6 +34,7 @@ const testimonials: TestimonialItem[] = [
       "It doesn't push five new products on you. It just helps you notice what your skin is responding to, one day at a time. The calmness of the whole experience is what won me over.",
     author: "Sophie L.",
     descriptor: "Beta participant & creative director, New York",
+    avatarSrc: "/images/teaser3-avatar-sophie.webp",
   },
   {
     id: "julian",
@@ -37,12 +42,17 @@ const testimonials: TestimonialItem[] = [
       "Finally, an approach that respects how interconnected skin barrier function is with rest and autonomic recovery—without over-promising or turning into an aggressive medical dashboard.",
     author: "Dr. Julian K.",
     descriptor: "Cutaneous physiology researcher & beta advisor, Boston",
+    avatarSrc: "/images/teaser3-avatar-julian.webp",
   },
 ];
 
 export function Teaser3Testimonials() {
   return (
-    <section id="early-voices" className="teaser3-section teaser3-testimonials-section" aria-labelledby="testimonials-heading">
+    <section
+      id="early-voices"
+      className="teaser3-section teaser3-testimonials-section"
+      aria-labelledby="testimonials-heading"
+    >
       <div className="teaser3-section-container">
         {/* Section Header */}
         <div className="teaser3-section-head">
@@ -63,14 +73,29 @@ export function Teaser3Testimonials() {
                 &ldquo;{item.quote}&rdquo;
               </blockquote>
               <div className="teaser3-testimonial-meta">
-                <cite className="teaser3-testimonial-author">{item.author}</cite>
-                <span className="teaser3-testimonial-descriptor">
-                  {item.descriptor}
-                </span>
+                <Image
+                  src={item.avatarSrc}
+                  alt=""
+                  width={48}
+                  height={48}
+                  loading="lazy"
+                  className="teaser3-testimonial-avatar"
+                />
+                <div className="teaser3-testimonial-author-group">
+                  <cite className="teaser3-testimonial-author">{item.author}</cite>
+                  <span className="teaser3-testimonial-descriptor">
+                    {item.descriptor}
+                  </span>
+                </div>
               </div>
             </article>
           ))}
         </div>
+
+        {/* Discreet Section-Level Note */}
+        <p className="teaser3-testimonials-disclaimer">
+          Portraits are illustrative.
+        </p>
       </div>
     </section>
   );

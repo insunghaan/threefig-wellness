@@ -244,11 +244,12 @@ export function Teaser3WaitlistDialog({
                 Join the launch list to reserve your founding member spot and enjoy free 3FIG app access for life.
               </DialogPrimitive.Description>
 
-              <div className="teaser3-dialog-condition">
-                <p>
+              <div className="teaser3-dialog-benefit-summary">
+                <p className="teaser3-dialog-benefit-primary">Free app access. For life.</p>
+                <p className="teaser3-dialog-benefit-secondary">
                   {selectedOffer === "early_20_off"
-                    ? "20% ring discount applied upon launch. Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis."
-                    : "Zero monthly membership fees for all core wellness signals, insights, and rhythm analysis. Ring purchase required upon launch."}
+                    ? "20% off your ring at launch."
+                    : "Ring purchase required upon launch."}
                 </p>
               </div>
 
@@ -322,9 +323,10 @@ export function Teaser3WaitlistDialog({
                 Join the launch list today to guarantee 20% off your 3FIG smart ring, plus lifetime free app membership upon release.
               </DialogPrimitive.Description>
 
-              <div className="teaser3-dialog-condition">
-                <p>
-                  Zero monthly membership fees for all core wellness signals, rhythm analysis, and skin insights. 20% discount applied automatically at ring launch.
+              <div className="teaser3-dialog-benefit-summary">
+                <p className="teaser3-dialog-benefit-primary">Free app access. For life.</p>
+                <p className="teaser3-dialog-benefit-secondary">
+                  Your discount applies automatically at launch.
                 </p>
               </div>
 

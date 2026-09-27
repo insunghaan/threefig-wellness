@@ -15,31 +15,29 @@ export const Teaser3FinalBenefits = forwardRef<HTMLDivElement, Teaser3FinalBenef
         className="teaser3-section teaser3-benefits-section"
         aria-labelledby="benefits-heading"
       >
-        <div className="teaser3-section-container">
-          <div className="teaser3-benefits-card">
-            <p className="teaser3-eyebrow">FOUNDING MEMBER ACCESS</p>
-            <h2 id="benefits-heading" className="teaser3-benefits-title">
-              Your membership. <br />
-              <span className="teaser3-title-accent">Free for life.</span>
-            </h2>
-            <p className="teaser3-benefits-lead">
-              Join early and keep your 3FIG membership free for life.
-            </p>
+        <div className="teaser3-benefits-container">
+          <p className="teaser3-benefits-eyebrow">FOUNDING MEMBER ACCESS</p>
+          <h2 id="benefits-heading" className="teaser3-benefits-title">
+            Your membership. <br />
+            <span className="teaser3-benefits-accent">Free for life.</span>
+          </h2>
+          <p className="teaser3-benefits-lead">
+            Join early and keep your 3FIG membership free for life.
+          </p>
 
-            <div className="teaser3-benefits-actions" ref={ref}>
-              <button
-                type="button"
-                className="teaser3-btn-pill teaser3-benefits-btn"
-                onClick={onOpenWaitlist}
-                aria-label="Count me in"
-              >
-                <span>Count me in</span>
-                <ArrowRight size={17} aria-hidden="true" />
-              </button>
-              <p className="teaser3-benefits-microcopy">
-                Ring sold separately.
-              </p>
-            </div>
+          <div className="teaser3-benefits-actions" ref={ref}>
+            <button
+              type="button"
+              className="teaser3-btn-pill-inverse teaser3-benefits-btn"
+              onClick={onOpenWaitlist}
+              aria-label="Count me in"
+            >
+              <span>Count me in</span>
+              <ArrowRight size={17} aria-hidden="true" />
+            </button>
+            <p className="teaser3-benefits-microcopy">
+              Ring sold separately.
+            </p>
           </div>
         </div>
       </section>

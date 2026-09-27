@@ -13,7 +13,7 @@ export function Teaser3BrandMoment({ onOpenWaitlist }: Teaser3BrandMomentProps) 
       <div className="teaser3-brand-container">
         <h2 className="teaser3-brand-title">
           Life happens. <br />
-          <span className="teaser3-title-accent">Skin notices.</span>
+          <span className="teaser3-brand-accent">Skin notices.</span>
         </h2>
         <p className="teaser3-brand-desc">
           3FIG helps you notice what tends to come with it.
@@ -24,9 +24,9 @@ export function Teaser3BrandMoment({ onOpenWaitlist }: Teaser3BrandMomentProps) 
             type="button"
             className="teaser3-btn-pill teaser3-brand-btn"
             onClick={onOpenWaitlist}
-            aria-label="Claim free lifetime access to 3FIG"
+            aria-label="Count me in"
           >
-            <span>Claim Free Lifetime Access</span>
+            <span>Count me in</span>
             <ArrowRight size={17} aria-hidden="true" />
           </button>
         </div>
