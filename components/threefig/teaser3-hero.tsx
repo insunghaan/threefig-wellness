@@ -6,14 +6,19 @@ import { ArrowDown } from "lucide-react";
 import { getSimulatedWaitlistCount } from "@/lib/threefig/waitlist-counter";
 import { Teaser3WaitlistDialog } from "./teaser3-waitlist-dialog";
 import { ThreeFigButton } from "./threefig-button";
+import { Teaser3Body } from "./teaser3-body";
+import { Teaser3PrivacyDialog } from "./teaser3-privacy-dialog";
 
 export function Teaser3Hero() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLightSurface, setIsLightSurface] = useState(false);
   const [isHandoffHidden, setIsHandoffHidden] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
+
+  const finalCtaRef = useRef<HTMLDivElement | null>(null);
 
   // Email draft and selected offer preserved above popup content across reopens
   const [emailDraft, setEmailDraft] = useState("");
@@ -272,11 +277,32 @@ export function Teaser3Hero() {
       if (window.scrollY > 24) {
         setHasScrolled(true);
       }
+      setIsLightSurface(window.scrollY > 300);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [dialogOpen]);
+
+  // Mobile floating CTA handoff: hide when final inline benefits CTA enters viewport
+  useEffect(() => {
+    const target = finalCtaRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setIsHandoffHidden(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -20px 0px",
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
 
   const handleScrollToNext = () => {
     setHasScrolled(true);
@@ -550,6 +576,22 @@ export function Teaser3Hero() {
           </video>
         </section>
       </div>
+
+      {/* ====================================================================
+          BELOW-THE-HERO BODY CONTENT (SECTIONS A THROUGH I)
+          Migrated from Teaser2 and redesigned to match Teaser3 visual identity
+          ==================================================================== */}
+      <Teaser3Body
+        ref={finalCtaRef}
+        onOpenWaitlist={handleOpenWaitlist}
+        onOpenPrivacy={() => setPrivacyOpen(true)}
+      />
+
+      {/* Privacy & Analytics Dialog */}
+      <Teaser3PrivacyDialog
+        open={privacyOpen}
+        onOpenChange={setPrivacyOpen}
+      />
 
       {/* ====================================================================
           COORDINATED MOBILE OVERLAYS: Fixed to Viewport Bottom
