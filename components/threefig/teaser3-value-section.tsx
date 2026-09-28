@@ -38,6 +38,29 @@ function useInView(options: IntersectionObserverInit = { threshold: 0.2, rootMar
 export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
   const animated = Boolean(inView || isActive);
+  const [displayScore, setDisplayScore] = useState(0);
+
+  useEffect(() => {
+    if (!animated) {
+      setDisplayScore(0);
+      return;
+    }
+    let startTimestamp: number | null = null;
+    const duration = 1100;
+    const endVal = 82;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setDisplayScore(Math.round(endVal * ease));
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+    const reqId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(reqId);
+  }, [animated]);
 
   return (
     <div
@@ -53,7 +76,7 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
 
       <div className="teaser3-preview-score-row">
         <div className="teaser3-preview-score-group">
-          <span className="teaser3-preview-score-number">82</span>
+          <span className="teaser3-preview-score-number">{displayScore}</span>
           <span className="teaser3-preview-score-total">/ 100</span>
         </div>
         <div className="teaser3-preview-status-tag">
@@ -327,18 +350,30 @@ const BENEFIT_ITEMS: BenefitItem[] = [
 export function Teaser3ValueSection() {
   const [activeMobileIdx, setActiveMobileIdx] = useState(0);
   const mobileTrackRef = useRef<HTMLDivElement | null>(null);
+  const touchStartXRef = useRef<number>(0);
+  const touchStartYRef = useRef<number>(0);
+  const isSwipingRef = useRef<boolean>(false);
 
   // Sync active mobile index on scroll
   const handleMobileScroll = () => {
     const el = mobileTrackRef.current;
     if (!el) return;
+    const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "24");
     const scrollLeft = el.scrollLeft;
-    const slideWidth = el.firstElementChild
-      ? (el.firstElementChild as HTMLElement).offsetWidth + 16
-      : 300;
-    const newIdx = Math.round(scrollLeft / slideWidth);
-    if (newIdx >= 0 && newIdx < BENEFIT_ITEMS.length && newIdx !== activeMobileIdx) {
-      setActiveMobileIdx(newIdx);
+
+    let closestIdx = 0;
+    let minDiff = Infinity;
+    for (let i = 0; i < el.children.length; i++) {
+      const child = el.children[i] as HTMLElement;
+      const target = child.offsetLeft - paddingLeft;
+      const diff = Math.abs(target - scrollLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = i;
+      }
+    }
+    if (closestIdx !== activeMobileIdx) {
+      setActiveMobileIdx(closestIdx);
     }
   };
 
@@ -347,12 +382,38 @@ export function Teaser3ValueSection() {
     if (!el) return;
     const slideEl = el.children[idx] as HTMLElement | undefined;
     if (slideEl) {
-      slideEl.scrollIntoView({
+      const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "24");
+      const targetScroll = slideEl.offsetLeft - paddingLeft;
+      el.scrollTo({
+        left: Math.max(0, targetScroll),
         behavior: "smooth",
-        inline: "start",
-        block: "nearest",
       });
       setActiveMobileIdx(idx);
+    }
+  };
+
+  // Touch swipe gestures for mobile slide interaction
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+
+    // Detect horizontal swipe if deltaX is dominant and >= 35px
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
+      if (deltaX < 0 && activeMobileIdx < BENEFIT_ITEMS.length - 1) {
+        // Swipe left -> Next slide
+        scrollToSlide(activeMobileIdx + 1);
+      } else if (deltaX > 0 && activeMobileIdx > 0) {
+        // Swipe right -> Prev slide
+        scrollToSlide(activeMobileIdx - 1);
+      }
     }
   };
 
@@ -394,7 +455,7 @@ export function Teaser3ValueSection() {
                   loading="lazy"
                 />
                 <div className="teaser3-panel-content">
-                  {BENEFIT_ITEMS[0].renderPreview(true)}
+                  {BENEFIT_ITEMS[0].renderPreview()}
                 </div>
               </div>
             </div>
@@ -411,7 +472,7 @@ export function Teaser3ValueSection() {
                   loading="lazy"
                 />
                 <div className="teaser3-panel-content">
-                  {BENEFIT_ITEMS[1].renderPreview(true)}
+                  {BENEFIT_ITEMS[1].renderPreview()}
                 </div>
               </div>
             </div>
@@ -444,7 +505,7 @@ export function Teaser3ValueSection() {
                   loading="lazy"
                 />
                 <div className="teaser3-panel-content">
-                  {BENEFIT_ITEMS[2].renderPreview(true)}
+                  {BENEFIT_ITEMS[2].renderPreview()}
                 </div>
               </div>
             </div>
@@ -470,6 +531,8 @@ export function Teaser3ValueSection() {
               ref={mobileTrackRef}
               className="teaser3-value-mobile-track"
               onScroll={handleMobileScroll}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
               role="region"
               aria-label="What You Get product previews"
               aria-roledescription="carousel"

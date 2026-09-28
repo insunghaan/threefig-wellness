@@ -1683,6 +1683,14 @@
   background-color: #f0f4ee;
   padding: 5px 12px;
   border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
+}
+
+.teaser3-preview-balance.is-animated .teaser3-preview-status-tag {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .teaser3-preview-status-dot {
@@ -1785,6 +1793,14 @@
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 16px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.teaser3-preview-move.is-animated .teaser3-preview-move-box {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .teaser3-preview-time-tag {
@@ -1856,13 +1872,15 @@
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-left: var(--tf-mobile-px, 24px);
+    scroll-padding-right: var(--tf-mobile-px, 24px);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
     gap: 16px;
     padding: 0 var(--tf-mobile-px, 24px) 8px var(--tf-mobile-px, 24px);
     margin: 0 calc(-1 * var(--tf-mobile-px, 24px));
-    touch-action: pan-y;
+    touch-action: pan-x pan-y;
   }
 
   .teaser3-value-mobile-track::-webkit-scrollbar {
@@ -1894,14 +1912,70 @@
   }
 
   .teaser3-value-mobile-slide .teaser3-visual-panel {
-    aspect-ratio: 9 / 10;
+    aspect-ratio: 1 / 1.18;
+    min-height: 380px;
     max-width: 100%;
     border-radius: 22px;
   }
 
-  .teaser3-preview-card {
-    padding: 18px 16px;
+  .teaser3-value-mobile-slide .teaser3-panel-content {
+    padding: 12px;
+  }
+
+  /* Compact preview card on mobile to prevent any overflow/clipping */
+  .teaser3-value-mobile-slide .teaser3-preview-card {
+    padding: 16px 14px 14px;
     border-radius: 16px;
+    width: 100%;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-header {
+    margin-bottom: 12px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-score-row {
+    margin-bottom: 12px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-score-number {
+    font-size: 42px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-score-total {
+    font-size: 16px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-meter-track {
+    margin-bottom: 12px;
+    height: 7px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-legend {
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-chart-wrap {
+    margin-bottom: 8px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-move-box {
+    padding: 14px 12px;
+    margin-bottom: 12px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-move-title {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-move-rationale {
+    font-size: 12.5px;
+  }
+
+  .teaser3-value-mobile-slide .teaser3-preview-caption {
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   /* Mobile Pagination Dots: matched exactly to How It Works pagination */
@@ -2019,6 +2093,14 @@
   width: 320px;
   max-width: calc(100% - 48px);
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.teaser3-how-overlay-stack.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .teaser3-how-glass-overlay {
@@ -2410,6 +2492,7 @@
     padding-left: 0;
     margin-right: calc(-1 * var(--tf-mobile-px, 24px));
     padding-right: var(--tf-mobile-px, 24px);
+    touch-action: pan-x pan-y;
   }
 
   .teaser3-how-slide-card {
@@ -2430,7 +2513,14 @@
     gap: 6px;
     max-width: calc(100% - 24px);
     transform-origin: bottom left;
-    transform: scale(0.65);
+    transform: scale(0.65) translateY(10px);
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .teaser3-how-overlay-stack.is-revealed {
+    opacity: 1;
+    transform: scale(0.65) translateY(0);
   }
 
   .teaser3-how-caption-row {

@@ -272,15 +272,20 @@ export function Teaser3HowItWorks() {
   const [activeIdx, setActiveIdx] = useState(0);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
+  const touchStartXRef = useRef<number>(0);
+  const touchStartYRef = useRef<number>(0);
+  const isSwipingRef = useRef<boolean>(false);
+
   const scrollToSlide = useCallback((idx: number) => {
     const track = trackRef.current;
     if (!track) return;
     const slides = track.querySelectorAll<HTMLElement>(".teaser3-how-slide-card");
     if (slides[idx]) {
-      slides[idx].scrollIntoView({
+      const paddingLeft = parseFloat(window.getComputedStyle(track).paddingLeft || "0");
+      const targetLeft = slides[idx].offsetLeft - track.offsetLeft - paddingLeft;
+      track.scrollTo({
+        left: Math.max(0, targetLeft),
         behavior: "smooth",
-        block: "nearest",
-        inline: "start",
       });
       setActiveIdx(idx);
     }
@@ -296,9 +301,31 @@ export function Teaser3HowItWorks() {
     scrollToSlide(target);
   }, [activeIdx, scrollToSlide]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
+      if (deltaX < 0 && activeIdx < STORY_SLIDES.length - 1) {
+        nextSlide();
+      } else if (deltaX > 0 && activeIdx > 0) {
+        prevSlide();
+      }
+    }
+  };
+
   const handleScroll = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
+    const paddingLeft = parseFloat(window.getComputedStyle(track).paddingLeft || "0");
     const scrollLeft = track.scrollLeft;
     const slides = track.querySelectorAll<HTMLElement>(".teaser3-how-slide-card");
     if (!slides.length) return;
@@ -306,7 +333,8 @@ export function Teaser3HowItWorks() {
     let closestIdx = 0;
     let minDiff = Infinity;
     slides.forEach((slide, idx) => {
-      const diff = Math.abs(slide.offsetLeft - track.offsetLeft - scrollLeft);
+      const targetLeft = slide.offsetLeft - track.offsetLeft - paddingLeft;
+      const diff = Math.abs(targetLeft - scrollLeft);
       if (diff < minDiff) {
         minDiff = diff;
         closestIdx = idx;
@@ -362,6 +390,8 @@ export function Teaser3HowItWorks() {
             ref={trackRef}
             className="teaser3-how-track"
             onScroll={handleScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             {STORY_SLIDES.map((slide, i) => (
               <div
