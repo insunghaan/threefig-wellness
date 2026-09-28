@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useId } from "react";
-import { Moon } from "lucide-react";
+import { Moon, ArrowLeft, ArrowRight } from "lucide-react";
 
 /* Lightweight viewport observer for motion */
 function useInView(options: IntersectionObserverInit = { threshold: 0.2, rootMargin: "60px" }) {
@@ -35,14 +35,15 @@ function useInView(options: IntersectionObserverInit = { threshold: 0.2, rootMar
    01. PREVIEW 01 — SKIN BALANCE
    Teaser3 Clean Aesthetic: Warm ivory/white surface, restrained border, warm-brown accent
    ------------------------------------------------------------ */
-export function Teaser3SkinBalancePreview() {
+export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
+  const animated = Boolean(inView || isActive);
 
   return (
     <div
       ref={ref}
       className={`teaser3-preview-card teaser3-preview-balance ${
-        inView ? "is-animated" : ""
+        animated ? "is-animated" : ""
       }`}
     >
       <div className="teaser3-preview-header">
@@ -71,7 +72,7 @@ export function Teaser3SkinBalancePreview() {
       >
         <div
           className="teaser3-preview-meter-fill"
-          style={{ width: inView ? "82%" : "0%" }}
+          style={{ width: animated ? "82%" : "0%" }}
         />
       </div>
 
@@ -86,10 +87,11 @@ export function Teaser3SkinBalancePreview() {
    02. PREVIEW 02 — 7-DAY PATTERNS
    Teaser3 Clean Line Chart: White surface, charcoal lines, warm-brown accent, legible labels
    ------------------------------------------------------------ */
-export function Teaser3PatternsPreview() {
+export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
   const rawClipId = useId();
   const clipId = `teaser3-patterns-clip-${rawClipId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const animated = Boolean(inView || isActive);
 
   const sleepPoints: [number, number][] = [
     [24, 75],
@@ -118,7 +120,7 @@ export function Teaser3PatternsPreview() {
     <div
       ref={ref}
       className={`teaser3-preview-card teaser3-preview-patterns ${
-        inView ? "is-animated" : ""
+        animated ? "is-animated" : ""
       }`}
     >
       <div className="teaser3-preview-header">
@@ -155,7 +157,7 @@ export function Teaser3PatternsPreview() {
               <rect
                 x="0"
                 y="0"
-                width={inView ? "320" : "0"}
+                width={animated ? "320" : "0"}
                 height="132"
                 style={{
                   transition: "width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
@@ -193,8 +195,8 @@ export function Teaser3PatternsPreview() {
               r="4"
               className="teaser3-chart-node-sleep"
               style={{
-                opacity: inView ? 1 : 0,
-                transform: inView ? "scale(1)" : "scale(0)",
+                opacity: animated ? 1 : 0,
+                transform: animated ? "scale(1)" : "scale(0)",
                 transformOrigin: `${cx}px ${cy}px`,
                 transition: `all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.3 + i * 0.08}s`,
               }}
@@ -210,8 +212,8 @@ export function Teaser3PatternsPreview() {
               r="3.5"
               className="teaser3-chart-node-skin"
               style={{
-                opacity: inView ? 1 : 0,
-                transform: inView ? "scale(1)" : "scale(0)",
+                opacity: animated ? 1 : 0,
+                transform: animated ? "scale(1)" : "scale(0)",
                 transformOrigin: `${cx}px ${cy}px`,
                 transition: `all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) ${0.4 + i * 0.08}s`,
               }}
@@ -227,7 +229,7 @@ export function Teaser3PatternsPreview() {
               textAnchor="middle"
               className="teaser3-chart-axis-label"
               style={{
-                opacity: inView ? 1 : 0,
+                opacity: animated ? 1 : 0,
                 transition: "opacity 0.4s ease 0.2s",
               }}
             >
@@ -248,14 +250,15 @@ export function Teaser3PatternsPreview() {
    03. PREVIEW 03 — TONIGHT’S MOVE
    Teaser3 Clean Recommendation Card: Warm ivory card, time badge, clean typography
    ------------------------------------------------------------ */
-export function Teaser3NextMovePreview() {
+export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
+  const animated = Boolean(inView || isActive);
 
   return (
     <div
       ref={ref}
       className={`teaser3-preview-card teaser3-preview-move ${
-        inView ? "is-animated" : ""
+        animated ? "is-animated" : ""
       }`}
     >
       <div className="teaser3-preview-header">
@@ -284,13 +287,75 @@ export function Teaser3NextMovePreview() {
 }
 
 /* ------------------------------------------------------------
-   MAIN SECTION: WHAT YOU GET
+   MAIN SECTION: WHAT YOU GET (CAROUSEL)
    ------------------------------------------------------------ */
 export function Teaser3ValueSection() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+
+  const slides = [
+    {
+      id: "balance",
+      title: "Know where you are.",
+      desc: "See a simple view of how your supported signals and skin check-ins are lining up.",
+      preview: (isActive: boolean) => <Teaser3SkinBalancePreview isActive={isActive} />,
+    },
+    {
+      id: "patterns",
+      title: "See what changed.",
+      desc: "Spot small shifts over time and see what may be moving together.",
+      preview: (isActive: boolean) => <Teaser3PatternsPreview isActive={isActive} />,
+    },
+    {
+      id: "move",
+      title: "Know what to try.",
+      desc: "Get one useful suggestion based on the patterns 3FIG is helping you notice.",
+      preview: (isActive: boolean) => <Teaser3NextMovePreview isActive={isActive} />,
+    },
+  ];
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+
+    // Detect intentional horizontal swipe (dominant over vertical scroll)
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      if (deltaX < 0 && activeIdx < slides.length - 1) {
+        setActiveIdx((prev) => prev + 1);
+      } else if (deltaX > 0 && activeIdx > 0) {
+        setActiveIdx((prev) => prev - 1);
+      }
+    }
+
+    setTouchStartX(null);
+    setTouchStartY(null);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      setActiveIdx((prev) => Math.max(0, prev - 1));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      setActiveIdx((prev) => Math.min(slides.length - 1, prev + 1));
+    }
+  };
+
   return (
-    <section id="what-you-get" className="teaser3-section teaser3-value-section" aria-labelledby="value-title">
+    <section
+      id="what-you-get"
+      className="teaser3-section teaser3-value-section"
+      aria-labelledby="value-title"
+    >
       <div className="teaser3-section-container">
-        {/* Section Header */}
+        {/* Stationary Section Header outside carousel */}
         <div className="teaser3-section-head">
           <p className="teaser3-eyebrow">WHAT YOU GET</p>
           <h2 id="value-title" className="teaser3-section-title">
@@ -299,53 +364,91 @@ export function Teaser3ValueSection() {
           </h2>
         </div>
 
-        {/* Editorial Rows */}
-        <div className="teaser3-value-rows">
-          {/* Row 01: Know where you are */}
-          <div className="teaser3-value-row teaser3-row-text-left">
-            <div className="teaser3-value-text">
-              <span className="teaser3-value-step">01</span>
-              <p className="teaser3-value-kicker">01 / KNOW WHERE YOU ARE</p>
-              <h3 className="teaser3-value-heading">Know where you are.</h3>
-              <p className="teaser3-value-subheading">Your Skin Balance, at a glance.</p>
-              <p className="teaser3-value-desc">
-                See a simple view of how your supported signals and skin check-ins are lining up.
-              </p>
-            </div>
-            <div className="teaser3-value-media">
-              <Teaser3SkinBalancePreview />
-            </div>
+        {/* Unified Benefit Carousel */}
+        <div
+          className="teaser3-value-carousel"
+          tabIndex={0}
+          role="region"
+          aria-label="What You Get product previews"
+          aria-roledescription="carousel"
+          onKeyDown={handleKeyDown}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Slides Slider Track */}
+          <div className="teaser3-value-slider">
+            {slides.map((slide, idx) => {
+              const isActive = activeIdx === idx;
+              return (
+                <div
+                  key={slide.id}
+                  className={`teaser3-value-slide ${isActive ? "is-active" : ""}`}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${idx + 1} of ${slides.length}: ${slide.title}`}
+                  aria-hidden={!isActive}
+                >
+                  <div className="teaser3-value-slide-content">
+                    {/* Copy Column */}
+                    <div className="teaser3-value-slide-text">
+                      <h3 className="teaser3-value-slide-title">{slide.title}</h3>
+                      <p className="teaser3-value-slide-desc">{slide.desc}</p>
+                    </div>
+
+                    {/* Preview Column */}
+                    <div className="teaser3-value-slide-visual">
+                      {slide.preview(isActive)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          {/* Row 02: See what changed (Alternating on desktop: Media Left, Text Right) */}
-          <div className="teaser3-value-row teaser3-row-media-left">
-            <div className="teaser3-value-text">
-              <span className="teaser3-value-step">02</span>
-              <p className="teaser3-value-kicker">02 / SEE WHAT CHANGED</p>
-              <h3 className="teaser3-value-heading">See what changed.</h3>
-              <p className="teaser3-value-subheading">Notice patterns across your days.</p>
-              <p className="teaser3-value-desc">
-                Spot small shifts over time and see what may be moving together.
-              </p>
+          {/* Unified Controls: Dots + Desktop Arrows */}
+          <div className="teaser3-value-controls">
+            <div
+              className="teaser3-value-dots"
+              role="tablist"
+              aria-label="Choose slide to display"
+            >
+              {slides.map((slide, idx) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  role="tab"
+                  className={`teaser3-value-dot-btn ${
+                    activeIdx === idx ? "is-active" : ""
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
+                  aria-selected={activeIdx === idx}
+                  tabIndex={0}
+                  onClick={() => setActiveIdx(idx)}
+                />
+              ))}
             </div>
-            <div className="teaser3-value-media">
-              <Teaser3PatternsPreview />
-            </div>
-          </div>
 
-          {/* Row 03: Know what to try */}
-          <div className="teaser3-value-row teaser3-row-text-left">
-            <div className="teaser3-value-text">
-              <span className="teaser3-value-step">03</span>
-              <p className="teaser3-value-kicker">03 / KNOW WHAT TO TRY</p>
-              <h3 className="teaser3-value-heading">Know what to try.</h3>
-              <p className="teaser3-value-subheading">One small move. Not ten.</p>
-              <p className="teaser3-value-desc">
-                Get one useful suggestion based on the patterns 3FIG is helping you notice.
-              </p>
-            </div>
-            <div className="teaser3-value-media">
-              <Teaser3NextMovePreview />
+            <div className="teaser3-value-arrows" aria-label="Carousel navigation">
+              <button
+                type="button"
+                className="teaser3-value-arrow-btn"
+                onClick={() => setActiveIdx((prev) => Math.max(0, prev - 1))}
+                disabled={activeIdx === 0}
+                aria-label="Previous slide"
+              >
+                <ArrowLeft size={18} aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="teaser3-value-arrow-btn"
+                onClick={() =>
+                  setActiveIdx((prev) => Math.min(slides.length - 1, prev + 1))
+                }
+                disabled={activeIdx === slides.length - 1}
+                aria-label="Next slide"
+              >
+                <ArrowRight size={18} aria-hidden="true" />
+              </button>
             </div>
           </div>
         </div>
