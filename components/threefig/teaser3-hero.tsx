@@ -13,7 +13,7 @@ export function Teaser3Hero() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLightSurface, setIsLightSurface] = useState(false);
+  const [isLightSurface, setIsLightSurface] = useState(true);
   const [isHandoffHidden, setIsHandoffHidden] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
@@ -35,8 +35,6 @@ export function Teaser3Hero() {
   });
   const [hasNextSection, setHasNextSection] = useState(true);
 
-  const desktopVideoRef = useRef<HTMLVideoElement | null>(null);
-  const mobileVideoRef = useRef<HTMLVideoElement | null>(null);
   const mobileMediaRef = useRef<HTMLDivElement | null>(null);
 
   const [signupCount, setSignupCount] = useState<number | null>(() => {
@@ -48,7 +46,7 @@ export function Teaser3Hero() {
     }
   });
 
-  // Track active viewport (mobile vs desktop) to prevent duplicate downloads
+  // Track active viewport (mobile vs desktop)
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 860px)");
     setIsMobileView(mql.matches);
@@ -87,58 +85,6 @@ export function Teaser3Hero() {
       clearInterval(interval);
     };
   }, []);
-
-  // Video playback management: pause when offscreen or tab is hidden, resume when visible
-  useEffect(() => {
-    const activeVideo = isMobileView ? mobileVideoRef.current : desktopVideoRef.current;
-    if (!activeVideo) return;
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        activeVideo.pause();
-      } else {
-        activeVideo.play().catch(() => {});
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            activeVideo.play().catch(() => {});
-          } else {
-            activeVideo.pause();
-          }
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(activeVideo);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      observer.disconnect();
-    };
-  }, [isMobileView]);
-
-  // Pause background hero playback while modal is open, resume when closed and appropriate
-  useEffect(() => {
-    const activeVideo = isMobileView ? mobileVideoRef.current : desktopVideoRef.current;
-    if (!activeVideo) return;
-
-    if (dialogOpen) {
-      activeVideo.pause();
-    } else {
-      const prefersReduced =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      if (!prefersReduced && !document.hidden) {
-        activeVideo.play().catch(() => {});
-      }
-    }
-  }, [dialogOpen, isMobileView]);
 
   // Contrast observer: determines if mobile dock is over dark video or light background
   useEffect(() => {
@@ -438,24 +384,16 @@ export function Teaser3Hero() {
           </div>
         </section>
 
-        {/* Right Column: 45% Hero Video Panel */}
-        <section className="teaser3-video-col" aria-label="3FIG Smart Ring Video Preview">
-          <video
-            ref={desktopVideoRef}
-            className="teaser3-video"
-            poster="/images/teaser3-desktop-poster.webp"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-            suppressHydrationWarning
-          >
-            {isMobileView === false && (
-              <source src="/video/teaser3-hero-desktop.mp4" type="video/mp4" />
-            )}
-          </video>
+        {/* Right Column: 45% Hero Image Panel */}
+        <section className="teaser3-video-col" aria-label="3FIG Smart Ring Preview">
+          <img
+            src="/images/newhero0928.png"
+            alt="3FIG Smart Ring and Skin Balance app"
+            className="teaser3-video teaser3-hero-image"
+            width={1200}
+            height={1500}
+            fetchPriority="high"
+          />
         </section>
       </div>
 
@@ -551,29 +489,21 @@ export function Teaser3Hero() {
           </p>
         </div>
 
-        {/* Bottom Video Section: 4:5 aspect ratio, meets viewport bottom on tall screens */}
+        {/* Bottom Image Section: 4:5 aspect ratio, meets viewport bottom on tall screens */}
         <section
           ref={mobileMediaRef}
           className="teaser3-mobile-media-col"
-          data-theme="dark"
-          aria-label="3FIG Video Preview"
+          data-theme="light"
+          aria-label="3FIG Smart Ring Preview"
         >
-          <video
-            ref={mobileVideoRef}
-            className="teaser3-video"
-            poster="/images/teaser3-mobile-poster.webp"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-            suppressHydrationWarning
-          >
-            {isMobileView === true && (
-              <source src="/video/teaser3-hero-mobile.mp4" type="video/mp4" />
-            )}
-          </video>
+          <img
+            src="/images/newhero0928.png"
+            alt="3FIG Smart Ring and Skin Balance app"
+            className="teaser3-video teaser3-hero-image"
+            width={1200}
+            height={1500}
+            fetchPriority="high"
+          />
         </section>
       </div>
 

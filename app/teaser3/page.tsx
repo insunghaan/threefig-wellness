@@ -22,8 +22,7 @@ export default function Teaser3Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/teaser3-mobile-poster.webp"
-        type="image/webp"
+        href="/images/newhero0928.png"
       />
       <link
         rel="preload"
