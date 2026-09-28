@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useId } from "react";
-import { Moon, ArrowLeft, ArrowRight } from "lucide-react";
 
 /* Lightweight viewport observer for motion */
-function useInView(options: IntersectionObserverInit = { threshold: 0.2, rootMargin: "60px" }) {
+function useInView(options: IntersectionObserverInit = { threshold: 0.15, rootMargin: "60px" }) {
   const [inView, setInView] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -33,12 +32,26 @@ function useInView(options: IntersectionObserverInit = { threshold: 0.2, rootMar
 
 /* ------------------------------------------------------------
    01. PREVIEW 01 — SKIN BALANCE
-   Teaser3 Clean Aesthetic: Warm ivory/white surface, restrained border, warm-brown accent
+   Circular Score Component:
+   - "SKIN BALANCE" kicker + "Illustrative preview" badge
+   - Large circular gauge starting at 12 o'clock, filling clockwise 82%
+   - Pale track for remaining 18% with rounded ends
+   - Pink-to-coral gradient along progress
+   - Prominent "82" with secondary "/ 100" and green "Balanced" pill
+   - Soft rose-tinted explanatory box below
    ------------------------------------------------------------ */
 export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
+  const rawId = useId();
+  const gradId = `teaser3-gauge-grad-${rawId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const animated = Boolean(inView || isActive);
   const [displayScore, setDisplayScore] = useState(0);
+
+  // Gauge geometry: r=74, cx=90, cy=90
+  const radius = 74;
+  const circumference = 2 * Math.PI * radius; // ~464.955
+  const targetPercent = 0.82;
+  const targetOffset = circumference * (1 - targetPercent);
 
   useEffect(() => {
     if (!animated) {
@@ -65,7 +78,7 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
   return (
     <div
       ref={ref}
-      className={`teaser3-preview-card teaser3-preview-balance ${
+      className={`teaser3-preview-card teaser3-glass-card teaser3-preview-balance ${
         animated ? "is-animated" : ""
       }`}
     >
@@ -74,75 +87,126 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
         <span className="teaser3-preview-badge">Illustrative preview</span>
       </div>
 
-      <div className="teaser3-preview-score-row">
-        <div className="teaser3-preview-score-group">
-          <span className="teaser3-preview-score-number">{displayScore}</span>
-          <span className="teaser3-preview-score-total">/ 100</span>
-        </div>
-        <div className="teaser3-preview-status-tag">
-          <span className="teaser3-preview-status-dot" aria-hidden="true" />
-          <span>Balanced</span>
+      {/* Large Circular Gauge Container */}
+      <div className="teaser3-gauge-wrap">
+        <svg
+          className="teaser3-gauge-svg"
+          viewBox="0 0 180 180"
+          role="meter"
+          aria-label="Skin Balance score 82 out of 100"
+          aria-valuenow={82}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <defs>
+            <linearGradient id={gradId} x1="50%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#fa528a" />
+              <stop offset="50%" stopColor="#f87488" />
+              <stop offset="100%" stopColor="#f78d78" />
+            </linearGradient>
+          </defs>
+
+          {/* Pale background track (remaining 18% visible through here) */}
+          <circle
+            cx="90"
+            cy="90"
+            r={radius}
+            className="teaser3-gauge-track"
+            stroke="rgba(255, 230, 238, 0.45)"
+            strokeWidth="13"
+            fill="none"
+          />
+
+          {/* Animated progress arc: starts exactly at 12 o'clock, fills clockwise 82% */}
+          <circle
+            cx="90"
+            cy="90"
+            r={radius}
+            className="teaser3-gauge-fill"
+            stroke={`url(#${gradId})`}
+            strokeWidth="13"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={animated ? targetOffset : circumference}
+            transform="rotate(-90 90 90)"
+            style={{
+              transition: "stroke-dashoffset 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.15s",
+            }}
+          />
+        </svg>
+
+        {/* Center content inside the gauge */}
+        <div className="teaser3-gauge-center">
+          <div className="teaser3-gauge-score-row">
+            <span className="teaser3-gauge-number">{displayScore}</span>
+            <span className="teaser3-gauge-total">/ 100</span>
+          </div>
+          <div className="teaser3-preview-status-tag">
+            <span className="teaser3-preview-status-dot" aria-hidden="true" />
+            <span>Balanced</span>
+          </div>
         </div>
       </div>
 
-      <div
-        className="teaser3-preview-meter-track"
-        role="meter"
-        aria-label="Illustrative Skin Balance score"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={82}
-      >
-        <div
-          className="teaser3-preview-meter-fill"
-          style={{ width: animated ? "82%" : "0%" }}
-        />
+      {/* Soft rose-tinted explanatory area below */}
+      <div className="teaser3-preview-explainer">
+        <p>A simple view of the patterns across your supported signals and skin check-ins.</p>
       </div>
-
-      <p className="teaser3-preview-caption">
-        A simple view of the patterns across your supported signals and skin check-ins.
-      </p>
     </div>
   );
 }
 
 /* ------------------------------------------------------------
    02. PREVIEW 02 — 7-DAY PATTERNS
-   Teaser3 Clean Line Chart: White surface, charcoal lines, warm-brown accent, legible labels
+   Chart Component:
+   - Heading + Illustrative preview badge
+   - Two-series legend:
+     * Sleep consistency (Green solid line with hollow circular marker)
+     * Skin comfort (Pink dashed line with filled circular marker)
+   - Restrained green area fill under Sleep line
+   - Light dashed grid lines
+   - 7 weekday labels (M, T, W, T, F, S, S)
+   - Soft rose-tinted explanatory box below
    ------------------------------------------------------------ */
 export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
-  const rawClipId = useId();
-  const clipId = `teaser3-patterns-clip-${rawClipId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const rawId = useId();
+  const cleanId = rawId.replace(/[^a-zA-Z0-9_-]/g, "");
+  const clipId = `teaser3-patterns-clip-${cleanId}`;
+  const greenAreaId = `teaser3-green-area-${cleanId}`;
   const animated = Boolean(inView || isActive);
 
+  // Plotted data matching reference:
+  // Days: M (24), T (70), W (116), T (162), F (208), S (254), S (296)
   const sleepPoints: [number, number][] = [
-    [24, 75],
-    [68, 62],
-    [114, 76],
-    [160, 52],
-    [206, 56],
-    [252, 30],
-    [296, 36],
+    [24, 82],
+    [70, 68],
+    [116, 76],
+    [162, 54],
+    [208, 58],
+    [254, 34],
+    [296, 42],
   ];
 
   const skinPoints: [number, number][] = [
-    [24, 85],
-    [68, 74],
-    [114, 78],
-    [160, 64],
-    [206, 60],
-    [252, 44],
-    [296, 50],
+    [24, 94],
+    [70, 80],
+    [116, 78],
+    [162, 66],
+    [208, 64],
+    [254, 46],
+    [296, 52],
   ];
 
-  const sleepPathD = "M 24,75 L 68,62 L 114,76 L 160,52 L 206,56 L 252,30 L 296,36";
-  const skinPathD = "M 24,85 L 68,74 L 114,78 L 160,64 L 206,60 L 252,44 L 296,50";
+  const sleepPathD = "M 24,82 L 70,68 L 116,76 L 162,54 L 208,58 L 254,34 L 296,42";
+  const skinPathD = "M 24,94 L 70,80 L 116,78 L 162,66 L 208,64 L 254,46 L 296,52";
+  const sleepAreaD = "M 24,82 L 70,68 L 116,76 L 162,54 L 208,58 L 254,34 L 296,42 L 296,118 L 24,118 Z";
 
   return (
     <div
       ref={ref}
-      className={`teaser3-preview-card teaser3-preview-patterns ${
+      className={`teaser3-preview-card teaser3-glass-card teaser3-preview-patterns ${
         animated ? "is-animated" : ""
       }`}
     >
@@ -151,60 +215,74 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
         <span className="teaser3-preview-badge">Illustrative preview</span>
       </div>
 
+      {/* Two-series Legend */}
       <div className="teaser3-preview-legend">
         <div className="teaser3-legend-item">
-          <svg width="26" height="10" viewBox="0 0 26 10" aria-hidden="true">
-            <line x1="0" y1="5" x2="26" y2="5" stroke="#1e1e1e" strokeWidth="2" />
-            <circle cx="13" cy="5" r="3.5" stroke="#1e1e1e" strokeWidth="2" fill="#ffffff" />
+          <svg width="28" height="12" viewBox="0 0 28 12" aria-hidden="true">
+            <line x1="0" y1="6" x2="28" y2="6" stroke="#2fb155" strokeWidth="2.2" />
+            <circle cx="14" cy="6" r="3.8" stroke="#2fb155" strokeWidth="2.2" fill="#ffffff" />
           </svg>
           <span>Sleep consistency</span>
         </div>
         <div className="teaser3-legend-item">
-          <svg width="26" height="10" viewBox="0 0 26 10" aria-hidden="true">
-            <line x1="0" y1="5" x2="26" y2="5" stroke="var(--tf-color-accent-brown, #b85d70)" strokeWidth="2" strokeDasharray="3 3" />
-            <circle cx="13" cy="5" r="3" fill="var(--tf-color-accent-brown, #b85d70)" />
+          <svg width="28" height="12" viewBox="0 0 28 12" aria-hidden="true">
+            <line x1="0" y1="6" x2="28" y2="6" stroke="#f7557d" strokeWidth="2.2" strokeDasharray="4 3" />
+            <circle cx="14" cy="6" r="3.5" fill="#f7557d" />
           </svg>
           <span>Skin comfort</span>
         </div>
       </div>
 
+      {/* SVG Line Chart */}
       <div className="teaser3-chart-wrap">
         <svg
           className="teaser3-chart-svg"
-          viewBox="0 0 320 132"
+          viewBox="0 0 320 144"
           role="img"
           aria-label="7-day sleep consistency and skin comfort correlation graph"
         >
           <defs>
+            <linearGradient id={greenAreaId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#34c759" stopOpacity="0.14" />
+              <stop offset="100%" stopColor="#34c759" stopOpacity="0.01" />
+            </linearGradient>
             <clipPath id={clipId}>
               <rect
                 x="0"
                 y="0"
                 width={animated ? "320" : "0"}
-                height="132"
+                height="144"
                 style={{
-                  transition: "width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s",
+                  transition: "width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s",
                 }}
               />
             </clipPath>
           </defs>
 
-          {/* Reference guidelines */}
-          <line x1="16" x2="304" y1="26" y2="26" className="teaser3-chart-grid" />
-          <line x1="16" x2="304" y1="56" y2="56" className="teaser3-chart-grid" />
-          <line x1="16" x2="304" y1="86" y2="86" className="teaser3-chart-grid" />
+          {/* Light dashed horizontal grid lines */}
+          <line x1="16" x2="304" y1="22" y2="22" className="teaser3-chart-grid" />
+          <line x1="16" x2="304" y1="52" y2="52" className="teaser3-chart-grid" />
+          <line x1="16" x2="304" y1="82" y2="82" className="teaser3-chart-grid" />
+          <line x1="16" x2="304" y1="112" y2="112" className="teaser3-chart-grid" />
 
-          {/* Sleep curve (solid charcoal) */}
+          {/* Restrained green area fill under Sleep consistency */}
           <path
-            d={sleepPathD}
-            className="teaser3-chart-path-sleep"
+            d={sleepAreaD}
+            fill={`url(#${greenAreaId})`}
             clipPath={`url(#${clipId})`}
           />
 
-          {/* Skin curve (dashed warm brown) */}
+          {/* Sleep curve (solid green #2fb155) */}
+          <path
+            d={sleepPathD}
+            className="teaser3-chart-path-sleep-green"
+            clipPath={`url(#${clipId})`}
+          />
+
+          {/* Skin curve (dashed pink #f7557d) */}
           <path
             d={skinPathD}
-            className="teaser3-chart-path-skin"
+            className="teaser3-chart-path-skin-pink"
             strokeDasharray="4 3"
             clipPath={`url(#${clipId})`}
           />
@@ -215,8 +293,8 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
               key={`sleep-${i}`}
               cx={cx}
               cy={cy}
-              r="4"
-              className="teaser3-chart-node-sleep"
+              r="4.2"
+              className="teaser3-chart-node-sleep-green"
               style={{
                 opacity: animated ? 1 : 0,
                 transform: animated ? "scale(1)" : "scale(0)",
@@ -232,8 +310,8 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
               key={`skin-${i}`}
               cx={cx}
               cy={cy}
-              r="3.5"
-              className="teaser3-chart-node-skin"
+              r="3.8"
+              className="teaser3-chart-node-skin-pink"
               style={{
                 opacity: animated ? 1 : 0,
                 transform: animated ? "scale(1)" : "scale(0)",
@@ -248,7 +326,7 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
             <text
               key={i}
               x={24 + i * 45.3}
-              y="118"
+              y="132"
               textAnchor="middle"
               className="teaser3-chart-axis-label"
               style={{
@@ -262,16 +340,24 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
         </svg>
       </div>
 
-      <p className="teaser3-preview-caption">
-        When sleep holds steady, morning skin comfort stays resilient.
-      </p>
+      {/* Soft rose-tinted explanatory box below */}
+      <div className="teaser3-preview-explainer">
+        <p>When sleep holds steady, morning skin comfort stays resilient.</p>
+      </div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------
    03. PREVIEW 03 — TONIGHT’S MOVE
-   Teaser3 Clean Recommendation Card: Warm ivory card, time badge, clean typography
+   Recommendation Component:
+   - "TONIGHT’S MOVE" heading + "Personalized" badge
+   - Inner recommendation panel (lavender-to-rose translucent gradient):
+     * Purple moon icon + "10:20 PM"
+     * Bold recommendation: "Shift wind-down 20 mins earlier tonight."
+     * Secondary explanation: "Your recovery pattern may benefit from a steadier bedtime."
+   - Separate soft rose-tinted supporting note below:
+     * "One realistic adjustment to support cellular recovery before bed."
    ------------------------------------------------------------ */
 export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
@@ -280,7 +366,7 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
   return (
     <div
       ref={ref}
-      className={`teaser3-preview-card teaser3-preview-move ${
+      className={`teaser3-preview-card teaser3-glass-card teaser3-preview-move ${
         animated ? "is-animated" : ""
       }`}
     >
@@ -289,9 +375,23 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
         <span className="teaser3-preview-badge">Personalized</span>
       </div>
 
+      {/* Inner Lavender-to-Rose Translucent Recommendation Box */}
       <div className="teaser3-preview-move-box">
         <div className="teaser3-preview-time-tag">
-          <Moon size={14} className="teaser3-time-icon" aria-hidden="true" />
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7e57c2"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="teaser3-time-icon"
+            aria-hidden="true"
+          >
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
           <span className="teaser3-time-text">10:20 PM</span>
         </div>
         <h4 className="teaser3-preview-move-title">
@@ -302,17 +402,18 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
         </p>
       </div>
 
-      <p className="teaser3-preview-caption">
-        One realistic adjustment to support cellular recovery before bed.
-      </p>
+      {/* Separate soft rose-tinted supporting note below */}
+      <div className="teaser3-preview-explainer">
+        <p>One realistic adjustment to support cellular recovery before bed.</p>
+      </div>
     </div>
   );
 }
 
 /* ------------------------------------------------------------
    MAIN SECTION: WHAT YOU GET
-   - Desktop: 3 vertically arranged alternating rows (Row 1: Head+01 / Panel 1, Row 2: Panel 2 / 02, Row 3: 03 / Panel 3)
-   - Mobile: 1 horizontal carousel with 24-40px peek and capsule pagination
+   - Desktop: 3 vertically arranged alternating rows
+   - Mobile: 1 horizontal carousel with peek and capsule pagination
    ------------------------------------------------------------ */
 
 interface BenefitItem {
@@ -405,13 +506,10 @@ export function Teaser3ValueSection() {
     const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
     const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
 
-    // Detect horizontal swipe if deltaX is dominant and >= 35px
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
       if (deltaX < 0 && activeMobileIdx < BENEFIT_ITEMS.length - 1) {
-        // Swipe left -> Next slide
         scrollToSlide(activeMobileIdx + 1);
       } else if (deltaX > 0 && activeMobileIdx > 0) {
-        // Swipe right -> Prev slide
         scrollToSlide(activeMobileIdx - 1);
       }
     }
