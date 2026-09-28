@@ -2434,39 +2434,32 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-}
-
-.t3-gauge-app-label {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: #3b3632;
-  letter-spacing: -0.01em;
-  margin-bottom: 2px;
-  font-family: var(--tf-font-sans);
+  transform: translateY(2px);
 }
 
 .t3-gauge-app-score {
-  font-size: 54px;
+  font-size: 56px;
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.035em;
   color: #111111;
   font-family: var(--tf-font-sans);
+  margin: 0;
 }
 
 .t3-gauge-app-status {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   color: #2e2925;
   letter-spacing: -0.01em;
-  margin-top: 4px;
+  margin-top: 3px;
   margin-bottom: 6px;
   font-family: var(--tf-font-sans);
 }
 
 .t3-gauge-app-arrow {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background-color: rgba(238, 222, 216, 0.75);
   display: flex;
@@ -2809,21 +2802,30 @@
     margin-bottom: 10px;
   }
 
-  .teaser3-value-mobile-slide .teaser3-gauge-number {
-    font-size: 42px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-gauge-total {
-    font-size: 15px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-status-tag {
-    font-size: 11.5px;
-    padding: 3px 9px;
+  .teaser3-value-mobile-slide .t3-gauge-app-style {
+    transform: translateY(2px);
   }
 
   .teaser3-value-mobile-slide .t3-gauge-app-score {
     font-size: 46px;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .teaser3-value-mobile-slide .t3-gauge-app-status {
+    font-size: 13px;
+    margin-top: 2px;
+    margin-bottom: 5px;
+  }
+
+  .teaser3-value-mobile-slide .t3-gauge-app-arrow {
+    width: 19px;
+    height: 19px;
+  }
+
+  .teaser3-value-mobile-slide .t3-gauge-app-arrow svg {
+    width: 10px;
+    height: 10px;
   }
 
   .teaser3-value-mobile-slide .t3-app-subcards-row {

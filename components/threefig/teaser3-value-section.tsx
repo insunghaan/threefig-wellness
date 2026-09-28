@@ -136,7 +136,6 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
 
         {/* Center content inside the gauge */}
         <div className="teaser3-gauge-center t3-gauge-app-style">
-          <span className="t3-gauge-app-label">Skin Balance</span>
           <span className="t3-gauge-app-score">{displayScore}</span>
           <span className="t3-gauge-app-status">Good</span>
           <div className="t3-gauge-app-arrow" aria-hidden="true">
