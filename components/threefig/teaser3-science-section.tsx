@@ -16,6 +16,7 @@ interface ScienceTopic {
   body: string;
   highlight: string;
   destination: string;
+  sourceName: string;
 }
 
 const scienceTopics: ScienceTopic[] = [
@@ -26,6 +27,7 @@ const scienceTopics: ScienceTopic[] = [
     body: "Sleep is part of the environment your skin responds to. Research has linked sleep quality and sleep loss with changes in skin function, recovery, and appearance.\n\n3fig uses supported sleep and recovery signals as context alongside your own skin check-ins.",
     highlight: "Better nights can give your skin a different context.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/42641586/",
+    sourceName: "PubMed (NLM ID: 42641586)",
   },
   {
     id: "stress-skin",
@@ -34,6 +36,7 @@ const scienceTopics: ScienceTopic[] = [
     body: "Stress can influence sleep, recovery, and other physiological patterns that may coincide with changes in how skin feels.\n\n3fig looks at supported recovery-related signals alongside your own skin check-ins to help you notice patterns over time.",
     highlight: "Stress leaves clues. Skin can be part of the story.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/41962101/",
+    sourceName: "PubMed (NLM ID: 41962101)",
   },
   {
     id: "body-signals",
@@ -42,6 +45,7 @@ const scienceTopics: ScienceTopic[] = [
     body: "Sleep, recovery, temperature trends, movement, and other supported body signals can add useful context to everyday skin changes.\n\n3fig brings those signals together with your own skin check-ins to make personal patterns easier to notice.",
     highlight: "Your skin does not live apart from the rest of you.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/42389732/",
+    sourceName: "PubMed (NLM ID: 42389732)",
   },
 ];
 
@@ -123,6 +127,7 @@ export function Teaser3ScienceSection() {
             className="teaser3-btn-pill teaser3-btn-secondary teaser3-science-hub-btn"
             onClick={(e) => handleOpenHub(e.currentTarget)}
             aria-haspopup="dialog"
+            data-science-cta="true"
           >
             <span>Explore Skin Science</span>
             <ArrowRight size={15} aria-hidden="true" />
@@ -178,6 +183,11 @@ export function Teaser3ScienceSection() {
                 </div>
               )}
 
+              <div className="teaser3-modal-source-note">
+                <span className="teaser3-modal-source-label">Source reference:</span>{" "}
+                <span className="teaser3-modal-source-val">{selectedTopic.sourceName}</span>
+              </div>
+
               <div className="teaser3-modal-actions">
                 <a
                   href={selectedTopic.destination}
@@ -186,7 +196,7 @@ export function Teaser3ScienceSection() {
                   className="teaser3-btn-pill teaser3-modal-primary-btn"
                   onClick={handleCloseTopic}
                 >
-                  <span>Read more</span>
+                  <span>Read on PubMed</span>
                   <ArrowRight size={15} aria-hidden="true" />
                 </a>
                 <button

@@ -250,32 +250,17 @@ export function Teaser3WaitlistDialog({
     }
   }
 
-  // Handle open/close requests from Radix (ESC, overlay click)
+  // Handle open/close requests from Radix (ESC, overlay click, close button)
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) {
-      const exitShown =
-        typeof window !== "undefined" && sessionStorage.getItem("t3_exit_shown") === "1";
-
-      // If user attempts to close from signup view without success and hasn't seen exit offer yet
-      if (view === "signup" && !exitShown) {
-        if (typeof window !== "undefined") {
-          sessionStorage.setItem("t3_exit_shown", "1");
-        }
-        setView("exit-offer");
-        return; // Keep dialog open, show exit offer inside same frame
-      }
-
       handleCloseFinal();
     } else {
       onOpenChange(true);
     }
   }
 
-  // Final dismissal closing the modal completely
+  // Final dismissal closing the modal completely without promotional follow-up
   function handleCloseFinal() {
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("t3_exit_shown", "1");
-    }
     onOpenChange(false);
   }
 

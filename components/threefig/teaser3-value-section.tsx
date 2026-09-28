@@ -414,15 +414,15 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
         <span className="teaser3-preview-badge">Personalized</span>
       </div>
 
-      {/* Inner Lavender-to-Rose Translucent Recommendation Box */}
+      {/* Unified Restrained Recommendation Card: Time, Action, Short Reason */}
       <div className="teaser3-preview-move-box">
         <div className="teaser3-preview-time-tag">
           <svg
-            width="18"
-            height="18"
+            width="17"
+            height="17"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#7e57c2"
+            stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -439,11 +439,6 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
         <p className="teaser3-preview-move-rationale">
           Your recovery pattern may benefit from a steadier bedtime.
         </p>
-      </div>
-
-      {/* Separate soft rose-tinted supporting note below */}
-      <div className="teaser3-preview-explainer">
-        <p>One realistic adjustment to support cellular recovery before bed.</p>
       </div>
     </div>
   );

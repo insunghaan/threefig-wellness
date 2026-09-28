@@ -31,10 +31,12 @@ export const Teaser3FinalBenefits = forwardRef<HTMLDivElement, Teaser3FinalBenef
               className="teaser3-btn-pill-inverse teaser3-benefits-btn"
               onClick={onOpenWaitlist}
               aria-label="Get early access"
+              data-benefits-cta="true"
             >
               <span>Get early access</span>
               <ArrowRight size={17} aria-hidden="true" />
             </button>
+            <p className="teaser3-benefits-microcopy">Ring sold separately.</p>
           </div>
         </div>
       </section>

@@ -16,7 +16,6 @@ export function Teaser3Hero() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [stickyMenuOpen, setStickyMenuOpen] = useState(false);
   const [isLightSurface, setIsLightSurface] = useState(true);
-  const [isHandoffHidden, setIsHandoffHidden] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState<boolean | null>(null);
 
@@ -111,45 +110,7 @@ export function Teaser3Hero() {
     return () => observer.disconnect();
   }, [isMobileView]);
 
-  // Benefits CTA handoff observer: hides persistent dock when inline [data-benefits-cta] is visible
-  useEffect(() => {
-    let obs: IntersectionObserver | null = null;
 
-    const setupObserver = () => {
-      const target = document.querySelector("[data-benefits-cta]");
-      if (!target) return;
-
-      if (obs) obs.disconnect();
-
-      obs = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            setIsHandoffHidden(entry.isIntersecting);
-          }
-        },
-        {
-          root: null,
-          rootMargin: "0px 0px -76px 0px",
-          threshold: [0, 0.2],
-        }
-      );
-
-      obs.observe(target);
-    };
-
-    setupObserver();
-
-    // Check periodically or on DOM mutations in case the benefits section mounts later
-    const mutObs = new MutationObserver(() => {
-      setupObserver();
-    });
-    mutObs.observe(document.body, { childList: true, subtree: true });
-
-    return () => {
-      if (obs) obs.disconnect();
-      mutObs.disconnect();
-    };
-  }, []);
 
   // Conceal dock when virtual keyboard appears or input is focused
   useEffect(() => {
@@ -210,51 +171,77 @@ export function Teaser3Hero() {
     }
   }, []);
 
-  // Track scroll threshold - dismiss cue, reveal CTA, and manage sticky header visibility
+  // Coordinated Mobile Visibility Controller
+  // Tracks scroll depth, collision avoidance with 'Explore Skin Science' & final inline signup, and modal/menu states
+  const [isScienceOverlapping, setIsScienceOverlapping] = useState(false);
+  const [isFinalCtaOverlapping, setIsFinalCtaOverlapping] = useState(false);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (window.scrollY > 24) {
-      setHasScrolled(true);
-    }
-    if (window.scrollY > 40) {
-      setIsScrolled(true);
-    }
+    let rafId: number | null = null;
 
-    const handleScroll = () => {
-      // Ignore scroll inside modal dialogs
-      if (dialogOpen) return;
-
+    const checkVisibility = () => {
       const y = window.scrollY;
-      if (y > 24) {
-        setHasScrolled(true);
-      }
+      const vh = window.innerHeight;
+
+      // 1. Initial Hero landing vs Scrolled state (restores cue if user scrolls back to top)
+      const atTop = y <= 24;
+      setHasScrolled(!atTop);
       setIsScrolled(y > 40);
       setIsLightSurface(y > 300);
+
+      // 2. Track Collision with "Explore Skin Science" ([data-science-cta])
+      const scienceBtn = document.querySelector<HTMLElement>("[data-science-cta]");
+      if (scienceBtn) {
+        const rect = scienceBtn.getBoundingClientRect();
+        // Floating dock zone: bottom 0 to ~95px from window bottom with 15px buffer
+        const dockTop = vh - 105;
+        const dockBottom = vh;
+        // Suppress if the science button vertically overlaps the floating dock zone
+        const overlaps = rect.bottom >= dockTop && rect.top <= dockBottom;
+        setIsScienceOverlapping(overlaps);
+      } else {
+        setIsScienceOverlapping(false);
+      }
+
+      // 3. Track Collision with Final Inline Benefits CTA ([data-benefits-cta])
+      const benefitsBtn =
+        document.querySelector<HTMLElement>("[data-benefits-cta]") ||
+        finalCtaRef.current;
+      if (benefitsBtn) {
+        const rect = benefitsBtn.getBoundingClientRect();
+        // Hide before it collides: once the top of the benefits button enters within 60px of the dock
+        // With hysteresis to eliminate flicker during fast scrolling
+        setIsFinalCtaOverlapping((prev) => {
+          if (prev) {
+            // Restore only if scrolled back down/up far away from viewport bottom
+            return rect.top < vh + 10;
+          } else {
+            return rect.top < vh - 50;
+          }
+        });
+      } else {
+        setIsFinalCtaOverlapping(false);
+      }
     };
 
+    const handleScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(checkVisibility);
+    };
+
+    // Initial check on mount
+    checkVisibility();
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [dialogOpen]);
+    window.addEventListener("resize", handleScroll, { passive: true });
 
-  // Mobile floating CTA handoff: hide when final inline benefits CTA enters viewport
-  useEffect(() => {
-    const target = finalCtaRef.current;
-    if (!target) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        setIsHandoffHidden(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "0px 0px -20px 0px",
-      }
-    );
-
-    observer.observe(target);
-    return () => observer.disconnect();
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   const handleScrollToNext = () => {
@@ -324,11 +311,21 @@ export function Teaser3Hero() {
     });
   };
 
+  // Any open menu, dialog, or modal suppresses the floating dock
+  const isAnyOverlayOpen =
+    dialogOpen || privacyOpen || menuOpen || stickyMenuOpen || isKeyboardOpen;
+
   // Coordinated Mobile States:
   // - Initial landing (!hasScrolled): Show centered scroll cue only, hide CTA
-  // - After scroll (hasScrolled): Reveal floating CTA dock (slides up), hide scroll cue
-  const showMobileCue = !hasScrolled && !dialogOpen && !isKeyboardOpen;
-  const showMobileCta = hasScrolled && !dialogOpen && !isHandoffHidden && !isKeyboardOpen;
+  // - After scroll (hasScrolled): Reveal floating CTA dock, hide scroll cue
+  // - Suppress CTA when colliding with 'Explore Skin Science' or final inline signup
+  // - Suppress CTA when any menu or dialog is open
+  const showMobileCue = !hasScrolled && !isAnyOverlayOpen;
+  const showMobileCta =
+    hasScrolled &&
+    !isAnyOverlayOpen &&
+    !isScienceOverlapping &&
+    !isFinalCtaOverlapping;
 
   // Desktop States:
   // - CTA is always visible
