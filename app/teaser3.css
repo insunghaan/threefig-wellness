@@ -3466,9 +3466,19 @@
    ========================================================================== */
 .teaser3-brand-section {
   width: 100%;
+  position: relative;
   padding: clamp(96px, 12vw, 150px) clamp(24px, 5.4vw, 96px);
   text-align: center;
-  background-color: #E8DCCE;
+  background-color: #E8D3C0;
+  background-image: url("/images/teaser3-sunlight-bg.png");
+  background-image: image-set(
+    url("/images/teaser3-sunlight-bg-2x.webp") 2x,
+    url("/images/teaser3-sunlight-bg.webp") 1x,
+    url("/images/teaser3-sunlight-bg.png") 1x
+  );
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   border: none;
   box-sizing: border-box;
 }
@@ -3488,7 +3498,7 @@
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin: 0 0 16px 0;
-  color: #191919;
+  color: #141210;
 }
 
 .teaser3-brand-accent {
@@ -3499,7 +3509,7 @@
   font-family: var(--tf-font-sans);
   font-size: clamp(17px, 1.6vw, 22px);
   line-height: 1.45;
-  color: #524741;
+  color: #3D332D;
   margin: 0 0 36px 0;
 }
 
@@ -3512,6 +3522,13 @@
 .teaser3-brand-btn {
   background-color: #111111;
   color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .teaser3-brand-section {
+    background-position: 35% center;
+    padding: 80px 20px;
+  }
 }
 
 /* ==========================================================================
@@ -3940,9 +3957,19 @@
    ========================================================================== */
 .teaser3-benefits-section {
   width: 100%;
+  position: relative;
   padding: clamp(96px, 12vw, 150px) clamp(24px, 5.4vw, 96px);
   text-align: center;
-  background-color: #56382C;
+  background-color: #1E1214;
+  background-image: url("/images/teaser3-glow-bg.png");
+  background-image: image-set(
+    url("/images/teaser3-glow-bg-2x.webp") 2x,
+    url("/images/teaser3-glow-bg.webp") 1x,
+    url("/images/teaser3-glow-bg.png") 1x
+  );
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
   border: none;
   box-sizing: border-box;
 }
@@ -3961,7 +3988,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #D4BBAF;
+  color: #E2CBC1;
   margin: 0 0 16px 0;
 }
 
@@ -3976,14 +4003,14 @@
 }
 
 .teaser3-benefits-accent {
-  color: #F1E7DF;
+  color: #F8EFEA;
 }
 
 .teaser3-benefits-lead {
   font-family: var(--tf-font-sans);
   font-size: clamp(16px, 1.5vw, 20px);
   line-height: 1.5;
-  color: #F1E7DF;
+  color: #EFE6E0;
   margin: 0 0 36px 0;
   max-width: 520px;
 }
@@ -3999,7 +4026,7 @@
 .teaser3-benefits-microcopy {
   font-family: var(--tf-font-sans);
   font-size: 13.5px;
-  color: #D4BBAF;
+  color: #D8C2B8;
   margin: 0;
 }
 
