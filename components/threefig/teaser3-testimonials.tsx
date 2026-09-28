@@ -91,11 +91,6 @@ export function Teaser3Testimonials() {
             </article>
           ))}
         </div>
-
-        {/* Discreet Section-Level Note */}
-        <p className="teaser3-testimonials-disclaimer">
-          Portraits are illustrative.
-        </p>
       </div>
     </section>
   );

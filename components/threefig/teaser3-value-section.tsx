@@ -287,64 +287,72 @@ export function Teaser3NextMovePreview({ isActive }: { isActive?: boolean }) {
 }
 
 /* ------------------------------------------------------------
-   MAIN SECTION: WHAT YOU GET (CAROUSEL)
+   MAIN SECTION: WHAT YOU GET
+   - Desktop: 3 vertically arranged alternating rows (Row 1: Head+01 / Panel 1, Row 2: Panel 2 / 02, Row 3: 03 / Panel 3)
+   - Mobile: 1 horizontal carousel with 24-40px peek and capsule pagination
    ------------------------------------------------------------ */
+
+interface BenefitItem {
+  num: string;
+  title: string;
+  desc: string;
+  bgImage: string;
+  renderPreview: (isActive?: boolean) => React.ReactNode;
+}
+
+const BENEFIT_ITEMS: BenefitItem[] = [
+  {
+    num: "01",
+    title: "Know where you are.",
+    desc: "See a simple view of how your supported signals and skin check-ins are lining up.",
+    bgImage: "/images/teaser3-panel-bg-01.webp",
+    renderPreview: (isActive) => <Teaser3SkinBalancePreview isActive={isActive} />,
+  },
+  {
+    num: "02",
+    title: "See what changed.",
+    desc: "Spot small shifts over time and see what may be moving together.",
+    bgImage: "/images/teaser3-panel-bg-02.webp",
+    renderPreview: (isActive) => <Teaser3PatternsPreview isActive={isActive} />,
+  },
+  {
+    num: "03",
+    title: "Know what to try.",
+    desc: "Get one useful suggestion based on the patterns 3FIG is helping you notice.",
+    bgImage: "/images/teaser3-panel-bg-03.webp",
+    renderPreview: (isActive) => <Teaser3NextMovePreview isActive={isActive} />,
+  },
+];
+
 export function Teaser3ValueSection() {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [activeMobileIdx, setActiveMobileIdx] = useState(0);
+  const mobileTrackRef = useRef<HTMLDivElement | null>(null);
 
-  const slides = [
-    {
-      id: "balance",
-      title: "Know where you are.",
-      desc: "See a simple view of how your supported signals and skin check-ins are lining up.",
-      preview: (isActive: boolean) => <Teaser3SkinBalancePreview isActive={isActive} />,
-    },
-    {
-      id: "patterns",
-      title: "See what changed.",
-      desc: "Spot small shifts over time and see what may be moving together.",
-      preview: (isActive: boolean) => <Teaser3PatternsPreview isActive={isActive} />,
-    },
-    {
-      id: "move",
-      title: "Know what to try.",
-      desc: "Get one useful suggestion based on the patterns 3FIG is helping you notice.",
-      preview: (isActive: boolean) => <Teaser3NextMovePreview isActive={isActive} />,
-    },
-  ];
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-    setTouchStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null || touchStartY === null) return;
-    const deltaX = e.changedTouches[0].clientX - touchStartX;
-    const deltaY = e.changedTouches[0].clientY - touchStartY;
-
-    // Detect intentional horizontal swipe (dominant over vertical scroll)
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
-      if (deltaX < 0 && activeIdx < slides.length - 1) {
-        setActiveIdx((prev) => prev + 1);
-      } else if (deltaX > 0 && activeIdx > 0) {
-        setActiveIdx((prev) => prev - 1);
-      }
+  // Sync active mobile index on scroll
+  const handleMobileScroll = () => {
+    const el = mobileTrackRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const slideWidth = el.firstElementChild
+      ? (el.firstElementChild as HTMLElement).offsetWidth + 16
+      : 300;
+    const newIdx = Math.round(scrollLeft / slideWidth);
+    if (newIdx >= 0 && newIdx < BENEFIT_ITEMS.length && newIdx !== activeMobileIdx) {
+      setActiveMobileIdx(newIdx);
     }
-
-    setTouchStartX(null);
-    setTouchStartY(null);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      setActiveIdx((prev) => Math.max(0, prev - 1));
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      setActiveIdx((prev) => Math.min(slides.length - 1, prev + 1));
+  const scrollToSlide = (idx: number) => {
+    const el = mobileTrackRef.current;
+    if (!el) return;
+    const slideEl = el.children[idx] as HTMLElement | undefined;
+    if (slideEl) {
+      slideEl.scrollIntoView({
+        behavior: "smooth",
+        inline: "start",
+        block: "nearest",
+      });
+      setActiveMobileIdx(idx);
     }
   };
 
@@ -355,100 +363,170 @@ export function Teaser3ValueSection() {
       aria-labelledby="value-title"
     >
       <div className="teaser3-section-container">
-        {/* Stationary Section Header outside carousel */}
-        <div className="teaser3-section-head">
-          <p className="teaser3-eyebrow">WHAT YOU GET</p>
-          <h2 id="value-title" className="teaser3-section-title">
-            One clear view. <br className="teaser3-br-desktop" />
-            <span className="teaser3-title-accent">One useful next move.</span>
-          </h2>
-        </div>
+        {/* ============================================================
+            DESKTOP LAYOUT (3 Alternating Rows in Document Flow)
+            ============================================================ */}
+        <div className="teaser3-value-desktop-flow">
+          {/* Row 1: Left (Head + 01 Copy), Right (Panel 01) */}
+          <div className="teaser3-value-row teaser3-value-row-1">
+            <div className="teaser3-value-col-left teaser3-value-intro-col">
+              <div className="teaser3-section-head">
+                <p className="teaser3-eyebrow">WHAT YOU GET</p>
+                <h2 id="value-title" className="teaser3-section-title">
+                  One clear view. <br />
+                  <span className="teaser3-title-accent">One useful next move.</span>
+                </h2>
+              </div>
 
-        {/* Unified Benefit Carousel */}
-        <div
-          className="teaser3-value-carousel"
-          tabIndex={0}
-          role="region"
-          aria-label="What You Get product previews"
-          aria-roledescription="carousel"
-          onKeyDown={handleKeyDown}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {/* Slides Slider Track */}
-          <div className="teaser3-value-slider">
-            {slides.map((slide, idx) => {
-              const isActive = activeIdx === idx;
-              return (
-                <div
-                  key={slide.id}
-                  className={`teaser3-value-slide ${isActive ? "is-active" : ""}`}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${idx + 1} of ${slides.length}: ${slide.title}`}
-                  aria-hidden={!isActive}
-                >
-                  <div className="teaser3-value-slide-content">
-                    {/* Copy Column */}
-                    <div className="teaser3-value-slide-text">
-                      <h3 className="teaser3-value-slide-title">{slide.title}</h3>
-                      <p className="teaser3-value-slide-desc">{slide.desc}</p>
-                    </div>
-
-                    {/* Preview Column */}
-                    <div className="teaser3-value-slide-visual">
-                      {slide.preview(isActive)}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Unified Controls: Dots + Desktop Arrows */}
-          <div className="teaser3-value-controls">
-            <div
-              className="teaser3-value-dots"
-              role="tablist"
-              aria-label="Choose slide to display"
-            >
-              {slides.map((slide, idx) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  role="tab"
-                  className={`teaser3-value-dot-btn ${
-                    activeIdx === idx ? "is-active" : ""
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
-                  aria-selected={activeIdx === idx}
-                  tabIndex={0}
-                  onClick={() => setActiveIdx(idx)}
-                />
-              ))}
+              <div className="teaser3-value-copy-block">
+                <span className="teaser3-value-num">{BENEFIT_ITEMS[0].num}</span>
+                <h3 className="teaser3-value-title">{BENEFIT_ITEMS[0].title}</h3>
+                <p className="teaser3-value-desc">{BENEFIT_ITEMS[0].desc}</p>
+              </div>
             </div>
 
-            <div className="teaser3-value-arrows" aria-label="Carousel navigation">
-              <button
-                type="button"
-                className="teaser3-value-arrow-btn"
-                onClick={() => setActiveIdx((prev) => Math.max(0, prev - 1))}
-                disabled={activeIdx === 0}
-                aria-label="Previous slide"
-              >
-                <ArrowLeft size={18} aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                className="teaser3-value-arrow-btn"
-                onClick={() =>
-                  setActiveIdx((prev) => Math.min(slides.length - 1, prev + 1))
-                }
-                disabled={activeIdx === slides.length - 1}
-                aria-label="Next slide"
-              >
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
+            <div className="teaser3-value-col-right">
+              <div className="teaser3-visual-panel">
+                <img
+                  src={BENEFIT_ITEMS[0].bgImage}
+                  alt=""
+                  className="teaser3-panel-bg"
+                  loading="lazy"
+                />
+                <div className="teaser3-panel-content">
+                  {BENEFIT_ITEMS[0].renderPreview(true)}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Left (Panel 02), Right (02 Copy) */}
+          <div className="teaser3-value-row teaser3-value-row-2">
+            <div className="teaser3-value-col-left">
+              <div className="teaser3-visual-panel">
+                <img
+                  src={BENEFIT_ITEMS[1].bgImage}
+                  alt=""
+                  className="teaser3-panel-bg"
+                  loading="lazy"
+                />
+                <div className="teaser3-panel-content">
+                  {BENEFIT_ITEMS[1].renderPreview(true)}
+                </div>
+              </div>
+            </div>
+
+            <div className="teaser3-value-col-right teaser3-value-copy-col">
+              <div className="teaser3-value-copy-block">
+                <span className="teaser3-value-num">{BENEFIT_ITEMS[1].num}</span>
+                <h3 className="teaser3-value-title">{BENEFIT_ITEMS[1].title}</h3>
+                <p className="teaser3-value-desc">{BENEFIT_ITEMS[1].desc}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 3: Left (03 Copy), Right (Panel 03) */}
+          <div className="teaser3-value-row teaser3-value-row-3">
+            <div className="teaser3-value-col-left teaser3-value-copy-col">
+              <div className="teaser3-value-copy-block">
+                <span className="teaser3-value-num">{BENEFIT_ITEMS[2].num}</span>
+                <h3 className="teaser3-value-title">{BENEFIT_ITEMS[2].title}</h3>
+                <p className="teaser3-value-desc">{BENEFIT_ITEMS[2].desc}</p>
+              </div>
+            </div>
+
+            <div className="teaser3-value-col-right">
+              <div className="teaser3-visual-panel">
+                <img
+                  src={BENEFIT_ITEMS[2].bgImage}
+                  alt=""
+                  className="teaser3-panel-bg"
+                  loading="lazy"
+                />
+                <div className="teaser3-panel-content">
+                  {BENEFIT_ITEMS[2].renderPreview(true)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================================
+            MOBILE LAYOUT (1 Horizontal Carousel with Peek & Dots)
+            ============================================================ */}
+        <div className="teaser3-value-mobile-view">
+          {/* Stationary Section Header outside carousel */}
+          <div className="teaser3-section-head">
+            <p className="teaser3-eyebrow">WHAT YOU GET</p>
+            <h2 className="teaser3-section-title">
+              One clear view. <br />
+              <span className="teaser3-title-accent">One useful next move.</span>
+            </h2>
+          </div>
+
+          {/* Horizontal Carousel Track with Peek */}
+          <div className="teaser3-value-mobile-carousel-wrap">
+            <div
+              ref={mobileTrackRef}
+              className="teaser3-value-mobile-track"
+              onScroll={handleMobileScroll}
+              role="region"
+              aria-label="What You Get product previews"
+              aria-roledescription="carousel"
+            >
+              {BENEFIT_ITEMS.map((item, idx) => {
+                const isActive = activeMobileIdx === idx;
+                return (
+                  <div
+                    key={item.num}
+                    className={`teaser3-value-mobile-slide ${
+                      isActive ? "is-active" : ""
+                    }`}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${idx + 1} of ${BENEFIT_ITEMS.length}: ${item.title}`}
+                  >
+                    <div className="teaser3-value-mobile-copy">
+                      <span className="teaser3-value-num">{item.num}</span>
+                      <h3 className="teaser3-value-title">{item.title}</h3>
+                      <p className="teaser3-value-desc">{item.desc}</p>
+                    </div>
+
+                    <div className="teaser3-visual-panel">
+                      <img
+                        src={item.bgImage}
+                        alt=""
+                        className="teaser3-panel-bg"
+                        loading="lazy"
+                      />
+                      <div className="teaser3-panel-content">
+                        {item.renderPreview(isActive)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile Pagination: Active Capsule + Inactive Dots */}
+            <div
+              className="teaser3-value-mobile-dots"
+              role="tablist"
+              aria-label="Slide navigation"
+            >
+              {BENEFIT_ITEMS.map((item, idx) => (
+                <button
+                  key={item.num}
+                  type="button"
+                  role="tab"
+                  className={`teaser3-value-mobile-dot ${
+                    activeMobileIdx === idx ? "is-active" : ""
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}: ${item.title}`}
+                  aria-selected={activeMobileIdx === idx}
+                  onClick={() => scrollToSlide(idx)}
+                />
+              ))}
             </div>
           </div>
         </div>
