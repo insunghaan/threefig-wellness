@@ -32,13 +32,10 @@ function useInView(options: IntersectionObserverInit = { threshold: 0.15, rootMa
 
 /* ------------------------------------------------------------
    01. PREVIEW 01 — SKIN BALANCE
-   Circular Score Component:
+   Circular Score Component matching Hero App Screen:
    - "SKIN BALANCE" kicker + "Illustrative preview" badge
-   - Large circular gauge starting at 12 o'clock, filling clockwise 82%
-   - Pale track for remaining 18% with rounded ends
-   - Pink-to-coral gradient along progress
-   - Prominent "82" with secondary "/ 100" and green "Balanced" pill
-   - Soft rose-tinted explanatory box below
+   - Large circular gauge with 86 score, "Skin Balance", "Good" and arrow button
+   - 3 sub-signal cards below: Sleep (78 Good), Nutrition (82 Good), Stress (70 Fair)
    ------------------------------------------------------------ */
 export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) {
   const [ref, inView] = useInView();
@@ -50,7 +47,7 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
   // Gauge geometry: r=74, cx=90, cy=90
   const radius = 74;
   const circumference = 2 * Math.PI * radius; // ~464.955
-  const targetPercent = 0.82;
+  const targetPercent = 0.86;
   const targetOffset = circumference * (1 - targetPercent);
 
   useEffect(() => {
@@ -60,7 +57,7 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
     }
     let startTimestamp: number | null = null;
     const duration = 1100;
-    const endVal = 82;
+    const endVal = 86;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -87,44 +84,45 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
         <span className="teaser3-preview-badge">Illustrative preview</span>
       </div>
 
-      {/* Large Circular Gauge Container */}
+      {/* Large Circular Gauge Container matching hero screen */}
       <div className="teaser3-gauge-wrap">
         <svg
           className="teaser3-gauge-svg"
           viewBox="0 0 180 180"
           role="meter"
-          aria-label="Skin Balance score 82 out of 100"
-          aria-valuenow={82}
+          aria-label="Skin Balance score 86 out of 100"
+          aria-valuenow={86}
           aria-valuemin={0}
           aria-valuemax={100}
         >
           <defs>
-            <linearGradient id={gradId} x1="50%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fa528a" />
-              <stop offset="50%" stopColor="#f87488" />
-              <stop offset="100%" stopColor="#f78d78" />
+            <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fca5a5" />
+              <stop offset="35%" stopColor="#f472b6" />
+              <stop offset="70%" stopColor="#e879f9" />
+              <stop offset="100%" stopColor="#fb7185" />
             </linearGradient>
           </defs>
 
-          {/* Pale background track (remaining 18% visible through here) */}
+          {/* Background track */}
           <circle
             cx="90"
             cy="90"
             r={radius}
             className="teaser3-gauge-track"
-            stroke="rgba(255, 230, 238, 0.45)"
-            strokeWidth="13"
+            stroke="rgba(244, 114, 182, 0.16)"
+            strokeWidth="11"
             fill="none"
           />
 
-          {/* Animated progress arc: starts exactly at 12 o'clock, fills clockwise 82% */}
+          {/* Animated progress arc: fills clockwise 86% */}
           <circle
             cx="90"
             cy="90"
             r={radius}
             className="teaser3-gauge-fill"
             stroke={`url(#${gradId})`}
-            strokeWidth="13"
+            strokeWidth="11"
             fill="none"
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -137,21 +135,63 @@ export function Teaser3SkinBalancePreview({ isActive }: { isActive?: boolean }) 
         </svg>
 
         {/* Center content inside the gauge */}
-        <div className="teaser3-gauge-center">
-          <div className="teaser3-gauge-score-row">
-            <span className="teaser3-gauge-number">{displayScore}</span>
-            <span className="teaser3-gauge-total">/ 100</span>
-          </div>
-          <div className="teaser3-preview-status-tag">
-            <span className="teaser3-preview-status-dot" aria-hidden="true" />
-            <span>Balanced</span>
+        <div className="teaser3-gauge-center t3-gauge-app-style">
+          <span className="t3-gauge-app-label">Skin Balance</span>
+          <span className="t3-gauge-app-score">{displayScore}</span>
+          <span className="t3-gauge-app-status">Good</span>
+          <div className="t3-gauge-app-arrow" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
           </div>
         </div>
       </div>
 
-      {/* Soft rose-tinted explanatory area below */}
-      <div className="teaser3-preview-explainer">
-        <p>A simple view of the patterns across your supported signals and skin check-ins.</p>
+      {/* 3 Sub-signal cards below gauge: Sleep, Nutrition, Stress */}
+      <div className="t3-app-subcards-row">
+        {/* Sleep Card */}
+        <div className="t3-app-subcard t3-app-subcard-sleep">
+          <div className="t3-app-subcard-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </div>
+          <span className="t3-app-subcard-title">Sleep</span>
+          <strong className="t3-app-subcard-score">78</strong>
+          <span className="t3-app-subcard-status">Good</span>
+        </div>
+
+        {/* Nutrition Card */}
+        <div className="t3-app-subcard t3-app-subcard-nutrition">
+          <div className="t3-app-subcard-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2" />
+              <path d="M15 2v20" />
+              <path d="M6 2v7a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V2" />
+              <path d="M9 12v10" />
+            </svg>
+          </div>
+          <span className="t3-app-subcard-title">Nutrition</span>
+          <strong className="t3-app-subcard-score">82</strong>
+          <span className="t3-app-subcard-status">Good</span>
+        </div>
+
+        {/* Stress Card */}
+        <div className="t3-app-subcard t3-app-subcard-stress">
+          <div className="t3-app-subcard-icon" aria-hidden="true">
+            {/* Lotus flower icon matching attachment */}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 3c-1.5 3-2 6-2 9 1-1 3-1.5 5-1.5-1-2.5-2-5.5-3-7.5zm0 0c1.5 3 2 6 2 9-1-1-3-1.5-5-1.5 1-2.5 2-5.5 3-7.5z" opacity="0.95" />
+              <path d="M6.5 11c1.8 1.8 3.5 2.5 5.5 2.5-1.2-3-3-5.5-5.5-2.5zm11 0c-1.8 1.8-3.5 2.5-5.5 2.5 1.2-3 3-5.5 5.5-2.5z" opacity="0.85" />
+              <path d="M3.5 15.5c2.5.5 5 0 7-1.5-2.5-1.5-5-1-7 1.5zm17 0c-2.5.5-5 0-7-1.5 2.5-1.5 5-1 7 1.5z" opacity="0.75" />
+              <path d="M12 15c-3 0-5.5 1.5-7 3.5 3 .5 6 .5 9 0-1.5-2-3-3.5-2-3.5zm0 0c3 0 5.5 1.5 7 3.5-3 .5-6 .5-9 0 1.5-2 3-3.5 2-3.5z" opacity="0.9" />
+            </svg>
+          </div>
+          <span className="t3-app-subcard-title">Stress</span>
+          <strong className="t3-app-subcard-score">70</strong>
+          <span className="t3-app-subcard-status">Fair</span>
+        </div>
       </div>
     </div>
   );

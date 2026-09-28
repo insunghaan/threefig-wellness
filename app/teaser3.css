@@ -1104,32 +1104,69 @@
   text-align: left;
 }
 
-/* Clean Two-Line Benefit Summary: No gray box, no border, no excessive padding */
-.teaser3-dialog-benefit-summary {
-  margin-bottom: 20px;
+/* Enhanced Perks Highlight with Polished Icons */
+.teaser3-dialog-perks-highlight {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.teaser3-dialog-perk-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(217, 107, 115, 0.05) 0%, rgba(248, 245, 241, 0.8) 100%);
+  border: 1px solid rgba(217, 107, 115, 0.15);
+  box-sizing: border-box;
+}
+
+.teaser3-dialog-perk-card.is-highlight {
+  background: linear-gradient(135deg, rgba(217, 107, 115, 0.1) 0%, rgba(254, 243, 238, 0.9) 100%);
+  border-color: rgba(217, 107, 115, 0.28);
+}
+
+.teaser3-dialog-perk-icon-wrap {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 50%;
+  background: rgba(217, 107, 115, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b8525b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.teaser3-dialog-perk-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   text-align: left;
 }
 
-.teaser3-dialog-benefit-primary {
+.teaser3-dialog-perk-title {
   font-family: var(--tf-font-sans);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.01em;
   color: var(--tf-color-text-primary);
-  margin: 0;
 }
 
-.teaser3-dialog-benefit-secondary {
+.teaser3-dialog-perk-desc {
   font-family: var(--tf-font-sans);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: -0.005em;
-  color: var(--tf-color-text-secondary);
+  color: #6a645d;
   margin: 0;
 }
 
@@ -1316,6 +1353,222 @@
 .teaser3-dialog-check-icon {
   color: var(--tf-color-accent-brown);
   flex-shrink: 0;
+}
+
+/* Optional Survey Invite Card (Confirmed & Already Registered) */
+.teaser3-survey-invite-card {
+  margin-top: 6px;
+  margin-bottom: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(217, 107, 115, 0.06) 0%, rgba(248, 245, 240, 0.95) 100%);
+  border: 1px solid rgba(217, 107, 115, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.teaser3-survey-invite-badge {
+  display: inline-block;
+  font-family: var(--tf-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #a84b54;
+  margin-bottom: 6px;
+}
+
+.teaser3-survey-invite-title {
+  font-family: var(--tf-font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1816;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.teaser3-survey-invite-desc {
+  font-family: var(--tf-font-sans);
+  font-size: 13px;
+  color: #665f58;
+  margin: 0;
+  line-height: 1.42;
+}
+
+.teaser3-survey-invite-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.teaser3-survey-start-btn {
+  margin: 0;
+}
+
+.teaser3-survey-done-btn {
+  height: 38px;
+}
+
+/* Survey Form & Options */
+.teaser3-dialog-content.is-survey-mode {
+  max-width: 520px;
+}
+
+.teaser3-survey-inner {
+  padding-bottom: 8px;
+}
+
+.teaser3-survey-header {
+  margin-bottom: 20px;
+}
+
+.teaser3-survey-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.teaser3-survey-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.teaser3-survey-group-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.teaser3-survey-label {
+  font-family: var(--tf-font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2b2723;
+  letter-spacing: -0.01em;
+}
+
+.teaser3-survey-subhint {
+  font-family: var(--tf-font-sans);
+  font-size: 12px;
+  color: #888078;
+}
+
+.teaser3-survey-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.teaser3-survey-chip {
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid #e5e0da;
+  background-color: #faf8f5;
+  color: #4b453e;
+  font-family: var(--tf-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  outline: none;
+}
+
+.teaser3-survey-chip:hover {
+  background-color: #f1ede8;
+  border-color: #d6cfc7;
+  color: #1a1816;
+}
+
+.teaser3-survey-chip.is-selected {
+  background-color: #1e1d1b;
+  border-color: #1e1d1b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.teaser3-survey-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teaser3-survey-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #e5e0da;
+  background-color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.teaser3-survey-card:hover {
+  border-color: #d4cdbf;
+  background-color: #faf8f6;
+}
+
+.teaser3-survey-card.is-selected {
+  border-color: #b8525b;
+  background: linear-gradient(135deg, rgba(217, 107, 115, 0.06) 0%, rgba(255, 252, 250, 0.95) 100%);
+}
+
+.teaser3-survey-card-check {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 6px;
+  border: 1.5px solid #d0c9c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  margin-top: 2px;
+  transition: all 0.16s ease;
+}
+
+.teaser3-survey-card.is-selected .teaser3-survey-card-check {
+  background-color: #b8525b;
+  border-color: #b8525b;
+  color: #ffffff;
+}
+
+.teaser3-survey-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.teaser3-survey-card-text strong {
+  font-family: var(--tf-font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a1816;
+}
+
+.teaser3-survey-card-text small {
+  font-family: var(--tf-font-sans);
+  font-size: 12px;
+  color: #6a645d;
+  line-height: 1.35;
+}
+
+.teaser3-survey-form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 /* ==========================================================================
@@ -2169,6 +2422,146 @@
   background-color: #38a149;
 }
 
+/* App Screen Matching Circular Gauge Center */
+.t3-gauge-app-style {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.t3-gauge-app-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #3b3632;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+  font-family: var(--tf-font-sans);
+}
+
+.t3-gauge-app-score {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: #111111;
+  font-family: var(--tf-font-sans);
+}
+
+.t3-gauge-app-status {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2e2925;
+  letter-spacing: -0.01em;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  font-family: var(--tf-font-sans);
+}
+
+.t3-gauge-app-arrow {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(238, 222, 216, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38332e;
+}
+
+/* 3 Sub-signal cards below gauge: Sleep, Nutrition, Stress */
+.t3-app-subcards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.t3-app-subcard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px 12px;
+  border-radius: 18px;
+  box-sizing: border-box;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.t3-app-subcard-icon {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.t3-app-subcard-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+  font-family: var(--tf-font-sans);
+}
+
+.t3-app-subcard-score {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #111111;
+  font-family: var(--tf-font-sans);
+  margin-bottom: 2px;
+}
+
+.t3-app-subcard-status {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-family: var(--tf-font-sans);
+}
+
+/* Sleep Card: Lavender Tint */
+.t3-app-subcard-sleep {
+  background: rgba(240, 242, 255, 0.85);
+  border: 1px solid rgba(220, 224, 255, 0.6);
+}
+.t3-app-subcard-sleep .t3-app-subcard-icon,
+.t3-app-subcard-sleep .t3-app-subcard-title,
+.t3-app-subcard-sleep .t3-app-subcard-status {
+  color: #6366f1;
+}
+
+/* Nutrition Card: Sage/Mint Tint */
+.t3-app-subcard-nutrition {
+  background: rgba(238, 250, 242, 0.85);
+  border: 1px solid rgba(215, 245, 223, 0.6);
+}
+.t3-app-subcard-nutrition .t3-app-subcard-icon,
+.t3-app-subcard-nutrition .t3-app-subcard-title,
+.t3-app-subcard-nutrition .t3-app-subcard-status {
+  color: #38a169;
+}
+
+/* Stress Card: Peach/Coral Tint */
+.t3-app-subcard-stress {
+  background: rgba(255, 244, 238, 0.85);
+  border: 1px solid rgba(255, 230, 220, 0.6);
+}
+.t3-app-subcard-stress .t3-app-subcard-icon,
+.t3-app-subcard-stress .t3-app-subcard-title,
+.t3-app-subcard-stress .t3-app-subcard-status {
+  color: #ea580c;
+}
+
 /* Common Soft Rose-Tinted Explanatory Box */
 .teaser3-preview-explainer {
   background: rgba(255, 238, 242, 0.72);
@@ -2427,6 +2820,32 @@
   .teaser3-value-mobile-slide .teaser3-preview-status-tag {
     font-size: 11.5px;
     padding: 3px 9px;
+  }
+
+  .teaser3-value-mobile-slide .t3-gauge-app-score {
+    font-size: 46px;
+  }
+
+  .teaser3-value-mobile-slide .t3-app-subcards-row {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .teaser3-value-mobile-slide .t3-app-subcard {
+    padding: 10px 4px 8px;
+    border-radius: 14px;
+  }
+
+  .teaser3-value-mobile-slide .t3-app-subcard-title {
+    font-size: 11px;
+  }
+
+  .teaser3-value-mobile-slide .t3-app-subcard-score {
+    font-size: 20px;
+  }
+
+  .teaser3-value-mobile-slide .t3-app-subcard-status {
+    font-size: 11px;
   }
 
   .teaser3-value-mobile-slide .teaser3-preview-legend {
@@ -3655,10 +4074,9 @@
   max-width: 1140px;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  text-align: center;
 }
 
 .teaser3-footer-privacy-btn {
