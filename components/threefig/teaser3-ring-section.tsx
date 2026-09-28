@@ -28,7 +28,7 @@ export function Teaser3RingSection() {
             <div className="teaser3-ring-image-wrapper">
               <Image
                 src="/images/teaser2-ring-still-life.webp"
-                alt="Polished silver 3FIG smart ring standing upright on sculptural dark charcoal stone"
+                alt="Polished silver 3fig smart ring standing upright on sculptural dark charcoal stone"
                 width={744}
                 height={952}
                 className="teaser3-ring-image"

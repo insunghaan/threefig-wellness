@@ -17,7 +17,7 @@ export function Teaser3Footer({ onOpenPrivacy }: Teaser3FooterProps) {
         >
           Privacy &amp; Analytics
         </button>
-        <span className="teaser3-footer-copyright">© 2026 3FIG</span>
+        <span className="teaser3-footer-copyright">© 2026 3fig</span>
       </div>
     </footer>
   );

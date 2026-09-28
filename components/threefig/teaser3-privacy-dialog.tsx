@@ -25,7 +25,7 @@ export function Teaser3PrivacyDialog({
         </DialogTitle>
         <DialogDescription className="teaser3-dialog-desc">
           Join the launch list and we’ll keep your email only to send occasional
-          3FIG product updates. We never sell it. Leave anytime.
+          3fig product updates. We never sell it. Leave anytime.
         </DialogDescription>
         <div className="teaser3-dialog-body-text">
           <p>
@@ -35,7 +35,7 @@ export function Teaser3PrivacyDialog({
             address in Meta event parameters.
           </p>
           <p>
-            3FIG supports everyday wellness. It does not diagnose, prevent or
+            3fig supports everyday wellness. It does not diagnose, prevent or
             treat medical conditions.
           </p>
         </div>

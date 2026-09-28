@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowRight, Menu, X } from "lucide-react";
 import { getSimulatedWaitlistCount } from "@/lib/threefig/waitlist-counter";
 import { Teaser3WaitlistDialog } from "./teaser3-waitlist-dialog";
 import { ThreeFigButton } from "./threefig-button";
@@ -13,6 +13,8 @@ export function Teaser3Hero() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [stickyMenuOpen, setStickyMenuOpen] = useState(false);
   const [isLightSurface, setIsLightSurface] = useState(true);
   const [isHandoffHidden, setIsHandoffHidden] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
@@ -208,22 +210,27 @@ export function Teaser3Hero() {
     }
   }, []);
 
-  // Track scroll threshold (24px) - dismiss cue and reveal CTA for remainder of visit
+  // Track scroll threshold - dismiss cue, reveal CTA, and manage sticky header visibility
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     if (window.scrollY > 24) {
       setHasScrolled(true);
     }
+    if (window.scrollY > 40) {
+      setIsScrolled(true);
+    }
 
     const handleScroll = () => {
       // Ignore scroll inside modal dialogs
       if (dialogOpen) return;
 
-      if (window.scrollY > 24) {
+      const y = window.scrollY;
+      if (y > 24) {
         setHasScrolled(true);
       }
-      setIsLightSurface(window.scrollY > 300);
+      setIsScrolled(y > 40);
+      setIsLightSurface(y > 300);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -291,6 +298,32 @@ export function Teaser3Hero() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    setStickyMenuOpen(false);
+    setMenuOpen(false);
+    const elem = document.getElementById(targetId);
+    if (elem) {
+      const headerOffset = 70;
+      const elementPosition = elem.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setStickyMenuOpen(false);
+    setMenuOpen(false);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   // Coordinated Mobile States:
   // - Initial landing (!hasScrolled): Show centered scroll cue only, hide CTA
   // - After scroll (hasScrolled): Reveal floating CTA dock (slides up), hide scroll cue
@@ -305,13 +338,114 @@ export function Teaser3Hero() {
   return (
     <div className="teaser3-root">
       {/* ====================================================================
+          STICKY FLOATING HEADER
+          Appears on scroll-down (both desktop and mobile), hides at top
+          ==================================================================== */}
+      <header
+        className={`teaser3-sticky-header ${isScrolled || stickyMenuOpen ? "is-scrolled" : "is-top"}`}
+        aria-label="3fig Navigation Header"
+      >
+        <div className="teaser3-sticky-inner">
+          <a
+            href="/teaser3"
+            onClick={handleLogoClick}
+            className="teaser3-sticky-brand"
+            aria-label="3fig Home"
+          >
+            <img
+              src="/images/threefig-logo.png"
+              alt="3fig"
+              className="teaser3-sticky-logo-img"
+              width={76}
+              height={39}
+            />
+          </a>
+
+          <nav className="teaser3-sticky-nav" aria-label="Main Navigation">
+            <a href="#what-you-get" onClick={(e) => handleNavClick(e, "what-you-get")}>
+              What you get
+            </a>
+            <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
+              How it works
+            </a>
+            <a href="#ring" onClick={(e) => handleNavClick(e, "ring")}>
+              The ring
+            </a>
+            <a href="#science" onClick={(e) => handleNavClick(e, "science")}>
+              Skin science
+            </a>
+            <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
+              FAQ
+            </a>
+          </nav>
+
+          <div className="teaser3-sticky-right">
+            <button
+              type="button"
+              className="teaser3-sticky-cta"
+              onClick={handleOpenWaitlist}
+              aria-label="Claim Free Lifetime Access"
+            >
+              <span className="teaser3-sticky-cta-full">Claim Free Lifetime Access</span>
+              <span className="teaser3-sticky-cta-short">Claim Access</span>
+              <ArrowRight size={14} aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              className="teaser3-sticky-menu-btn"
+              onClick={() => setStickyMenuOpen((prev) => !prev)}
+              aria-label={stickyMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={stickyMenuOpen}
+            >
+              {stickyMenuOpen ? (
+                <X size={20} aria-hidden="true" />
+              ) : (
+                <Menu size={20} aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Dropdown Navigation for Sticky Header */}
+        {stickyMenuOpen && (
+          <nav className="teaser3-sticky-mobile-nav" aria-label="Mobile Navigation Drawer">
+            <a href="#what-you-get" onClick={(e) => handleNavClick(e, "what-you-get")}>
+              What you get
+            </a>
+            <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
+              How it works
+            </a>
+            <a href="#ring" onClick={(e) => handleNavClick(e, "ring")}>
+              The ring
+            </a>
+            <a href="#science" onClick={(e) => handleNavClick(e, "science")}>
+              Skin science
+            </a>
+            <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
+              FAQ
+            </a>
+            <button
+              type="button"
+              className="teaser3-sticky-mobile-nav-cta"
+              onClick={() => {
+                setStickyMenuOpen(false);
+                handleOpenWaitlist();
+              }}
+            >
+              Claim Free Lifetime Access
+            </button>
+          </nav>
+        )}
+      </header>
+      {/* ====================================================================
           DESKTOP VIEWPORT (Split 55% Content / 45% Video)
           ==================================================================== */}
       <div className="teaser3-desktop-split">
         {/* Left Column: 55% Content */}
-        <section className="teaser3-content-col" aria-label="3FIG Introduction">
+        <section className="teaser3-content-col" aria-label="3fig Introduction">
           <header className="teaser3-header">
-            <Link href="/teaser3" className="teaser3-logo" aria-label="3FIG Home">
+            <Link href="/teaser3" className="teaser3-logo" aria-label="3fig Home">
               <img
                 src="/images/threefig-logo.png"
                 alt="3fig"
@@ -330,7 +464,7 @@ export function Teaser3Hero() {
             </h1>
 
             <p className="teaser3-desc tf-role-body-lead">
-              Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+              Meet 3fig, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
             </p>
 
             {/* Desktop CTA Row: Solid-Black Pill Button + Plain Text Waitlist Count */}
@@ -385,10 +519,10 @@ export function Teaser3Hero() {
         </section>
 
         {/* Right Column: 45% Hero Image Panel */}
-        <section className="teaser3-video-col" aria-label="3FIG Smart Ring Preview">
+        <section className="teaser3-video-col" aria-label="3fig Smart Ring Preview">
           <img
             src="/images/newhero0928.png?v=0928v3"
-            alt="3FIG Smart Ring and Skin Balance app"
+            alt="3fig Smart Ring and Skin Balance app"
             className="teaser3-video teaser3-hero-image"
             width={1200}
             height={1500}
@@ -404,7 +538,7 @@ export function Teaser3Hero() {
         {/* Mobile Header: Logo near top, all-black logo */}
         <div className="teaser3-mobile-header-container">
           <header className="teaser3-mobile-header-row">
-            <Link href="/teaser3" className="teaser3-mobile-logo" aria-label="3FIG Home">
+            <Link href="/teaser3" className="teaser3-mobile-logo" aria-label="3fig Home">
               <img
                 src="/images/threefig-logo.png"
                 alt="3fig"
@@ -485,7 +619,7 @@ export function Teaser3Hero() {
           </h1>
 
           <p className="teaser3-desc tf-role-body-lead">
-            Meet 3FIG, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+            Meet 3fig, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
           </p>
         </div>
 
@@ -494,11 +628,11 @@ export function Teaser3Hero() {
           ref={mobileMediaRef}
           className="teaser3-mobile-media-col"
           data-theme="light"
-          aria-label="3FIG Smart Ring Preview"
+          aria-label="3fig Smart Ring Preview"
         >
           <img
             src="/images/newhero0928.png?v=0928v3"
-            alt="3FIG Smart Ring and Skin Balance app"
+            alt="3fig Smart Ring and Skin Balance app"
             className="teaser3-video teaser3-hero-image"
             width={1200}
             height={1500}

@@ -246,21 +246,21 @@ const STORY_SLIDES: StorySlide[] = [
     title: "Wear it.",
     description: "Wear it through sleep and everyday life.",
     imageSrc: "/images/threefig-pathway-01-sleep.webp",
-    imageAlt: "Resting calmly during sleep wearing the 3FIG smart ring.",
+    imageAlt: "Resting calmly during sleep wearing the 3fig smart ring.",
   },
   {
     id: "check-in",
     title: "Check in.",
     description: "A few taps to log how your skin feels.",
     imageSrc: "/images/threefig-pathway-04-rhythm.webp",
-    imageAlt: "Gentle morning reflection touching clean skin while wearing the 3FIG ring.",
+    imageAlt: "Gentle morning reflection touching clean skin while wearing the 3fig ring.",
   },
   {
     id: "connect",
     title: "Connect it.",
     description: "See your body signals and skin check-ins together.",
     imageSrc: "/images/threefig-balance-now-knit.webp",
-    imageAlt: "Relaxing at home in soft knitwear with the 3FIG ring naturally visible.",
+    imageAlt: "Relaxing at home in soft knitwear with the 3fig ring naturally visible.",
   },
 ];
 

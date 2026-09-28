@@ -233,7 +233,7 @@ export function Teaser3WaitlistDialog({
           {/* VIEW 1: INITIAL SIGNUP */}
           {view === "signup" && (
             <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">3FIG EARLY ACCESS</span>
+              <span className="teaser3-dialog-eyebrow">3fig EARLY ACCESS</span>
               <DialogPrimitive.Title className="teaser3-dialog-title">
                 App access. Free for life.
               </DialogPrimitive.Title>
@@ -241,7 +241,7 @@ export function Teaser3WaitlistDialog({
                 id="t3-dialog-description"
                 className="teaser3-dialog-desc"
               >
-                Join the launch list to reserve your founding member spot and enjoy free 3FIG app access for life.
+                Join the launch list to reserve your founding member spot and enjoy free 3fig app access for life.
               </DialogPrimitive.Description>
 
               <div className="teaser3-dialog-benefit-summary">
@@ -320,7 +320,7 @@ export function Teaser3WaitlistDialog({
                 id="t3-dialog-description"
                 className="teaser3-dialog-desc"
               >
-                Join the launch list today to guarantee 20% off your 3FIG smart ring, plus lifetime free app membership upon release.
+                Join the launch list today to guarantee 20% off your 3fig smart ring, plus lifetime free app membership upon release.
               </DialogPrimitive.Description>
 
               <div className="teaser3-dialog-benefit-summary">

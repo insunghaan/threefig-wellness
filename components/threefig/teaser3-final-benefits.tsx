@@ -22,7 +22,7 @@ export const Teaser3FinalBenefits = forwardRef<HTMLDivElement, Teaser3FinalBenef
             <span className="teaser3-benefits-accent">Free for life.</span>
           </h2>
           <p className="teaser3-benefits-lead">
-            Join early and keep your 3FIG membership free for life.
+            Join early and keep your 3fig membership free for life.
           </p>
 
           <div className="teaser3-benefits-actions" ref={ref}>

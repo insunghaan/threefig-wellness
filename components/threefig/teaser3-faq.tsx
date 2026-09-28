@@ -14,29 +14,29 @@ const faqs: FaqItem[] = [
     id: "faq-join",
     question: "What happens when I join?",
     answer:
-      "You reserve early access and secure free lifetime 3FIG membership before public launch.",
+      "You reserve early access and secure free lifetime 3fig membership before public launch.",
   },
   {
     id: "faq-membership",
     question: "What does lifetime membership include?",
     answer:
-      "Full ongoing access to the 3FIG companion app, Skin Balance insights, and pattern tracking with zero monthly subscription fees.",
+      "Full ongoing access to the 3fig companion app, Skin Balance insights, and pattern tracking with zero monthly subscription fees.",
   },
   {
     id: "faq-ring",
     question: "Is the ring included?",
     answer:
-      "No. The 3FIG smart ring is hardware and sold separately when reservations open. Membership is free for life for early members.",
+      "No. The 3fig smart ring is hardware and sold separately when reservations open. Membership is free for life for early members.",
   },
   {
     id: "faq-tracking",
-    question: "What does 3FIG actually track?",
+    question: "What does 3fig actually track?",
     answer:
       "The ring continuously tracks sleep stages, resting heart rate, HRV, and relative skin temperature shifts. You log skin reflections in seconds.",
   },
   {
     id: "faq-availability",
-    question: "When will 3FIG be available?",
+    question: "When will 3fig be available?",
     answer:
       "Early reservation access opens later this year. Members on the early list will be invited first in batches.",
   },

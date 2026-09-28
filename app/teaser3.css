@@ -24,6 +24,216 @@
 }
 
 /* ==========================================================================
+   0. STICKY FLOATING HEADER (Appears on scroll-down, hides at top)
+   Strictly scoped to Teaser3 - Zero impact on 3fig.io and teaser2
+   ========================================================================== */
+.teaser3-root .teaser3-sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 62px;
+  z-index: 100;
+  background: rgba(250, 248, 245, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(20, 19, 18, 0.07);
+  box-shadow: 0 4px 20px rgba(20, 19, 18, 0.03);
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.teaser3-root .teaser3-sticky-header.is-scrolled {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.teaser3-root .teaser3-sticky-inner {
+  height: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 36px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.teaser3-root .teaser3-sticky-brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.teaser3-root .teaser3-sticky-logo-img {
+  display: block;
+  width: clamp(74px, 7vw, 84px);
+  height: auto;
+  object-fit: contain;
+}
+
+.teaser3-root .teaser3-sticky-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.2vw, 32px);
+}
+
+.teaser3-root .teaser3-sticky-nav a {
+  font-family: var(--tf-font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: rgba(20, 19, 18, 0.68);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.teaser3-root .teaser3-sticky-nav a:hover {
+  color: var(--tf-color-text-primary, #141312);
+}
+
+.teaser3-root .teaser3-sticky-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.teaser3-root .teaser3-sticky-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  background: var(--tf-color-text-primary, #141312);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--tf-font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.teaser3-root .teaser3-sticky-cta:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.teaser3-root .teaser3-sticky-cta-short {
+  display: none;
+}
+
+.teaser3-root .teaser3-sticky-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--tf-color-text-primary, #141312);
+  border-radius: 8px;
+  transition: opacity 0.18s ease;
+}
+
+.teaser3-root .teaser3-sticky-menu-btn:hover {
+  opacity: 0.7;
+}
+
+/* Mobile Dropdown Menu for Sticky Header */
+.teaser3-root .teaser3-sticky-mobile-nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(250, 248, 245, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(20, 19, 18, 0.08);
+  padding: 16px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.06);
+  animation: teaser3StickyFadeDown 0.2s ease-out;
+}
+
+@keyframes teaser3StickyFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.teaser3-root .teaser3-sticky-mobile-nav a {
+  font-family: var(--tf-font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(20, 19, 18, 0.85);
+  text-decoration: none;
+  padding: 8px 4px;
+}
+
+.teaser3-root .teaser3-sticky-mobile-nav a:active {
+  color: var(--tf-color-accent-brown, #b85d70);
+}
+
+.teaser3-root .teaser3-sticky-mobile-nav-cta {
+  margin-top: 6px;
+  height: 44px;
+  background: var(--tf-color-text-primary, #141312);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--tf-font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Responsive Breakpoints for Sticky Header */
+@media (max-width: 860px) {
+  .teaser3-root .teaser3-sticky-header {
+    height: 54px;
+  }
+  .teaser3-root .teaser3-sticky-nav {
+    display: none;
+  }
+  .teaser3-root .teaser3-sticky-cta-full {
+    display: none;
+  }
+  .teaser3-root .teaser3-sticky-cta-short {
+    display: inline;
+  }
+  .teaser3-root .teaser3-sticky-cta {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+  .teaser3-root .teaser3-sticky-menu-btn {
+    display: inline-flex;
+  }
+}
+
+/* ==========================================================================
    1. DESKTOP VIEWPORT: 55% CONTENT / 45% VIDEO PANEL SPLIT
    ========================================================================== */
 .teaser3-desktop-split {

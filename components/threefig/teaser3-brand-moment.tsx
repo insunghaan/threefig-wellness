@@ -16,7 +16,7 @@ export function Teaser3BrandMoment({ onOpenWaitlist }: Teaser3BrandMomentProps) 
           <span className="teaser3-brand-accent">Skin notices.</span>
         </h2>
         <p className="teaser3-brand-desc">
-          3FIG helps you notice what tends to come with it.
+          3fig helps you notice what tends to come with it.
         </p>
 
         <div className="teaser3-brand-action">

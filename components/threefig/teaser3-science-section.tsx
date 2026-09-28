@@ -23,7 +23,7 @@ const scienceTopics: ScienceTopic[] = [
     id: "sleep-skin",
     title: "Sleep & Skin",
     label: "Circadian rhythms and overnight skin barrier renewal",
-    body: "Sleep is part of the environment your skin responds to. Research has linked sleep quality and sleep loss with changes in skin function, recovery, and appearance.\n\n3FIG uses supported sleep and recovery signals as context alongside your own skin check-ins.",
+    body: "Sleep is part of the environment your skin responds to. Research has linked sleep quality and sleep loss with changes in skin function, recovery, and appearance.\n\n3fig uses supported sleep and recovery signals as context alongside your own skin check-ins.",
     highlight: "Better nights can give your skin a different context.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/42641586/",
   },
@@ -31,7 +31,7 @@ const scienceTopics: ScienceTopic[] = [
     id: "stress-skin",
     title: "Stress & Skin",
     label: "Autonomic response and cutaneous barrier reactivity",
-    body: "Stress can influence sleep, recovery, and other physiological patterns that may coincide with changes in how skin feels.\n\n3FIG looks at supported recovery-related signals alongside your own skin check-ins to help you notice patterns over time.",
+    body: "Stress can influence sleep, recovery, and other physiological patterns that may coincide with changes in how skin feels.\n\n3fig looks at supported recovery-related signals alongside your own skin check-ins to help you notice patterns over time.",
     highlight: "Stress leaves clues. Skin can be part of the story.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/41962101/",
   },
@@ -39,7 +39,7 @@ const scienceTopics: ScienceTopic[] = [
     id: "body-signals",
     title: "Body Signals & Skin",
     label: "Physiological baselines and long-term vitality",
-    body: "Sleep, recovery, temperature trends, movement, and other supported body signals can add useful context to everyday skin changes.\n\n3FIG brings those signals together with your own skin check-ins to make personal patterns easier to notice.",
+    body: "Sleep, recovery, temperature trends, movement, and other supported body signals can add useful context to everyday skin changes.\n\n3fig brings those signals together with your own skin check-ins to make personal patterns easier to notice.",
     highlight: "Your skin does not live apart from the rest of you.",
     destination: "https://pubmed.ncbi.nlm.nih.gov/42389732/",
   },
@@ -225,7 +225,7 @@ export function Teaser3ScienceSection() {
                 Circadian biology shows that epidermal barrier repair, cellular proliferation, and trans-epidermal water loss undergo daily oscillation regulated by nighttime rest.
               </p>
               <p className="teaser3-modal-para">
-                When systemic recovery is suppressed, peripheral autonomic signals reflect altered skin comfort. 3FIG surfaces these correlations without medical diagnosis.
+                When systemic recovery is suppressed, peripheral autonomic signals reflect altered skin comfort. 3fig surfaces these correlations without medical diagnosis.
               </p>
             </div>
           </div>

@@ -341,7 +341,7 @@ const BENEFIT_ITEMS: BenefitItem[] = [
   {
     num: "03",
     title: "Know what to try.",
-    desc: "Get one useful suggestion based on the patterns 3FIG is helping you notice.",
+    desc: "Get one useful suggestion based on the patterns 3fig is helping you notice.",
     bgImage: "/images/teaser3-panel-bg-03.webp",
     renderPreview: (isActive) => <Teaser3NextMovePreview isActive={isActive} />,
   },

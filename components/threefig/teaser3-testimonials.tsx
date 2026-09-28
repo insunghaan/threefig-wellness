@@ -61,7 +61,7 @@ export function Teaser3Testimonials() {
             A few early reactions.
           </h2>
           <p className="teaser3-section-lead">
-            How early beta members describe their experience with 3FIG.
+            How early beta members describe their experience with 3fig.
           </p>
         </div>
 
