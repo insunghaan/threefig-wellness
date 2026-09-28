@@ -22,7 +22,7 @@ export default function Teaser3Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/newhero0928.png"
+        href="/images/newhero0928.png?v=0928v2"
       />
       <link
         rel="preload"
