@@ -240,6 +240,7 @@ interface StorySlide {
   title: string;
   description: string;
   imageSrc: string;
+  mobileImageSrc?: string;
   imageAlt: string;
   renderOverlay: (active: boolean) => React.ReactNode;
 }
@@ -251,6 +252,7 @@ const STORY_SLIDES: StorySlide[] = [
     title: "Wear it.",
     description: "Wear it through sleep and everyday life.",
     imageSrc: "/images/threefig-pathway-01-sleep.webp",
+    mobileImageSrc: "/images/teaser3/how-it-works-slide-01-mobile.png",
     imageAlt: "Resting calmly during sleep wearing the 3fig smart ring.",
     renderOverlay: (active) => <Teaser3WearOverlay active={active} />,
   },
@@ -260,6 +262,7 @@ const STORY_SLIDES: StorySlide[] = [
     title: "Check in.",
     description: "A few taps to log how your skin feels.",
     imageSrc: "/images/threefig-pathway-04-rhythm.webp",
+    mobileImageSrc: "/images/teaser3/how-it-works-slide-02-mobile.png",
     imageAlt: "Gentle morning reflection touching clean skin while wearing the 3fig ring.",
     renderOverlay: (active) => <Teaser3CheckInOverlay active={active} />,
   },
@@ -269,6 +272,7 @@ const STORY_SLIDES: StorySlide[] = [
     title: "Connect it.",
     description: "See your body signals and skin check-ins together.",
     imageSrc: "/images/threefig-balance-now-knit.webp",
+    mobileImageSrc: "/images/teaser3/how-it-works-slide-03-mobile.png",
     imageAlt: "Relaxing at home in soft knitwear with the 3fig ring naturally visible.",
     renderOverlay: (active) => <Teaser3ConnectOverlay active={active} />,
   },
@@ -424,10 +428,20 @@ export function Teaser3HowItWorks() {
                       src={slide.imageSrc}
                       alt={slide.imageAlt}
                       fill
-                      className="teaser3-how-clean-photo"
-                      sizes="(max-width: 860px) 88vw, (max-width: 1200px) 75vw, 960px"
+                      className="teaser3-how-clean-photo teaser3-how-desktop-photo"
+                      sizes="(max-width: 1200px) 75vw, 960px"
                       priority={i === 0}
                     />
+                    {slide.mobileImageSrc && (
+                      <Image
+                        src={slide.mobileImageSrc}
+                        alt={slide.imageAlt}
+                        fill
+                        className="teaser3-how-clean-photo teaser3-how-mobile-photo"
+                        sizes="(max-width: 860px) 88vw, 380px"
+                        priority={i === 0}
+                      />
+                    )}
                     <div className="teaser3-how-gradient-scrim" aria-hidden="true" />
 
                     {/* Desktop In-Photo Text Block (Lower-Left) */}

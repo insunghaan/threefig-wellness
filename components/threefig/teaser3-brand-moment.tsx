@@ -24,9 +24,9 @@ export function Teaser3BrandMoment({ onOpenWaitlist }: Teaser3BrandMomentProps) 
             type="button"
             className="teaser3-btn-pill teaser3-brand-btn"
             onClick={onOpenWaitlist}
-            aria-label="Count me in"
+            aria-label="Get early access"
           >
-            <span>Count me in</span>
+            <span>Get early access</span>
             <ArrowRight size={17} aria-hidden="true" />
           </button>
         </div>

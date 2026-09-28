@@ -296,7 +296,7 @@ export function Teaser3WaitlistDialog({
                     </>
                   ) : (
                     <>
-                      <span>Count me in</span>
+                      <span>Get early access</span>
                       <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
                     </>
                   )}

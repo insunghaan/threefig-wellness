@@ -30,9 +30,9 @@ export const Teaser3FinalBenefits = forwardRef<HTMLDivElement, Teaser3FinalBenef
               type="button"
               className="teaser3-btn-pill-inverse teaser3-benefits-btn"
               onClick={onOpenWaitlist}
-              aria-label="Count me in"
+              aria-label="Get early access"
             >
-              <span>Count me in</span>
+              <span>Get early access</span>
               <ArrowRight size={17} aria-hidden="true" />
             </button>
             <p className="teaser3-benefits-microcopy">

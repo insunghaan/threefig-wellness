@@ -384,10 +384,10 @@ export function Teaser3Hero() {
               type="button"
               className="teaser3-sticky-cta"
               onClick={handleOpenWaitlist}
-              aria-label="Claim Free Lifetime Access"
+              aria-label="Get early access"
             >
-              <span className="teaser3-sticky-cta-full">Claim Free Lifetime Access</span>
-              <span className="teaser3-sticky-cta-short">Claim Access</span>
+              <span className="teaser3-sticky-cta-full">Get early access</span>
+              <span className="teaser3-sticky-cta-short">Get early access</span>
               <ArrowRight size={14} aria-hidden="true" />
             </button>
 
@@ -433,7 +433,7 @@ export function Teaser3Hero() {
                 handleOpenWaitlist();
               }}
             >
-              Claim Free Lifetime Access
+              Get early access
             </button>
           </nav>
         )}
@@ -473,7 +473,7 @@ export function Teaser3Hero() {
                 variant="primary"
                 className="teaser3-desktop-btn"
                 onClick={handleOpenWaitlist}
-                aria-label="Count me in"
+                aria-label="Get early access"
                 ringAccessory={
                   <span className="teaser3-btn-ring-box">
                     <span className="teaser3-ring-float-wrapper">
@@ -489,14 +489,8 @@ export function Teaser3Hero() {
                   </span>
                 }
               >
-                Count me in
+                Get early access
               </ThreeFigButton>
-
-              {signupCount !== null && (
-                <span className="teaser3-count-text">
-                  {signupCount.toLocaleString()} on the waitlist.
-                </span>
-              )}
             </div>
 
             {/* Desktop Scroll-Discovery Cue: 44-48px below CTA/count row, left-aligned */}
@@ -602,7 +596,7 @@ export function Teaser3Hero() {
                   handleOpenWaitlist();
                 }}
               >
-                Claim Free Lifetime Access
+                Get early access
               </button>
             </nav>
           )}
@@ -694,7 +688,7 @@ export function Teaser3Hero() {
             className="teaser3-mobile-btn"
             onClick={handleOpenWaitlist}
             tabIndex={showMobileCta ? 0 : -1}
-            aria-label="Count me in"
+            aria-label="Get early access"
             ringAccessory={
               <span className={`teaser3-mobile-ring-box${showMobileCta ? " is-active" : " is-paused"}`}>
                 <span className="teaser3-ring-float-wrapper">
@@ -710,14 +704,8 @@ export function Teaser3Hero() {
               </span>
             }
           >
-            Count me in
+            Get early access
           </ThreeFigButton>
-
-          {signupCount !== null && (
-            <span className="teaser3-mobile-count-text">
-              {signupCount.toLocaleString()} on the waitlist.
-            </span>
-          )}
         </div>
       </aside>
 
