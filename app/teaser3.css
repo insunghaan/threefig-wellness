@@ -2466,7 +2466,7 @@
   background-color: #F9F7F5;
   border-bottom: 1px solid #ede8e0;
   overflow-x: hidden;
-  padding: clamp(80px, 9vw, 130px) 0;
+  padding: clamp(80px, 9vw, 130px) clamp(24px, 5.4vw, 96px);
 }
 
 .teaser3-how-carousel-wrap {
@@ -2846,20 +2846,25 @@
    ========================================================================== */
 @media (max-width: 860px) {
   .teaser3-how-section {
-    padding: 60px 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-left: var(--tf-mobile-px, 24px);
+    padding-right: var(--tf-mobile-px, 24px);
   }
 
   .teaser3-how-track {
     gap: 16px;
-    margin-left: 0;
-    padding-left: 0;
+    margin-left: calc(-1 * var(--tf-mobile-px, 24px));
     margin-right: calc(-1 * var(--tf-mobile-px, 24px));
+    padding-left: var(--tf-mobile-px, 24px);
     padding-right: var(--tf-mobile-px, 24px);
+    scroll-padding-left: var(--tf-mobile-px, 24px);
+    scroll-padding-right: var(--tf-mobile-px, 24px);
     touch-action: pan-x pan-y;
   }
 
   .teaser3-how-slide-card {
-    flex: 0 0 calc(100% - 36px);
+    flex: 0 0 calc(100% - 48px);
     max-width: 380px;
   }
 
