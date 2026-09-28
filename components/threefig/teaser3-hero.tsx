@@ -387,7 +387,7 @@ export function Teaser3Hero() {
         {/* Right Column: 45% Hero Image Panel */}
         <section className="teaser3-video-col" aria-label="3FIG Smart Ring Preview">
           <img
-            src="/images/newhero0928.png?v=0928v2"
+            src="/images/newhero0928.png?v=0928v3"
             alt="3FIG Smart Ring and Skin Balance app"
             className="teaser3-video teaser3-hero-image"
             width={1200}
@@ -497,7 +497,7 @@ export function Teaser3Hero() {
           aria-label="3FIG Smart Ring Preview"
         >
           <img
-            src="/images/newhero0928.png?v=0928v2"
+            src="/images/newhero0928.png?v=0928v3"
             alt="3FIG Smart Ring and Skin Balance app"
             className="teaser3-video teaser3-hero-image"
             width={1200}

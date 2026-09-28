@@ -161,8 +161,8 @@ export function Teaser3PatternsPreview({ isActive }: { isActive?: boolean }) {
         </div>
         <div className="teaser3-legend-item">
           <svg width="26" height="10" viewBox="0 0 26 10" aria-hidden="true">
-            <line x1="0" y1="5" x2="26" y2="5" stroke="#633a29" strokeWidth="2" strokeDasharray="3 3" />
-            <circle cx="13" cy="5" r="3" fill="#633a29" />
+            <line x1="0" y1="5" x2="26" y2="5" stroke="var(--tf-color-accent-brown, #b85d70)" strokeWidth="2" strokeDasharray="3 3" />
+            <circle cx="13" cy="5" r="3" fill="var(--tf-color-accent-brown, #b85d70)" />
           </svg>
           <span>Skin comfort</span>
         </div>
