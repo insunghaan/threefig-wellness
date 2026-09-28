@@ -3009,6 +3009,10 @@
   display: block;
 }
 
+.teaser3-how-desktop-photo.teaser3-how-desktop-photo-flipped {
+  transform: scaleX(-1);
+}
+
 .teaser3-how-mobile-photo {
   display: none !important;
 }

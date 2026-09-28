@@ -428,7 +428,9 @@ export function Teaser3HowItWorks() {
                       src={slide.imageSrc}
                       alt={slide.imageAlt}
                       fill
-                      className="teaser3-how-clean-photo teaser3-how-desktop-photo"
+                      className={`teaser3-how-clean-photo teaser3-how-desktop-photo${
+                        slide.id === "wear" ? " teaser3-how-desktop-photo-flipped" : ""
+                      }`}
                       sizes="(max-width: 1200px) 75vw, 960px"
                       priority={i === 0}
                     />
