@@ -584,10 +584,21 @@ export function Teaser3Hero() {
           {/* Mobile Navigation Drawer / Dropdown */}
           {menuOpen && (
             <nav className="teaser3-mobile-nav" aria-label="Mobile Navigation">
-              <a href="/#experience" onClick={closeMenu}>Skin Rhythm</a>
-              <a href="/#inputs" onClick={closeMenu}>The inputs</a>
-              <a href="/#ring" onClick={closeMenu}>The ring</a>
-              <a href="/#evidence" onClick={closeMenu}>The science</a>
+              <a href="#what-you-get" onClick={(e) => handleNavClick(e, "what-you-get")}>
+                What you get
+              </a>
+              <a href="#how-it-works" onClick={(e) => handleNavClick(e, "how-it-works")}>
+                How it works
+              </a>
+              <a href="#ring" onClick={(e) => handleNavClick(e, "ring")}>
+                The ring
+              </a>
+              <a href="#science" onClick={(e) => handleNavClick(e, "science")}>
+                Skin science
+              </a>
+              <a href="#faq" onClick={(e) => handleNavClick(e, "faq")}>
+                FAQ
+              </a>
               <button
                 type="button"
                 className="teaser3-nav-cta-btn"
