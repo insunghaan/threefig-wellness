@@ -327,14 +327,14 @@ const BENEFIT_ITEMS: BenefitItem[] = [
   {
     num: "01",
     title: "Know where you are.",
-    desc: "See a simple view of how your supported signals and skin check-ins are lining up.",
+    desc: "See how your daily signals and skin check-ins are coming together today.",
     bgImage: "/images/teaser3-panel-bg-01.webp",
     renderPreview: (isActive) => <Teaser3SkinBalancePreview isActive={isActive} />,
   },
   {
     num: "02",
     title: "See what changed.",
-    desc: "Spot small shifts over time and see what may be moving together.",
+    desc: "Follow shifts in sleep, stress, nutrition, and your skin patterns over time.",
     bgImage: "/images/teaser3-panel-bg-02.webp",
     renderPreview: (isActive) => <Teaser3PatternsPreview isActive={isActive} />,
   },
@@ -435,12 +435,12 @@ export function Teaser3ValueSection() {
                 <p className="teaser3-eyebrow">WHAT YOU GET</p>
                 <h2 id="value-title" className="teaser3-section-title">
                   One clear view. <br />
-                  <span className="teaser3-title-accent">One useful next move.</span>
+                  <span className="teaser3-rose-accent">One useful next move.</span>
                 </h2>
               </div>
 
               <div className="teaser3-value-copy-block">
-                <span className="teaser3-value-num">{BENEFIT_ITEMS[0].num}</span>
+                <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[0].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[0].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[0].desc}</p>
               </div>
@@ -479,7 +479,7 @@ export function Teaser3ValueSection() {
 
             <div className="teaser3-value-col-right teaser3-value-copy-col">
               <div className="teaser3-value-copy-block">
-                <span className="teaser3-value-num">{BENEFIT_ITEMS[1].num}</span>
+                <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[1].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[1].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[1].desc}</p>
               </div>
@@ -490,7 +490,7 @@ export function Teaser3ValueSection() {
           <div className="teaser3-value-row teaser3-value-row-3">
             <div className="teaser3-value-col-left teaser3-value-copy-col">
               <div className="teaser3-value-copy-block">
-                <span className="teaser3-value-num">{BENEFIT_ITEMS[2].num}</span>
+                <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[2].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[2].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[2].desc}</p>
               </div>
@@ -521,7 +521,7 @@ export function Teaser3ValueSection() {
             <p className="teaser3-eyebrow">WHAT YOU GET</p>
             <h2 className="teaser3-section-title">
               One clear view. <br />
-              <span className="teaser3-title-accent">One useful next move.</span>
+              <span className="teaser3-rose-accent">One useful next move.</span>
             </h2>
           </div>
 
@@ -550,7 +550,7 @@ export function Teaser3ValueSection() {
                     aria-label={`${idx + 1} of ${BENEFIT_ITEMS.length}: ${item.title}`}
                   >
                     <div className="teaser3-value-mobile-copy">
-                      <span className="teaser3-value-num">{item.num}</span>
+                      <span className="teaser3-value-num teaser3-rose-accent">{item.num}</span>
                       <h3 className="teaser3-value-title">{item.title}</h3>
                       <p className="teaser3-value-desc">{item.desc}</p>
                     </div>

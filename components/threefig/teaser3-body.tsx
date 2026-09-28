@@ -1,6 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
+import { Teaser3MeetIntro } from "./teaser3-meet-intro";
 import { Teaser3ValueSection } from "./teaser3-value-section";
 import { Teaser3HowItWorks } from "./teaser3-how-it-works";
 import { Teaser3BrandMoment } from "./teaser3-brand-moment";
@@ -20,6 +21,9 @@ export const Teaser3Body = forwardRef<HTMLDivElement, Teaser3BodyProps>(
   function Teaser3Body({ onOpenWaitlist, onOpenPrivacy }, ref) {
     return (
       <main id="teaser3-content" className="teaser3-main-body" tabIndex={-1}>
+        {/* Section: Meet 3fig (Introduction) */}
+        <Teaser3MeetIntro />
+
         {/* Section A: What You Get */}
         <Teaser3ValueSection />
 
