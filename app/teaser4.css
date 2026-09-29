@@ -179,11 +179,14 @@ body:has(.teaser4-root) {
   transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* Initial landing at top of page */
+/* Initial landing at top of page (completely transparent, no blur or border) */
 .teaser4-root .site-header.is-top {
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  box-shadow: none;
+  background: transparent !important;
+  border-bottom: 1px solid transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .teaser4-root .site-header.is-top .header-nav,
@@ -196,11 +199,11 @@ body:has(.teaser4-root) {
 
 /* When scrolled: header smoothly appears */
 .teaser4-root .site-header.is-scrolled {
-  background: rgba(248, 245, 240, 0.94);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 4px 20px rgba(36, 33, 31, 0.04);
+  background: rgba(248, 245, 240, 0.94) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom: 1px solid var(--line) !important;
+  box-shadow: 0 4px 20px rgba(36, 33, 31, 0.04) !important;
 }
 
 .teaser4-root .site-header.is-scrolled .header-nav,
@@ -336,14 +339,14 @@ body:has(.teaser4-root) {
 .teaser4-root .hero-copy {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-self: center;
+  justify-content: flex-end;
+  align-self: stretch;
   box-sizing: border-box;
   width: 100%;
-  max-width: 660px;
-  margin-left: auto;
-  margin-right: 0;
-  padding: clamp(90px, 12vh, 130px) clamp(28px, 4vw, 64px) clamp(40px, 6vh, 60px) clamp(36px, 5.5vw, 100px);
+  max-width: 620px;
+  margin-left: 0;
+  margin-right: auto;
+  padding: 100px clamp(24px, 3.5vw, 48px) clamp(36px, 5.5vh, 56px) clamp(24px, 4.5vw, 80px);
 }
 
 .teaser4-root .hero .eyebrow {
@@ -1820,14 +1823,18 @@ body:has(.teaser4-root) {
 
 @media (min-width: 861px) and (max-width: 1150px) {
   .teaser4-root .hero {
-    grid-template-columns: 42% 58%;
+    grid-template-columns: 44% 56%;
   }
   .teaser4-root .hero-copy {
-    padding: 90px 24px 40px clamp(24px, 3.5vw, 44px);
+    justify-content: flex-end;
+    align-self: stretch;
+    margin-left: 0;
+    margin-right: auto;
+    padding: 90px 20px clamp(32px, 5vh, 48px) clamp(24px, 3.5vw, 44px);
   }
   .teaser4-root .hero-a h1,
   .teaser4-root .hero-subline {
-    font-size: clamp(32px, 3.8vw, 42px);
+    font-size: clamp(30px, 3.6vw, 40px);
   }
   .teaser4-root .hero-visual img {
     object-position: left center;
@@ -1841,15 +1848,6 @@ body:has(.teaser4-root) {
   .teaser4-root .site-header nav {
     gap: 17px;
     margin-right: 0;
-  }
-  .teaser4-root .hero-copy {
-    padding: 45px 8%;
-  }
-  .teaser4-root .hero-a {
-    min-height: 620px;
-  }
-  .teaser4-root .hero-a h1 {
-    font-size: 52px;
   }
   .teaser4-root .hero-data {
     margin-top: 25px;
