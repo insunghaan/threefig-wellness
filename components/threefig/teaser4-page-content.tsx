@@ -427,7 +427,7 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
 
           <div className="how-grid">
             <article>
-              <div className="how-image">
+              <div className="how-image how-image-ring">
                 <img
                   src="/review/assets/sleep.webp"
                   alt="Sleeping with 3fig ring"

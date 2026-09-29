@@ -383,7 +383,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center center;
+  object-position: left center;
 }
 
 .teaser4-root .hero-a .hero-visual {
@@ -879,7 +879,7 @@
 }
 
 .teaser4-root .how-image {
-  aspect-ratio: 4 / 4.4;
+  aspect-ratio: 16 / 13;
   position: relative;
   overflow: hidden;
   background: #e8ded2;
@@ -890,6 +890,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* 01 / RING card: Anchor right so ring and ring-wearing finger are fully visible and never cut off */
+.teaser4-root .how-grid article:first-child .how-image img,
+.teaser4-root .how-image-ring img {
+  object-position: right center;
 }
 
 .teaser4-root .how-image > span {
@@ -1202,7 +1208,7 @@
   animation: teaser4ScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .teaser4-dialog-content {
     width: min(500px, calc(100% - 28px));
   }
@@ -1403,8 +1409,8 @@
   display: none;
 }
 
-/* Responsive behavior at 760px */
-@media (max-width: 760px) {
+/* Responsive behavior at 860px */
+@media (max-width: 860px) {
   .teaser4-modal-grid {
     display: flex;
     flex-direction: column;
@@ -1428,7 +1434,7 @@
   justify-content: center;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .teaser4-modal-form-body {
     padding: 24px 20px 28px;
   }
@@ -1794,16 +1800,19 @@
   }
 }
 
-@media (min-width: 761px) and (max-width: 1050px) {
+@media (min-width: 861px) and (max-width: 1150px) {
   .teaser4-root .hero {
-    grid-template-columns: 46% 54%;
+    grid-template-columns: 42% 58%;
   }
   .teaser4-root .hero-copy {
-    padding: 90px 28px 40px clamp(24px, 3.5vw, 44px);
+    padding: 90px 24px 40px clamp(24px, 3.5vw, 44px);
   }
   .teaser4-root .hero-a h1,
   .teaser4-root .hero-subline {
-    font-size: clamp(34px, 4.2vw, 44px);
+    font-size: clamp(32px, 3.8vw, 42px);
+  }
+  .teaser4-root .hero-visual img {
+    object-position: left center;
   }
 }
 
@@ -1866,7 +1875,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .teaser4-root .site-header {
     height: 56px;
     padding: 0 20px;
@@ -1904,16 +1913,16 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    height: calc(100dvh - 56px);
-    min-height: calc(100dvh - 56px);
-    max-height: calc(100dvh - 56px);
+    height: auto;
+    min-height: auto;
+    max-height: none;
     padding: 0;
     margin: 56px 0 0 0;
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
   }
   .teaser4-root .hero-copy {
-    padding: 10px 20px 4px;
+    padding: 12px 20px 6px;
     text-align: left;
     flex-shrink: 0;
     box-sizing: border-box;
@@ -1951,18 +1960,20 @@
     display: none !important;
   }
 
-  /* Hero image clearly visible & anchored without pushed down below the fold (ref: 3fig.io/teaser3) */
+  /* Hero image clearly visible & maintains original 910/1024 aspect ratio with zero cropping */
   .teaser4-root .hero-visual,
   .teaser4-root .hero-a .hero-visual {
     width: 100%;
-    flex: 1 1 auto;
+    max-width: 100vw;
+    aspect-ratio: 910 / 1024;
+    flex: 0 0 auto;
     min-height: 0;
     max-height: none;
-    margin: 8px 0 0 0;
+    margin: 4px 0 0 0;
     border-radius: 0;
     position: relative;
     overflow: hidden;
-    background: #e6d8c5;
+    background: #f0ebe4;
   }
   .teaser4-root .hero-visual picture,
   .teaser4-root .hero-visual img,
@@ -1970,8 +1981,8 @@
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
-    object-position: center 25%;
+    object-fit: contain;
+    object-position: center center;
   }
   .teaser4-root .photo-label {
     display: none;
@@ -2159,6 +2170,10 @@
   }
   .teaser4-root .how-image {
     aspect-ratio: 1.3;
+  }
+  .teaser4-root .how-grid article:first-child .how-image img,
+  .teaser4-root .how-image-ring img {
+    object-position: right center;
   }
   .teaser4-root .how-grid h3 {
     font-size: 26px;
