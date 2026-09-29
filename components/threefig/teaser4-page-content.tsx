@@ -39,7 +39,6 @@ const OUTCOMES_ITEMS = [
 export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: boolean }) {
   const [signupOpen, setSignupOpen] = useState(initialOpen);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   // What You Get Mobile Carousel state
   const [activeOutcomeIdx, setActiveOutcomeIdx] = useState(0);
@@ -50,11 +49,7 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
 
   useEffect(() => {
     const handleScroll = () => {
-      const y = window.scrollY;
-      setIsScrolled(y > 30);
-      // Smooth progress from 0 to 1 over first 360px of scroll
-      const p = Math.min(Math.max(y / 360, 0), 1);
-      setScrollProgress(p);
+      setIsScrolled(window.scrollY > 30);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -186,6 +181,9 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
         {/* HERO SECTION */}
         <section className="hero hero-a" aria-label="Introduction">
           <div className="hero-copy">
+            <p className="eyebrow">
+              THE SKIN WELLNESS SMART RING
+            </p>
             <h1>
               Skin Balance.<br />
               <span className="hero-subline" style={{ fontStyle: 'normal' }}>
@@ -228,40 +226,13 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
 
         {/* MEET 3FIG */}
         <section className="section meet" id="meet">
-          {/* Scroll Choreography Stage: Phone peeking into Hero, descends and scales down as copy appears behind it */}
-          <div className="meet-showcase-stage">
-            <div
-              className="meet-copy-reveal"
-              style={{
-                opacity: Math.max(0, Math.min(1, (scrollProgress - 0.06) / 0.45)),
-                transform: `translateY(${(1 - Math.min(1, scrollProgress * 1.6)) * 20}px)`,
-              }}
-            >
-              <p className="eyebrow">MEET 3FIG</p>
-              <h2>Your Skin Balance. The data behind it.</h2>
-              <p>
-                See your daily score alongside ring measurements and skin check-ins.
-              </p>
-            </div>
-
-            <div
-              className="meet-phone-stage"
-              style={{
-                transform: `translateY(${scrollProgress * 44}px) scale(${1 - scrollProgress * 0.08})`,
-              }}
-            >
-              <picture>
-                <source type="image/webp" srcSet="/images/teaser4/phone-app-mockup.webp" />
-                <img
-                  src="/images/teaser4/phone-app-mockup.png"
-                  alt="3fig app preview on smartphone displaying Skin Balance 78"
-                  className="meet-phone-img"
-                  width={384}
-                  height={512}
-                  fetchPriority="high"
-                />
-              </picture>
-            </div>
+          <div className="section-top">
+            <p className="eyebrow">MEET 3FIG</p>
+            <h2>Your Skin Balance. The data behind it.</h2>
+            <p>
+              See your daily score alongside ring measurements and skin
+              check-ins.
+            </p>
           </div>
 
           <div
@@ -711,9 +682,9 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
         <small>© 2026 3fig</small>
       </footer>
 
-      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content on scroll) */}
+      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content) */}
       <aside
-        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : isScrolled ? "is-visible" : "is-initial"}`}
+        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : "is-visible"}`}
         aria-label="Waitlist registration"
       >
         <button
