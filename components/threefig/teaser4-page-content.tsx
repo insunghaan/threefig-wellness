@@ -76,7 +76,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
           data-location="nav"
         >
           <span>Get early access</span>
-          <span>↗</span>
         </button>
       </header>
 
@@ -105,7 +104,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
                 data-location="hero"
               >
                 <span>Get early access</span>
-                <span>↗</span>
               </button>
             </div>
             <p className="hero-perks">
@@ -523,7 +521,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
               data-location="ring"
             >
               <span>Get early access</span>
-              <span>↗</span>
             </button>
           </div>
         </section>
@@ -623,7 +620,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
               data-location="final"
             >
               <span>Join the waitlist</span>
-              <span>↗</span>
             </button>
             <p className="offer-fine">
               No payment required to join. Ring sold separately.
@@ -657,7 +653,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
           data-location="floating_dock"
         >
           <span>Get early access</span>
-          <span>↗</span>
         </button>
       </aside>
 

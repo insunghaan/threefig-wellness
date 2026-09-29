@@ -143,13 +143,17 @@
 
 .teaser4-root .site-header {
   height: 80px;
-  padding: 0 clamp(20px, 4vw, 55px);
+  padding: 0 clamp(24px, 4.5vw, 80px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
   z-index: 30;
   transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
@@ -229,9 +233,9 @@
   min-height: 48px;
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 12px 24px;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 28px;
   border-radius: 9999px !important; /* Completely round pill */
   font-size: 14px !important;       /* Appropriate readable size */
   font-weight: 600;
@@ -241,7 +245,7 @@
 }
 
 .teaser4-root .button span {
-  font-size: 14px !important; /* Scaled down from giant 21px to appropriate 14px */
+  font-size: 14px !important;
   font-weight: 500;
   line-height: 1;
 }
@@ -260,9 +264,10 @@
 .teaser4-root .button.small {
   min-height: 38px;
   padding: 8px 18px;
-  gap: 14px;
+  gap: 10px;
   font-size: 13px !important;
   border-radius: 9999px !important;
+  justify-content: center;
 }
 
 .teaser4-root .button.small span {
@@ -284,26 +289,40 @@
 }
 
 /* ==========================================================================
-   HERO SECTION
+   HERO SECTION (Desktop Split matching Teaser3: full-bleed right image)
    ========================================================================== */
 
 .teaser4-root .hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(30px, 4vw, 60px);
+  grid-template-columns: 48% 52%;
+  gap: 0;
+  width: 100%;
 }
 
 .teaser4-root .hero-a {
-  max-width: 1280px; /* Matched with other sections */
-  margin: 0 auto;
-  padding: clamp(30px, 4vw, 60px) clamp(20px, 4vw, 55px);
-  min-height: calc(100vh - 80px);
-  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  align-items: stretch;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
 }
 
 .teaser4-root .hero-copy {
-  padding: 0;
-  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 660px;
+  margin-left: auto;
+  margin-right: 0;
+  padding: clamp(90px, 12vh, 130px) clamp(28px, 4vw, 64px) clamp(40px, 6vh, 60px) clamp(36px, 5.5vw, 100px);
 }
 
 .teaser4-root .hero h1,
@@ -346,11 +365,15 @@
 .teaser4-root .hero-visual {
   position: relative;
   min-width: 0;
+  width: 100%;
   height: 100%;
-  max-height: 680px;
-  border-radius: 14px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: none;
+  border-radius: 0;
   overflow: hidden;
   background: #e6d8c5;
+  margin: 0;
 }
 
 .teaser4-root .hero-visual picture,
@@ -360,7 +383,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 50% 45%;
+  object-position: center center;
 }
 
 .teaser4-root .hero-a .hero-visual {
@@ -380,7 +403,7 @@
   border: 1px solid #d6c8b7;
   font-size: 10px;
   letter-spacing: 0.07em;
-  border-radius: 8px;
+  border-radius: 14px;
   backdrop-filter: blur(8px);
 }
 
@@ -423,7 +446,7 @@
 .teaser4-root .dashboard {
   background: #fffefa;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 24px;
   box-shadow: 0 22px 80px rgba(89, 67, 45, 0.05);
   max-width: 970px;
   margin: 0 auto;
@@ -742,7 +765,7 @@
   background: #fffefa;
   padding: 30px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 22px;
   box-shadow: 0 14px 40px rgba(89, 67, 45, 0.04);
 }
 
@@ -860,7 +883,7 @@
   position: relative;
   overflow: hidden;
   background: #e8ded2;
-  border-radius: 10px;
+  border-radius: 22px;
 }
 
 .teaser4-root .how-image img {
@@ -877,8 +900,8 @@
   background: rgba(36, 33, 31, 0.75);
   font-size: 9px;
   letter-spacing: 0.12em;
-  padding: 7px 12px;
-  border-radius: 6px;
+  padding: 7px 14px;
+  border-radius: 9999px;
   backdrop-filter: blur(4px);
 }
 
@@ -949,7 +972,7 @@
 }
 
 .teaser4-root .foundation-copy .button {
-  border-radius: 12px;
+  border-radius: 9999px !important;
 }
 
 /* ==========================================================================
@@ -1096,7 +1119,7 @@
   margin-top: 32px;
   justify-content: center;
   gap: 16px;
-  border-radius: 12px;
+  border-radius: 9999px !important;
   padding: 16px 36px;
 }
 
@@ -1169,7 +1192,7 @@
   max-height: calc(100dvh - 36px);
   border: 1px solid #d9cfc4;
   padding: 0;
-  border-radius: 18px;
+  border-radius: 28px;
   background: #f8f5f0;
   color: var(--ink);
   overflow-y: auto;
@@ -1602,7 +1625,7 @@
   border: 1px solid #dcd4c8;
   background: #fffefa;
   padding: 24px;
-  border-radius: 14px;
+  border-radius: 20px;
   margin-top: 20px;
 }
 
@@ -1761,23 +1784,26 @@
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
 
-@media (min-width: 1600px) {
-  .teaser4-root .hero-a .hero-copy {
-    padding-left: max(80px, calc((100vw - 1280px) / 2));
+@media (min-width: 1441px) {
+  .teaser4-root .hero-copy {
+    padding-left: clamp(48px, 6vw, 120px);
+    padding-right: clamp(32px, 4vw, 64px);
+  }
+  .teaser4-root .hero-visual img {
+    object-position: center center;
   }
 }
 
-@media (min-width: 761px) {
-  .teaser4-root .hero-a {
-    height: min(790px, calc(100svh - 84px));
-    min-height: 690px;
+@media (min-width: 761px) and (max-width: 1050px) {
+  .teaser4-root .hero {
+    grid-template-columns: 46% 54%;
   }
-  .teaser4-root .hero-visual {
-    min-height: 0;
+  .teaser4-root .hero-copy {
+    padding: 90px 28px 40px clamp(24px, 3.5vw, 44px);
   }
-  .teaser4-root .hero-a .hero-copy {
-    padding-top: 40px;
-    padding-bottom: 35px;
+  .teaser4-root .hero-a h1,
+  .teaser4-root .hero-subline {
+    font-size: clamp(34px, 4.2vw, 44px);
   }
 }
 
@@ -1842,7 +1868,7 @@
 
 @media (max-width: 760px) {
   .teaser4-root .site-header {
-    height: 64px;
+    height: 56px;
     padding: 0 20px;
     gap: 10px;
   }
@@ -1867,70 +1893,76 @@
   }
   .teaser4-root .button.small {
     font-size: 12px !important;
-    gap: 12px;
+    gap: 10px;
     min-height: 36px;
     padding: 7px 15px;
     border-radius: 9999px !important;
+    justify-content: center;
   }
   .teaser4-root .hero {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: calc(100vh - 64px);
-    min-height: calc(100dvh - 64px);
+    justify-content: flex-start;
+    align-items: stretch;
+    height: calc(100dvh - 56px);
+    min-height: calc(100dvh - 56px);
+    max-height: calc(100dvh - 56px);
     padding: 0;
-    margin: 0;
+    margin: 56px 0 0 0;
+    overflow: hidden;
+    box-sizing: border-box;
   }
   .teaser4-root .hero-copy {
-    padding: 24px 20px 16px;
+    padding: 10px 20px 4px;
     text-align: left;
+    flex-shrink: 0;
+    box-sizing: border-box;
   }
   .teaser4-root .hero-a h1,
   .teaser4-root .hero-a h1 *,
   .teaser4-root .hero-subline {
-    font-size: clamp(34px, 8.8vw, 44px);
-    line-height: 1.08;
-    letter-spacing: -0.04em;
+    font-size: clamp(28px, 7.8vw, 36px);
+    line-height: 1.06;
+    letter-spacing: -0.035em;
     font-family: var(--font) !important;
     font-style: normal !important;
+    margin-bottom: 5px;
   }
   .teaser4-root .hero .eyebrow {
     font-size: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 5px;
     letter-spacing: 0.12em;
     font-family: var(--font) !important;
   }
   .teaser4-root .hero-lead {
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 13px;
+    line-height: 1.4;
     max-width: 100%;
-    margin: 12px 0 14px;
+    margin: 4px 0 0;
+    color: var(--muted);
   }
   .teaser4-root .hero-cta-wrap {
     display: none; /* Mobile uses floating bottom CTA */
   }
   .teaser4-root .hero-perks {
-    font-size: 12px;
-    margin-top: 8px;
-    line-height: 1.5;
-    max-width: none;
-    color: var(--muted);
+    display: none !important; /* HIDE perks on mobile per user instruction */
   }
   .teaser4-root .hero-data {
     display: none !important;
   }
 
-  /* Hero image clearly visible & anchored at screen bottom (ref: 3fig.io/teaser3) */
+  /* Hero image clearly visible & anchored without pushed down below the fold (ref: 3fig.io/teaser3) */
   .teaser4-root .hero-visual,
   .teaser4-root .hero-a .hero-visual {
     width: 100%;
-    aspect-ratio: 4 / 4.6;
-    max-height: 52vh;
-    min-height: 300px;
-    margin: auto 0 0 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    margin: 8px 0 0 0;
     border-radius: 0;
     position: relative;
     overflow: hidden;
+    background: #e6d8c5;
   }
   .teaser4-root .hero-visual picture,
   .teaser4-root .hero-visual img,
@@ -1939,7 +1971,7 @@
     height: 100%;
     display: block;
     object-fit: cover;
-    object-position: 50% 30%;
+    object-position: center 25%;
   }
   .teaser4-root .photo-label {
     display: none;
@@ -2009,7 +2041,14 @@
     margin-bottom: 17px;
   }
   .teaser4-root .dashboard {
-    border-radius: 12px;
+    border-radius: 20px;
+  }
+  .teaser4-root .data-card {
+    border-radius: 18px;
+    padding: 24px;
+  }
+  .teaser4-root .how-image {
+    border-radius: 18px;
   }
   .teaser4-root .dash-top {
     padding: 17px 19px;
@@ -2213,7 +2252,7 @@
   .teaser4-dialog-content {
     width: calc(100% - 24px);
     max-height: calc(100dvh - 24px);
-    border-radius: 16px;
+    border-radius: 24px;
   }
 
   .teaser4-dialog-close {

@@ -321,20 +321,14 @@ export function Teaser4WaitlistDialog({
                         <span>Reserving spot...</span>
                       </>
                     ) : (
-                      <>
-                        <span>Join the waitlist</span>
-                        <span>↗</span>
-                      </>
+                      <span>Join the waitlist</span>
                     )}
                   </button>
 
                   <p className="teaser4-reassurance">
                     No spam. Priority access when reservations open.
                   </p>
-                  <p className="teaser4-modal-small-print">
-                    No payment required to join. Ring sold separately.
-                  </p>
-                </form>
+                  </form>
               </div>
             </div>
           )}
