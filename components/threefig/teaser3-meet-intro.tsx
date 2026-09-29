@@ -36,8 +36,8 @@ export function Teaser3MeetIntro() {
               setScrollProgress(0);
             } else {
               // As the section enters active viewport, progress goes 0 -> 1
-              const start = windowHeight * 0.82;
-              const end = windowHeight * 0.20;
+              const start = windowHeight * 0.95;
+              const end = windowHeight * 0.30;
               const progress = Math.min(Math.max((start - rect.top) / (start - end), 0), 1);
               setScrollProgress(progress);
             }
@@ -58,14 +58,14 @@ export function Teaser3MeetIntro() {
 
   // Motion calculations:
   // - Initial state (scrollProgress = 0):
-  //     phoneTranslateY = 0, phoneScale = 1.02, copyOpacity = 0 (completely hidden)
+  //     phoneTranslateY = 0, phoneScale = 1.0, copyOpacity = 0 (completely hidden)
   // - Scrolled state (scrollProgress = 1):
-  //     phoneTranslateY = +100px (desktop) / +68px (mobile), phoneScale = 0.92, copyOpacity = 1
-  const maxTranslate = isMobile ? 68 : 105;
+  //     phone moves fully downward (+240px / +180px) and scales down to 0.90, copy clearly visible
+  const maxTranslate = isMobile ? 180 : 240;
   const phoneTranslateY = scrollProgress * maxTranslate;
-  const phoneScale = 1.02 - scrollProgress * 0.10;
-  const copyOpacity = Math.min(Math.max((scrollProgress - 0.15) / 0.7, 0), 1);
-  const copyTranslateY = (1 - copyOpacity) * 24;
+  const phoneScale = 1.0 - scrollProgress * 0.10;
+  const copyOpacity = Math.min(Math.max((scrollProgress - 0.08) / 0.60, 0), 1);
+  const copyTranslateY = (1 - copyOpacity) * 16;
 
   return (
     <section
@@ -108,8 +108,8 @@ export function Teaser3MeetIntro() {
                   src="/images/teaser3/meet-phone-single.png"
                   alt="3fig Skin Balance mobile app preview showing daily score 78 and habits"
                   className="teaser3-meet-phone-img"
-                  width={768}
-                  height={1024}
+                  width={472}
+                  height={956}
                   loading="eager"
                   decoding="async"
                 />
