@@ -12,6 +12,8 @@
    - Hero visual: Anchored cleanly at screen bottom (ref: 3fig.io/teaser3)
    - Mobile CTA: Floating bar over bottom image
    - Modal: No pink buttons, dark ink CTA matching page, full-width top banner
+   ========================================================================== */
+
 body:has(.teaser4-root) {
   background: #f8f5f0 !important;
 }
