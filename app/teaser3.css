@@ -1044,9 +1044,14 @@
 
 @media (max-width: 860px) {
   .teaser3-dialog-content {
-    width: min(500px, calc(100% - 24px));
-    max-height: calc(100dvh - 24px);
+    width: min(500px, calc(100% - 36px));
+    max-height: calc(100dvh - 48px);
     border-radius: 24px;
+  }
+
+  .teaser3-dialog-content.is-survey-mode {
+    width: min(500px, calc(100% - 36px));
+    max-height: calc(100dvh - 48px);
   }
 }
 
@@ -1122,7 +1127,7 @@
 .teaser3-modal-aside-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.85);
   z-index: 1;
 }
 
@@ -1205,7 +1210,7 @@
 .teaser3-modal-banner-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.88);
   z-index: 1;
 }
 
