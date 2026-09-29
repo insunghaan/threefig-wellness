@@ -18,7 +18,7 @@ export const Teaser3FinalBenefits = forwardRef<HTMLDivElement, Teaser3FinalBenef
         <div className="teaser3-benefits-container">
           <p className="teaser3-benefits-eyebrow">WAITLIST BENEFITS</p>
           <h2 id="benefits-heading" className="teaser3-benefits-title">
-            Your ring, 20% off. <br />
+            <span className="teaser3-benefits-main">Your ring, 20% off.</span> <br />
             <span className="teaser3-benefits-accent">Your app, free for life.</span>
           </h2>
 

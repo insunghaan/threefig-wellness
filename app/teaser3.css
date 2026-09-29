@@ -45,8 +45,8 @@
 }
 
 /* Global Heading Refinements in Teaser3: Lighter Font Weight (500) matching Teaser4 */
-.teaser3-root h1,
-.teaser3-root h2,
+.teaser3-root h1:not(.teaser3-benefits-title),
+.teaser3-root h2:not(.teaser3-benefits-title),
 .teaser3-root h3,
 .teaser3-root h4,
 .teaser3-root .teaser3-title,
@@ -4114,6 +4114,7 @@
   margin: 0 0 16px 0;
 }
 
+.teaser3-root .teaser3-benefits-title,
 .teaser3-benefits-title {
   font-family: var(--font) !important;
   font-size: clamp(38px, 4.4vw, 64px);
@@ -4121,11 +4122,17 @@
   line-height: 1.1;
   letter-spacing: -0.035em;
   margin: 0 0 16px 0;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
+.teaser3-root .teaser3-benefits-main,
+.teaser3-benefits-main {
+  color: #FFFFFF !important;
+}
+
+.teaser3-root .teaser3-benefits-accent,
 .teaser3-benefits-accent {
-  color: #F8EFEA;
+  color: #F8EFEA !important;
 }
 
 .teaser3-benefits-lead {
