@@ -11,34 +11,34 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    id: "faq-join",
-    question: "What happens when I join?",
+    id: "faq-benefits",
+    question: "What do I get for joining?",
     answer:
-      "You reserve early access and secure free lifetime 3fig membership before public launch.",
+      "You lock in 20% off the ring at launch and a free lifetime app subscription. No subscription fees, ever.",
   },
   {
-    id: "faq-membership",
-    question: "What does lifetime membership include?",
+    id: "faq-ring-cost",
+    question: "Is the ring free?",
     answer:
-      "Full ongoing access to the 3fig companion app, Skin Balance insights, and pattern tracking with zero monthly subscription fees.",
+      "No. The ring is a separate hardware purchase. Joining the waitlist gives you 20% off the ring and makes your app subscription free for life.",
   },
   {
-    id: "faq-ring",
-    question: "Is the ring included?",
+    id: "faq-skin-measurement",
+    question: "Does the ring measure my skin directly?",
     answer:
-      "No. The 3fig smart ring is hardware and sold separately when reservations open. Membership is free for life for early members.",
+      "The ring measures physiological signals—sleep, HRV, heart rate, and temperature trends. You log how your skin feels. 3fig correlates both into your daily Skin Balance.",
   },
   {
-    id: "faq-tracking",
-    question: "What does 3fig actually track?",
+    id: "faq-meals",
+    question: "Do I have to log every meal?",
     answer:
-      "The ring continuously tracks sleep stages, resting heart rate, HRV, and relative skin temperature shifts. You log skin reflections in seconds.",
+      "No. Meal notes are optional. Add them when you want to see if late eating or specific foods affect your morning Skin Balance.",
   },
   {
-    id: "faq-availability",
-    question: "When will 3fig be available?",
+    id: "faq-after-register",
+    question: "What happens after I register?",
     answer:
-      "Early reservation access opens later this year. Members on the early list will be invited first in batches.",
+      "We’ll send an email confirming your waitlist spot and discounts. As launch approaches, you’ll get sizing kit access and first choice of ring finishes.",
   },
 ];
 
@@ -54,10 +54,9 @@ export function Teaser3Faq() {
       <div className="teaser3-section-container">
         {/* Section Header */}
         <div className="teaser3-section-head">
-          <p className="teaser3-eyebrow">FREQUENTLY ASKED</p>
+          <p className="teaser3-eyebrow">FAQ</p>
           <h2 id="faq-heading" className="teaser3-section-title">
-            Good questions. <br />
-            <span className="teaser3-title-accent">Clear answers.</span>
+            Before you join.
           </h2>
         </div>
 

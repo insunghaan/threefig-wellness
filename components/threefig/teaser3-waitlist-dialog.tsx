@@ -76,6 +76,15 @@ export function Teaser3WaitlistDialog({
   // Reset form state when dialog opens
   useEffect(() => {
     if (open) {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const preview = params.get("preview_view");
+        if (preview === "survey" || preview === "confirmed" || preview === "already-registered") {
+          setView(preview);
+          setDisplayConfirmedEmail("preview@example.com");
+          return;
+        }
+      }
       setView("signup");
       setEmailError("");
       setServerError("");

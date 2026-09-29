@@ -10,7 +10,13 @@ import { Teaser3Body } from "./teaser3-body";
 import { Teaser3PrivacyDialog } from "./teaser3-privacy-dialog";
 
 export function Teaser3Hero() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      return sp.get("signup") === "1" || sp.get("join") === "1" || Boolean(sp.get("preview_view"));
+    }
+    return false;
+  });
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
