@@ -1493,7 +1493,7 @@
 }
 
 .teaser3-modal-confirmed .teaser3-modal-eyebrow {
-  color: var(--muted);
+  color: #7a6e65;
   font-weight: 700;
   margin-bottom: 12px;
   font-family: var(--font) !important;
@@ -1509,8 +1509,13 @@
 .teaser3-confirm-lead {
   font-size: 14px;
   margin-top: 14px;
-  color: var(--muted);
+  color: #2c2825 !important;
   line-height: 1.6;
+}
+
+.teaser3-confirm-lead strong {
+  color: #15120f;
+  font-weight: 600;
 }
 
 .teaser3-perks-confirmed {
@@ -1553,7 +1558,7 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #8A7768;
+  color: #786657;
   display: block;
   margin-bottom: 6px;
 }
@@ -1566,9 +1571,9 @@
 }
 
 .teaser3-survey-invite-card p {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
+  font-size: 13.5px;
+  color: #423c36 !important;
+  line-height: 1.55;
   margin: 0;
 }
 
@@ -1580,18 +1585,20 @@
 
 .teaser3-btn-primary-12 {
   flex: 1;
-  min-height: 42px;
+  min-height: 44px;
+  padding: 0 18px;
   border-radius: 9999px;
   background: #24211f;
   color: #fff;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  white-space: nowrap;
   transition: background 0.15s ease;
 }
 
@@ -1600,15 +1607,23 @@
 }
 
 .teaser3-btn-secondary-12 {
-  min-height: 42px;
-  padding: 0 16px;
+  min-height: 44px;
+  padding: 0 18px;
   border-radius: 9999px;
   background: transparent;
   border: 1px solid #d9cfc4;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teaser3-btn-secondary-12:hover {
+  background: rgba(36, 33, 31, 0.05);
 }
 
 .teaser3-survey-content {
@@ -1617,9 +1632,29 @@
 
 .teaser3-survey-sub {
   font-size: 13.5px;
-  color: var(--muted);
+  color: #38322d !important;
   margin-top: 6px;
   margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .teaser3-modal-confirmed,
+  .teaser3-survey-content {
+    padding: 30px 18px;
+  }
+
+  .teaser3-survey-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .teaser3-btn-primary-12,
+  .teaser3-btn-secondary-12 {
+    width: 100%;
+    min-height: 46px;
+  }
 }
 
 .teaser3-survey-form {
