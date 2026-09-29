@@ -114,13 +114,17 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
             </p>
           </div>
           <div className="hero-visual" aria-hidden="true">
-            <img
-              src="/images/teaser4/hero-ring-phone.jpg"
-              alt="3fig smart ring next to the 3fig app showing Skin Balance score"
-              width={819}
-              height={1024}
-              fetchPriority="high"
-            />
+            <picture>
+              <source type="image/webp" srcSet="/images/teaser4/hero-ring-phone.webp" />
+              <img
+                src="/images/teaser4/hero-ring-phone.jpg"
+                alt="3fig smart ring next to the 3fig app showing Skin Balance score"
+                width={910}
+                height={1024}
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
           </div>
         </section>
 

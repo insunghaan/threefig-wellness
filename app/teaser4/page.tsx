@@ -22,6 +22,7 @@ export default async function Teaser4Page({
   return (
     <>
       <link rel="preload" as="image" href="/review/assets/logo.png" />
+      <link rel="preload" as="image" href="/images/teaser4/hero-ring-phone.webp" type="image/webp" />
       <link rel="preload" as="image" href="/images/teaser4/hero-ring-phone.jpg" />
       <Teaser4PageContent initialOpen={initialOpen} />
     </>
