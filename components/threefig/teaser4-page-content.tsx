@@ -186,9 +186,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
         {/* HERO SECTION */}
         <section className="hero hero-a" aria-label="Introduction">
           <div className="hero-copy">
-            <p className="eyebrow">
-              THE SKIN WELLNESS SMART RING
-            </p>
             <h1>
               Skin Balance.<br />
               <span className="hero-subline" style={{ fontStyle: 'normal' }}>
@@ -236,8 +233,8 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
             <div
               className="meet-copy-reveal"
               style={{
-                opacity: Math.min(1, 0.2 + scrollProgress * 0.8),
-                transform: `translateY(${(1 - scrollProgress) * 24}px)`,
+                opacity: Math.max(0, Math.min(1, (scrollProgress - 0.06) / 0.45)),
+                transform: `translateY(${(1 - Math.min(1, scrollProgress * 1.6)) * 20}px)`,
               }}
             >
               <p className="eyebrow">MEET 3FIG</p>
@@ -714,9 +711,9 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
         <small>© 2026 3fig</small>
       </footer>
 
-      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content) */}
+      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content on scroll) */}
       <aside
-        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : "is-visible"}`}
+        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : isScrolled ? "is-visible" : "is-initial"}`}
         aria-label="Waitlist registration"
       >
         <button
