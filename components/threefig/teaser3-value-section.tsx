@@ -35,7 +35,6 @@ const BENEFIT_ITEMS: BenefitItem[] = [
       </>
     ),
     desc: "Every morning, 3fig pairs your sleep and recovery signals with how your skin feels to create your daily score.",
-    subDesc: "One number. Clear context behind it.",
     image: {
       webp: "/images/teaser3/what-you-get-01.webp",
       png: "/images/teaser3/what-you-get-01.png",
@@ -53,7 +52,6 @@ const BENEFIT_ITEMS: BenefitItem[] = [
       </>
     ),
     desc: "Track your Skin Balance alongside sleep consistency, late meals, and travel to see what might be affecting your skin.",
-    subDesc: "Spot connections without second-guessing.",
     image: {
       webp: "/images/teaser3/what-you-get-02.webp",
       png: "/images/teaser3/what-you-get-02.png",
@@ -71,7 +69,6 @@ const BENEFIT_ITEMS: BenefitItem[] = [
       </>
     ),
     desc: "When your score shifts, 3fig suggests a simple daily habit—like an earlier wind-down—and helps you track whether it makes a difference.",
-    subDesc: "Small adjustments. Real feedback.",
     image: {
       webp: "/images/teaser3/what-you-get-03.webp",
       png: "/images/teaser3/what-you-get-03.png",

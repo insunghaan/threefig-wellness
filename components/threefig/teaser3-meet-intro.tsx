@@ -22,16 +22,31 @@ export function Teaser3MeetIntro() {
           </p>
         </div>
 
-        {/* Visual Block: Approved Three-Phone + Ring Composition */}
+        {/* Visual Block: Responsive Three-Phone + Ring Composition */}
         <div className="teaser3-meet-visual">
-          <picture>
-            <source srcSet="/images/threefig-phones-trio.webp" type="image/webp" />
+          <picture className="teaser3-meet-picture">
+            {/* Mobile (<= 860px) */}
+            <source
+              media="(max-width: 860px)"
+              srcSet="/images/teaser3/meet-phones-mobile.webp"
+              type="image/webp"
+            />
+            <source
+              media="(max-width: 860px)"
+              srcSet="/images/teaser3/meet-phones-mobile.png"
+              type="image/png"
+            />
+            {/* Desktop / Webview */}
+            <source
+              srcSet="/images/teaser3/meet-phones-desktop.webp"
+              type="image/webp"
+            />
             <img
-              src="/images/threefig-phones-trio.png"
+              src="/images/teaser3/meet-phones-desktop.png"
               alt="Three smartphones showing the 3fig app next to the 3fig smart ring"
               className="teaser3-meet-image"
               width={1024}
-              height={808}
+              height={702}
               loading="lazy"
               decoding="async"
             />

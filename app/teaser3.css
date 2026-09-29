@@ -2081,6 +2081,10 @@
   width: 100%;
 }
 
+.teaser3-meet-picture {
+  display: contents;
+}
+
 .teaser3-meet-image {
   max-width: 820px;
   width: 100%;
@@ -2092,6 +2096,12 @@
 @media (max-width: 860px) {
   .teaser3-meet-section {
     padding: 56px 0 36px;
+    overflow-x: clip;
+  }
+
+  .teaser3-meet-container {
+    padding-left: var(--tf-mobile-px, 20px);
+    padding-right: var(--tf-mobile-px, 20px);
   }
 
   .teaser3-meet-header {
@@ -2107,20 +2117,29 @@
 
   .teaser3-meet-visual {
     margin-top: 32px;
-    margin-left: -24px;
-    margin-right: -24px;
-    width: calc(100% + 48px);
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
     display: flex;
     justify-content: center;
-    overflow: visible;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .teaser3-meet-picture {
+    width: 100%;
+    display: block;
   }
 
   .teaser3-meet-image {
-    max-width: 460px;
     width: 100%;
+    max-width: 100%;
+    min-width: 100%;
     height: auto;
     display: block;
-    object-fit: contain;
   }
 }
 
@@ -2783,11 +2802,11 @@
     max-width: 100%;
   }
 
-  /* Mobile What You Get: Vertical Sequential List (No carousel, continuous scroll) */
+  /* Mobile What You Get: Vertical Sequential List (Matching How It Works spacing & typography) */
   .teaser3-value-mobile-list {
     display: flex;
     flex-direction: column;
-    gap: 48px;
+    gap: 40px;
     width: 100%;
   }
 
@@ -2798,31 +2817,47 @@
   }
 
   .teaser3-value-mobile-copy {
-    margin-bottom: 12px;
+    margin-bottom: 0;
+  }
+
+  .teaser3-value-mobile-item .teaser3-value-num {
+    font-family: var(--tf-font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tf-color-text-secondary, #66615b);
+    display: inline-block;
+    margin-bottom: 6px;
   }
 
   .teaser3-value-mobile-title {
-    font-size: 22px;
-    line-height: 1.25;
+    font-family: var(--tf-font-sans);
+    font-size: 26px;
+    line-height: 1.2;
     color: var(--tf-color-ink, #141312);
     margin-top: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
     min-height: auto;
     display: block;
   }
 
   .teaser3-value-mobile-desc {
-    font-size: 14.5px;
-    line-height: 1.5;
+    font-family: var(--tf-font-sans);
+    font-size: 14px;
+    line-height: 1.65;
     color: var(--tf-color-text-secondary, #66615b);
     margin: 0;
     max-width: 100%;
   }
 
   .teaser3-value-mobile-subdesc {
-    margin-top: 4px;
+    font-family: var(--tf-font-sans);
+    font-size: 14px;
+    line-height: 1.65;
+    margin-top: 8px;
     color: var(--tf-color-text-secondary, #66615b);
   }
 
@@ -2830,21 +2865,22 @@
     aspect-ratio: unset;
     min-height: unset;
     max-width: 100%;
+    width: 100%;
     border-radius: 0;
     background: transparent !important;
     box-shadow: none !important;
     padding: 0;
-    margin-top: 14px;
+    margin-top: 20px;
   }
 
   .teaser3-value-mobile-item .teaser3-component-picture,
   .teaser3-value-mobile-item .teaser3-component-img {
     width: 100%;
-    max-width: 340px;
+    max-width: 100%;
     height: auto;
-    margin: 0 auto;
+    margin: 0;
     display: block;
-    filter: drop-shadow(0 12px 28px rgba(44, 30, 22, 0.08));
+    filter: drop-shadow(0 8px 24px rgba(44, 30, 22, 0.07));
   }
 }
 
