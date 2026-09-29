@@ -516,12 +516,15 @@
 }
 
 .teaser3-video-col .teaser3-hero-picture {
-  display: block;
-  width: 100%;
-  max-width: 580px;
-  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: min(100%, 580px);
+  height: auto;
+  max-height: 100%;
   aspect-ratio: 910 / 1024;
-  border-radius: clamp(26px, 2.5vw, 34px);
+  border-radius: clamp(24px, 2.4vw, 34px);
   overflow: hidden;
   background: #f0ebe4;
   box-shadow: 0 16px 44px -8px rgba(0, 0, 0, 0.08);
@@ -532,9 +535,9 @@
 .teaser3-video-col .teaser3-hero-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 8% center !important; /* 반지가 절대 크롭되지 않도록 좌측 8% 앵커링 */
-  border-radius: clamp(26px, 2.5vw, 34px);
+  object-fit: contain;
+  object-position: center center !important;
+  border-radius: clamp(24px, 2.4vw, 34px);
   display: block;
 }
 
@@ -680,8 +683,8 @@
 
 /* Flexible Space: Absorbs additional vertical space between header and copy on tall viewports */
 .teaser3-mobile-flex-spacer {
-  flex: 0 0 clamp(6px, 1.8vw, 12px);
-  min-height: clamp(6px, 1.8vw, 12px);
+  flex: 1 1 0px;
+  min-height: clamp(16px, 4vw, 32px);
   width: 100%;
 }
 
@@ -693,7 +696,7 @@
   padding-left: clamp(20px, 5.5vw, 28px);
   padding-right: clamp(20px, 5.5vw, 28px);
   margin: 0;
-  margin-bottom: clamp(10px, 2.5vw, 16px);
+  margin-bottom: clamp(12px, 3vw, 18px);
 }
 
 /* Mobile Headline */
@@ -727,9 +730,10 @@
   position: relative;
   width: calc(100% - clamp(32px, 8vw, 48px));
   max-width: calc(100vw - 32px);
-  margin: 0 auto clamp(24px, 6vw, 36px) auto;
-  aspect-ratio: 4 / 4.8;
-  flex-shrink: 0;
+  margin: 0 auto clamp(20px, 5vw, 32px) auto;
+  aspect-ratio: 910 / 1024;
+  max-height: calc(100dvh - clamp(240px, 32vh, 310px));
+  flex-shrink: 1;
   overflow: hidden;
   border-radius: 24px;
   background-color: #f0ebe4;
@@ -742,7 +746,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 26px;
+  border-radius: 24px;
   overflow: hidden;
 }
 
@@ -750,9 +754,9 @@
 .teaser3-mobile-media-col .teaser3-hero-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: 8% center !important; /* 모바일에서도 반지가 절대 크롭되지 않음 */
-  border-radius: 26px;
+  object-fit: contain;
+  object-position: center center !important;
+  border-radius: 24px;
   display: block;
 }
 
@@ -970,7 +974,7 @@
   }
 
   .teaser3-video-col .teaser3-hero-image {
-    object-position: 8% center !important;
+    object-position: center center !important;
   }
 
   .teaser3-title {
