@@ -1,14 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Check, ArrowRight, Loader2, X, Sparkles, ShieldCheck } from "lucide-react";
-import { Dialog as DialogPrimitive } from "radix-ui";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { ArrowRight, X, Loader2 } from "lucide-react";
 import { trackEvent } from "./analytics";
 import { captureBrowserAttribution, type Attribution } from "@/lib/threefig/attribution";
+
+export type Teaser3DialogView =
+  | "signup"
+  | "confirmed"
+  | "already-registered"
+  | "survey"
+  | "survey-success";
 
 export interface Teaser3WaitlistDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialSource?: string;
   defaultEmail?: string;
   emailDraft?: string;
   onEmailDraftChange?: (email: string) => void;
@@ -18,27 +26,17 @@ export interface Teaser3WaitlistDialogProps {
   onSuccess?: () => void;
 }
 
-type DialogView =
-  | "signup"
-  | "exit-offer"
-  | "confirmed"
-  | "already-registered"
-  | "survey"
-  | "survey-success";
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export function Teaser3WaitlistDialog({
   open,
   onOpenChange,
+  initialSource = "teaser3_waitlist",
   defaultEmail = "",
   emailDraft,
   onEmailDraftChange,
-  selectedOffer,
-  onOfferSelect,
   triggerElement,
   onSuccess,
 }: Teaser3WaitlistDialogProps) {
+  const [view, setView] = useState<Teaser3DialogView>("signup");
   const [internalEmail, setInternalEmail] = useState(defaultEmail);
   const email = emailDraft !== undefined ? emailDraft : internalEmail;
 
@@ -47,54 +45,50 @@ export function Teaser3WaitlistDialog({
     onEmailDraftChange?.(val);
   };
 
-  const [view, setView] = useState<DialogView>("signup");
-  const [submittedEmail, setSubmittedEmail] = useState("");
-  const [inputStatus, setInputStatus] = useState<"idle" | "submitting" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const submitting = useRef(false);
+  const [emailError, setEmailError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [displayConfirmedEmail, setDisplayConfirmedEmail] = useState("");
+
   const attributionRef = useRef<Attribution | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Optional Survey State
+  // Optional Survey state
   const [gender, setGender] = useState("");
   const [age, setAge] = useState("");
   const [intendedUser, setIntendedUser] = useState("");
   const [primaryFeatures, setPrimaryFeatures] = useState<string[]>([]);
   const [subscriptionPreference, setSubscriptionPreference] = useState("");
-  const [surveyStatus, setSurveyStatus] = useState<"idle" | "submitting" | "error">("idle");
+  const [isSurveySubmitting, setIsSurveySubmitting] = useState(false);
   const [surveyError, setSurveyError] = useState("");
 
-  const togglePrimaryFeature = (val: string) => {
-    setPrimaryFeatures((prev) =>
-      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
-    );
-  };
-
-  // Reset view & errors when opened, but keep email draft intact
   useEffect(() => {
-    if (open) {
-      setView("signup");
-      setErrorMessage("");
-      setInputStatus("idle");
-      setSurveyStatus("idle");
-      setSurveyError("");
-    }
-  }, [open]);
+    attributionRef.current = captureBrowserAttribution();
+  }, []);
 
+  // Sync defaultEmail when open
   useEffect(() => {
     if (defaultEmail && emailDraft === undefined) {
       setInternalEmail(defaultEmail);
     }
   }, [defaultEmail, emailDraft]);
 
+  // Reset form state when dialog opens
   useEffect(() => {
-    attributionRef.current = captureBrowserAttribution();
-    if (typeof window !== "undefined") {
-      (window as unknown as { __setTeaser3DialogView?: (v: DialogView) => void }).__setTeaser3DialogView = setView;
+    if (open) {
+      setView("signup");
+      setEmailError("");
+      setServerError("");
+      setSurveyError("");
+      setGender("");
+      setAge("");
+      setIntendedUser("");
+      setPrimaryFeatures([]);
+      setSubscriptionPreference("");
     }
-  }, []);
+  }, [open]);
 
-  // Restore focus to original trigger without unexpected scrolling
+  // Restore focus to original trigger when closed
   function handleRestoreFocus() {
     requestAnimationFrame(() => {
       setTimeout(() => {
@@ -114,171 +108,147 @@ export function Teaser3WaitlistDialog({
         if (target && typeof target.focus === "function") {
           target.focus({ preventScroll: true });
         }
-      }, 70);
+      }, 60);
     });
   }
 
-  async function handleEmailSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (submitting.current) return;
+  const validateEmail = (val: string) => {
+    const trimmed = val.trim();
+    if (!trimmed) {
+      return "Please enter your email address.";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) {
+      return "Please enter a valid email address.";
+    }
+    return "";
+  };
 
-    const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !EMAIL_PATTERN.test(cleanEmail)) {
-      setErrorMessage("Please enter a valid email address.");
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const err = validateEmail(email);
+    if (err) {
+      setEmailError(err);
       if (emailInputRef.current) {
         emailInputRef.current.focus();
       }
       return;
     }
+    setEmailError("");
+    setServerError("");
+    setIsSubmitting(true);
 
-    submitting.current = true;
-    setInputStatus("submitting");
-    setErrorMessage("");
+    const clientTimezone =
+      typeof Intl !== "undefined"
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+        : "";
+    const clientLanguage =
+      typeof navigator !== "undefined" ? navigator.language || "" : "";
+
+    const currentAttribution = attributionRef.current || captureBrowserAttribution();
+    const cleanEmail = email.trim().toLowerCase();
 
     try {
-      const clientTimezone =
-        typeof Intl !== "undefined"
-          ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
-          : "";
-      const clientLanguage =
-        typeof navigator !== "undefined" ? navigator.language || "" : "";
-
-      const currentAttribution = attributionRef.current || captureBrowserAttribution();
-      const payloadAttribution = selectedOffer
-        ? { ...currentAttribution, offer: selectedOffer }
-        : currentAttribution;
-
-      const response = await fetch("/api/waitlist", {
+      const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: cleanEmail,
-          attribution: payloadAttribution,
-          survey: selectedOffer ? { subscription_preference: selectedOffer } : undefined,
-          client_timezone: clientTimezone,
-          client_language: clientLanguage,
-        }),
-      });
-
-      const result = (await response.json()) as { message?: string; error?: string; created?: boolean };
-      if (!response.ok) {
-        throw new Error(result.error || "Unable to save your spot. Please try again.");
-      }
-
-      setSubmittedEmail(cleanEmail);
-
-      if (result.created === true) {
-        trackEvent("generate_lead", {
-          lead_source: "teaser3_waitlist",
-          offer: selectedOffer || "standard",
-        });
-        setView("confirmed");
-        // Clear draft only on successful submission
-        updateEmail("");
-      } else {
-        // Already registered email
-        setView("already-registered");
-      }
-
-      setInputStatus("idle");
-      if (onSuccess) onSuccess();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
-      setErrorMessage(msg);
-      setInputStatus("error");
-      if (emailInputRef.current) {
-        emailInputRef.current.focus();
-      }
-    } finally {
-      submitting.current = false;
-    }
-  }
-
-  async function handleSurveySubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (surveyStatus === "submitting") return;
-
-    const targetEmail = (submittedEmail || email).trim().toLowerCase();
-    if (!targetEmail) {
-      setView("survey-success");
-      return;
-    }
-
-    setSurveyStatus("submitting");
-    setSurveyError("");
-
-    try {
-      const clientTimezone =
-        typeof Intl !== "undefined"
-          ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
-          : "";
-      const clientLanguage =
-        typeof navigator !== "undefined" ? navigator.language || "" : "";
-      const currentAttribution = attributionRef.current || captureBrowserAttribution();
-
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: targetEmail,
-          attribution: currentAttribution,
-          survey: {
-            gender: gender || undefined,
-            age: age || undefined,
-            intended_user: intendedUser || undefined,
-            primary_feature: primaryFeatures.length > 0 ? primaryFeatures.join(", ") : undefined,
-            subscription_preference: subscriptionPreference || undefined,
+          attribution: {
+            ...currentAttribution,
+            lead_source: initialSource,
           },
           client_timezone: clientTimezone,
           client_language: clientLanguage,
         }),
       });
 
-      if (!response.ok) {
-        const result = (await response.json().catch(() => ({}))) as { error?: string };
-        throw new Error(result.error || "Unable to save survey preferences.");
+      const data = (await res.json()) as { message?: string; error?: string; created?: boolean };
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to submit. Please try again.");
       }
 
+      setDisplayConfirmedEmail(cleanEmail);
 
+      // Track lead generation
+      if (data.created === true) {
+        trackEvent("generate_lead", {
+          lead_source: initialSource,
+          offer: "lifetime_free_and_20_off",
+        });
+        setView("confirmed");
+        onSuccess?.();
+      } else {
+        setView("already-registered");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Network error. Please try again.";
+      setServerError(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-      setSurveyStatus("idle");
+  const toggleFeature = (val: string) => {
+    setPrimaryFeatures((prev) =>
+      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
+    );
+  };
+
+  const handleSurveySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSurveySubmitting(true);
+    setSurveyError("");
+
+    const surveyData = {
+      ...(gender ? { gender } : {}),
+      ...(age ? { age } : {}),
+      ...(intendedUser ? { intended_user: intendedUser } : {}),
+      ...(primaryFeatures.length > 0 ? { primary_feature: primaryFeatures.join(", ") } : {}),
+      ...(subscriptionPreference ? { subscription_preference: subscriptionPreference } : {}),
+    };
+
+    const clientTimezone =
+      typeof Intl !== "undefined"
+        ? Intl.DateTimeFormat().resolvedOptions().timeZone || ""
+        : "";
+    const clientLanguage =
+      typeof navigator !== "undefined" ? navigator.language || "" : "";
+    const currentAttribution = attributionRef.current || captureBrowserAttribution();
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: displayConfirmedEmail || email.trim().toLowerCase(),
+          attribution: {
+            ...currentAttribution,
+            lead_source: `${initialSource}_survey`,
+          },
+          survey: surveyData,
+          client_timezone: clientTimezone,
+          client_language: clientLanguage,
+        }),
+      });
+
+      const data = (await res.json()) as { message?: string; error?: string };
+      if (!res.ok) {
+        throw new Error(data.error || "Unable to save survey response.");
+      }
+
       setView("survey-success");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      const msg = err instanceof Error ? err.message : "Error saving survey. Please try again.";
       setSurveyError(msg);
-      setSurveyStatus("error");
+    } finally {
+      setIsSurveySubmitting(false);
     }
-  }
-
-  // Handle open/close requests from Radix (ESC, overlay click, close button)
-  function handleOpenChange(nextOpen: boolean) {
-    if (!nextOpen) {
-      handleCloseFinal();
-    } else {
-      onOpenChange(true);
-    }
-  }
-
-  // Final dismissal closing the modal completely without promotional follow-up
-  function handleCloseFinal() {
-    onOpenChange(false);
-  }
-
-  // From exit offer: return to signup view to claim the 20% offer, preserving draft
-  function handleClaimOffer() {
-    onOfferSelect?.("early_20_off");
-    setView("signup");
-    setTimeout(() => {
-      if (emailInputRef.current) {
-        emailInputRef.current.focus();
-      }
-    }, 60);
-  }
-
-  const displayConfirmedEmail = submittedEmail || email;
+  };
 
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="teaser3-dialog-overlay" />
         <DialogPrimitive.Content
@@ -289,221 +259,179 @@ export function Teaser3WaitlistDialog({
             handleRestoreFocus();
           }}
         >
-          {/* Minimum 44x44px accessible close control */}
-          <button
-            type="button"
-            className="teaser3-dialog-close"
-            onClick={() => handleOpenChange(false)}
-            aria-label="Close dialog"
-          >
-            <X size={20} aria-hidden="true" />
-          </button>
+          {/* Circular Close Button */}
+          <DialogPrimitive.Close className="teaser3-dialog-close" aria-label="Close dialog">
+            <X size={18} />
+          </DialogPrimitive.Close>
 
-          {/* VIEW 1: INITIAL SIGNUP */}
+          {/* VIEW 1: SIGNUP FORM (Dual Panel on Desktop, Top Banner on Mobile) */}
           {view === "signup" && (
-            <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">3fig EARLY ACCESS</span>
-              <DialogPrimitive.Title className="teaser3-dialog-title">
-                App access. Free for life.
-              </DialogPrimitive.Title>
-              <DialogPrimitive.Description
-                id="t3-dialog-description"
-                className="teaser3-dialog-desc"
-              >
-                Join the launch list to reserve your founding member spot and enjoy free 3fig app access for life.
-              </DialogPrimitive.Description>
+            <div className="teaser3-modal-grid">
+              {/* Desktop Left Aside: Background Image + Semi-transparent dark overlay + Benefits */}
+              <aside className="teaser3-modal-aside" aria-hidden="true">
+                <img
+                  src="/images/teaser3/modal-aside-desktop.png"
+                  alt=""
+                  className="teaser3-modal-aside-bg"
+                />
+                {/* Semi-transparent dark overlay for high text contrast */}
+                <div className="teaser3-modal-aside-overlay" />
 
-              {/* Enhanced Benefits with Polished Icons */}
-              <div className="teaser3-dialog-perks-highlight">
-                <div className="teaser3-dialog-perk-card">
-                  <div className="teaser3-dialog-perk-icon-wrap" aria-hidden="true">
-                    <Sparkles size={18} className="teaser3-dialog-perk-icon" />
-                  </div>
-                  <div className="teaser3-dialog-perk-info">
-                    <strong className="teaser3-dialog-perk-title">Lifetime Free App Access</strong>
-                    <p className="teaser3-dialog-perk-desc">
-                      Zero monthly membership fees for life as a founding member.
-                    </p>
-                  </div>
+                <div className="teaser3-modal-aside-content">
+                  <p className="teaser3-modal-aside-eyebrow">3FIG EARLY ACCESS</p>
+                  <h3 className="teaser3-modal-aside-title">
+                    No app fees.<br />For life.
+                  </h3>
+                  <p className="teaser3-modal-aside-subtitle">YOUR WAITLIST BENEFITS</p>
+                  <ul className="teaser3-modal-aside-list">
+                    <li>
+                      <strong>20% off</strong> the ring at launch
+                    </li>
+                    <li>
+                      <strong>Free lifetime</strong> app subscription
+                    </li>
+                  </ul>
                 </div>
+              </aside>
 
-                <div className="teaser3-dialog-perk-card">
-                  <div className="teaser3-dialog-perk-icon-wrap" aria-hidden="true">
-                    <ShieldCheck size={18} className="teaser3-dialog-perk-icon" />
-                  </div>
-                  <div className="teaser3-dialog-perk-info">
-                    <strong className="teaser3-dialog-perk-title">Priority Ring Reservation</strong>
-                    <p className="teaser3-dialog-perk-desc">
-                      {selectedOffer === "early_20_off"
-                        ? "Guaranteed 20% discount on your ring at launch."
-                        : "Priority reservation access when ring pre-orders open."}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Mobile-Only Top Banner Header: Landscape image with dark overlay */}
+              <div className="teaser3-modal-banner-header" aria-hidden="true">
+                <img
+                  src="/images/teaser3/modal-banner-mobile.png"
+                  alt=""
+                  className="teaser3-modal-banner-img"
+                />
+                {/* Semi-transparent dark overlay for high text contrast */}
+                <div className="teaser3-modal-banner-overlay" />
 
-              <form onSubmit={handleEmailSubmit} noValidate className="teaser3-dialog-form">
-                <div className="teaser3-dialog-field">
-                  <label htmlFor="t3-waitlist-email" className="teaser3-dialog-label">
-                    Email address
-                  </label>
-                  <input
-                    ref={emailInputRef}
-                    id="t3-waitlist-email"
-                    type="email"
-                    autoComplete="email"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    className={`teaser3-dialog-input ${errorMessage ? "has-error" : ""}`}
-                    placeholder="name@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      updateEmail(e.target.value);
-                      if (errorMessage) setErrorMessage("");
-                    }}
-                    disabled={inputStatus === "submitting"}
-                    aria-describedby={errorMessage ? "t3-email-error" : undefined}
-                    aria-invalid={errorMessage ? true : undefined}
-                    required
-                  />
-                  {errorMessage && (
-                    <p id="t3-email-error" className="teaser3-dialog-error" role="alert">
-                      {errorMessage}
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  className="teaser3-dialog-btn-primary"
-                  disabled={inputStatus === "submitting"}
-                >
-                  {inputStatus === "submitting" ? (
-                    <>
-                      <Loader2 className="teaser3-dialog-spinner" size={18} />
-                      <span>Saving your spot...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Get early access</span>
-                      <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* VIEW 2: EXIT OFFER */}
-          {view === "exit-offer" && (
-            <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">YOUR EARLY ACCESS OFFER</span>
-              <DialogPrimitive.Title className="teaser3-dialog-title">
-                Start with 20% off.
-              </DialogPrimitive.Title>
-              <DialogPrimitive.Description
-                id="t3-dialog-description"
-                className="teaser3-dialog-desc"
-              >
-                Join the launch list today to guarantee 20% off your 3fig smart ring, plus lifetime free app membership upon release.
-              </DialogPrimitive.Description>
-
-              <div className="teaser3-dialog-perks-highlight">
-                <div className="teaser3-dialog-perk-card">
-                  <div className="teaser3-dialog-perk-icon-wrap" aria-hidden="true">
-                    <Sparkles size={18} className="teaser3-dialog-perk-icon" />
-                  </div>
-                  <div className="teaser3-dialog-perk-info">
-                    <strong className="teaser3-dialog-perk-title">Lifetime Free App Access</strong>
-                    <p className="teaser3-dialog-perk-desc">
-                      Zero monthly membership fees for life as a founding member.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="teaser3-dialog-perk-card is-highlight">
-                  <div className="teaser3-dialog-perk-icon-wrap" aria-hidden="true">
-                    <ShieldCheck size={18} className="teaser3-dialog-perk-icon" />
-                  </div>
-                  <div className="teaser3-dialog-perk-info">
-                    <strong className="teaser3-dialog-perk-title">20% Hardware Discount</strong>
-                    <p className="teaser3-dialog-perk-desc">
-                      Discount applied automatically to your ring at launch.
-                    </p>
-                  </div>
+                {/* Header Text Overlay */}
+                <div className="teaser3-modal-banner-content">
+                  <p className="teaser3-modal-banner-eyebrow">WAITLIST BENEFITS</p>
+                  <h3 className="teaser3-modal-banner-title">
+                    <span>20% off the ring at launch</span>
+                    <span className="teaser3-modal-banner-divider">·</span>
+                    <span>Free lifetime app subscription</span>
+                  </h3>
                 </div>
               </div>
 
-              <div className="teaser3-dialog-exit-actions">
-                <button
-                  type="button"
-                  className="teaser3-dialog-btn-primary"
-                  onClick={handleClaimOffer}
-                >
-                  <span>Claim my offer</span>
-                  <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
-                </button>
+              {/* Lower / Right Form Section */}
+              <div className="teaser3-modal-form-body">
+                <p className="teaser3-modal-eyebrow">JOIN THE WAITLIST</p>
+                <DialogPrimitive.Title asChild>
+                  <h2 className="teaser3-modal-title">Join now. Never pay app subscription fees.</h2>
+                </DialogPrimitive.Title>
+                <DialogPrimitive.Description id="t3-dialog-description" className="teaser3-modal-desc">
+                  Get 20% off the ring at launch + a free lifetime app subscription.
+                </DialogPrimitive.Description>
 
-                <button
-                  type="button"
-                  className="teaser3-dialog-btn-secondary"
-                  onClick={handleCloseFinal}
+                {/* Signup Form */}
+                <form
+                  onSubmit={handleEmailSubmit}
+                  className="teaser3-waitlist-form"
+                  noValidate
                 >
-                  Not now
-                </button>
+                  <div className="teaser3-form-group">
+                    <label htmlFor="t3-modal-email" className="teaser3-form-label">
+                      Email address
+                    </label>
+                    <input
+                      ref={emailInputRef}
+                      id="t3-modal-email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => {
+                        updateEmail(e.target.value);
+                        if (emailError) setEmailError("");
+                      }}
+                      className={`teaser3-form-input ${emailError ? "has-error" : ""}`}
+                      disabled={isSubmitting}
+                      required
+                    />
+                    {emailError && (
+                      <p className="teaser3-form-error" role="alert">
+                        {emailError}
+                      </p>
+                    )}
+                    {serverError && (
+                      <p className="teaser3-form-error" role="alert">
+                        {serverError}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="teaser3-form-submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 size={16} className="teaser3-spinner" />
+                        <span>Reserving spot...</span>
+                      </>
+                    ) : (
+                      <span>Join the waitlist</span>
+                    )}
+                  </button>
+
+                  <p className="teaser3-reassurance">
+                    No spam. Priority access when reservations open.
+                  </p>
+                </form>
               </div>
             </div>
           )}
 
-          {/* VIEW 3: CONFIRMED SUCCESS (With Optional Survey Prompt) */}
+          {/* VIEW 2: CONFIRMED SUCCESS */}
           {view === "confirmed" && (
-            <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">FOUNDING MEMBER RESERVED</span>
-              <DialogPrimitive.Title className="teaser3-dialog-title">
-                You’re on the launch list.
+            <div className="teaser3-modal-confirmed">
+              <span className="teaser3-modal-eyebrow">FOUNDING MEMBER RESERVED</span>
+              <DialogPrimitive.Title asChild>
+                <h2>You’re on the launch list.</h2>
               </DialogPrimitive.Title>
               <DialogPrimitive.Description
                 id="t3-dialog-description"
-                className="teaser3-dialog-desc"
+                className="teaser3-confirm-lead"
               >
-                Your spot is confirmed{displayConfirmedEmail ? <> for <strong>{displayConfirmedEmail}</strong></> : ""}. We’ve reserved your free lifetime app subscription and priority launch access.
+                Your spot is confirmed{displayConfirmedEmail ? <> for <strong>{displayConfirmedEmail}</strong></> : ""}.
+                We’ve reserved your free lifetime app subscription and 20% discount on the ring at launch.
               </DialogPrimitive.Description>
 
-              <div className="teaser3-dialog-perks">
-                <div className="teaser3-dialog-perk-row">
-                  <Check size={18} className="teaser3-dialog-check-icon" />
+              <div className="teaser3-perks-confirmed">
+                <div className="teaser3-perk-row">
+                  <span className="teaser3-check-badge">✓</span>
                   <span>Lifetime free app subscription secured</span>
                 </div>
-                <div className="teaser3-dialog-perk-row">
-                  <Check size={18} className="teaser3-dialog-check-icon" />
-                  <span>Priority access when ring hardware opens</span>
+                <div className="teaser3-perk-row">
+                  <span className="teaser3-check-badge">✓</span>
+                  <span>20% off hardware when launch orders open</span>
                 </div>
               </div>
 
               {/* Optional Survey Invitation Card */}
               <div className="teaser3-survey-invite-card">
-                <div className="teaser3-survey-invite-head">
-                  <span className="teaser3-survey-invite-badge">OPTIONAL · 1 MINUTE</span>
-                  <h4 className="teaser3-survey-invite-title">Help us tailor 3fig to your skin rhythm</h4>
-                  <p className="teaser3-survey-invite-desc">
-                    Answer 4 quick questions so we can prioritize the features that matter most to you.
-                  </p>
-                </div>
+                <span className="teaser3-survey-badge">OPTIONAL · 1 MINUTE</span>
+                <h4>Help us tailor 3fig to your skin rhythm</h4>
+                <p>
+                  Answer 4 quick questions so we can prioritize the features that matter most to you.
+                </p>
 
-                <div className="teaser3-survey-invite-actions">
+                <div className="teaser3-survey-actions">
                   <button
                     type="button"
-                    className="teaser3-dialog-btn-primary teaser3-survey-start-btn"
+                    className="teaser3-btn-primary-12"
                     onClick={() => setView("survey")}
                   >
                     <span>Take quick survey (1 min)</span>
-                    <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
+                    <ArrowRight size={15} />
                   </button>
-
                   <button
                     type="button"
-                    className="teaser3-dialog-btn-secondary teaser3-survey-done-btn"
-                    onClick={handleCloseFinal}
+                    className="teaser3-btn-secondary-12"
+                    onClick={() => onOpenChange(false)}
                   >
                     Done
                   </button>
@@ -512,51 +440,48 @@ export function Teaser3WaitlistDialog({
             </div>
           )}
 
-          {/* VIEW 4: ALREADY REGISTERED */}
+          {/* VIEW 3: ALREADY REGISTERED */}
           {view === "already-registered" && (
-            <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">ALREADY RESERVED</span>
-              <DialogPrimitive.Title className="teaser3-dialog-title">
-                You’re already on the list.
+            <div className="teaser3-modal-confirmed">
+              <span className="teaser3-modal-eyebrow">ALREADY RESERVED</span>
+              <DialogPrimitive.Title asChild>
+                <h2>You’re already on the list.</h2>
               </DialogPrimitive.Title>
               <DialogPrimitive.Description
                 id="t3-dialog-description"
-                className="teaser3-dialog-desc"
+                className="teaser3-confirm-lead"
               >
                 {displayConfirmedEmail ? <strong>{displayConfirmedEmail}</strong> : "This email"} is already registered as a founding member with lifetime app access secured.
               </DialogPrimitive.Description>
 
-              <div className="teaser3-dialog-perks">
-                <div className="teaser3-dialog-perk-row">
-                  <Check size={18} className="teaser3-dialog-check-icon" />
-                  <span>Lifetime free app subscription reserved</span>
+              <div className="teaser3-perks-confirmed">
+                <div className="teaser3-perk-row">
+                  <span className="teaser3-check-badge">✓</span>
+                  <span>Lifetime free app subscription secured</span>
                 </div>
               </div>
 
               {/* Optional Survey Invitation Card */}
               <div className="teaser3-survey-invite-card">
-                <div className="teaser3-survey-invite-head">
-                  <span className="teaser3-survey-invite-badge">OPTIONAL · 1 MINUTE</span>
-                  <h4 className="teaser3-survey-invite-title">Help us tailor 3fig to your skin rhythm</h4>
-                  <p className="teaser3-survey-invite-desc">
-                    Share your preferences to help guide our upcoming features.
-                  </p>
-                </div>
+                <span className="teaser3-survey-badge">OPTIONAL · 1 MINUTE</span>
+                <h4>Help us tailor 3fig to your skin rhythm</h4>
+                <p>
+                  Share your preferences to help guide our upcoming features.
+                </p>
 
-                <div className="teaser3-survey-invite-actions">
+                <div className="teaser3-survey-actions">
                   <button
                     type="button"
-                    className="teaser3-dialog-btn-primary teaser3-survey-start-btn"
+                    className="teaser3-btn-primary-12"
                     onClick={() => setView("survey")}
                   >
                     <span>Take quick survey (1 min)</span>
-                    <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
+                    <ArrowRight size={15} />
                   </button>
-
                   <button
                     type="button"
-                    className="teaser3-dialog-btn-secondary teaser3-survey-done-btn"
-                    onClick={handleCloseFinal}
+                    className="teaser3-btn-secondary-12"
+                    onClick={() => onOpenChange(false)}
                   >
                     Done
                   </button>
@@ -565,40 +490,30 @@ export function Teaser3WaitlistDialog({
             </div>
           )}
 
-          {/* VIEW 5: OPTIONAL SURVEY */}
+          {/* VIEW 4: OPTIONAL SURVEY */}
           {view === "survey" && (
-            <div className="teaser3-dialog-inner teaser3-survey-inner">
-              <div className="teaser3-survey-header">
-                <span className="teaser3-dialog-eyebrow">FOUNDING MEMBER SURVEY · OPTIONAL</span>
-                <DialogPrimitive.Title className="teaser3-dialog-title">
-                  Help us tailor 3fig to you.
-                </DialogPrimitive.Title>
-                <DialogPrimitive.Description
-                  id="t3-dialog-description"
-                  className="teaser3-dialog-desc"
-                >
-                  Your feedback helps us fine-tune ring insights and priority features before launch.
-                </DialogPrimitive.Description>
-              </div>
+            <div className="teaser3-survey-content">
+              <span className="teaser3-modal-eyebrow">FOUNDING MEMBER SURVEY · OPTIONAL</span>
+              <DialogPrimitive.Title asChild>
+                <h2>Help us tailor 3fig to you.</h2>
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description id="t3-dialog-description" className="teaser3-survey-sub">
+                Your feedback helps us fine-tune ring insights and priority features before launch.
+              </DialogPrimitive.Description>
 
               <form onSubmit={handleSurveySubmit} className="teaser3-survey-form">
                 {/* Question 1: Gender */}
                 <div className="teaser3-survey-group">
-                  <span className="teaser3-survey-label">Gender</span>
+                  <span className="teaser3-survey-q-label">Gender</span>
                   <div className="teaser3-survey-chips">
-                    {[
-                      { value: "Female", label: "Female" },
-                      { value: "Male", label: "Male" },
-                      { value: "Non-binary", label: "Non-binary" },
-                      { value: "Prefer not to say", label: "Prefer not to say" },
-                    ].map((opt) => (
+                    {["Female", "Male", "Non-binary", "Prefer not to say"].map((opt) => (
                       <button
-                        key={opt.value}
+                        key={opt}
                         type="button"
-                        className={`teaser3-survey-chip ${gender === opt.value ? "is-selected" : ""}`}
-                        onClick={() => setGender(opt.value)}
+                        className={`teaser3-survey-chip ${gender === opt ? "is-selected" : ""}`}
+                        onClick={() => setGender(opt)}
                       >
-                        {opt.label}
+                        {opt}
                       </button>
                     ))}
                   </div>
@@ -606,9 +521,9 @@ export function Teaser3WaitlistDialog({
 
                 {/* Question 2: Age */}
                 <div className="teaser3-survey-group">
-                  <span className="teaser3-survey-label">Age</span>
+                  <span className="teaser3-survey-q-label">Age</span>
                   <div className="teaser3-survey-chips">
-                    {["Under 20", "20–29", "30–39", "40–49", "50+"].map((opt) => (
+                    {["Under 25", "25–34", "35–44", "45–54", "55+"].map((opt) => (
                       <button
                         key={opt}
                         type="button"
@@ -621,21 +536,18 @@ export function Teaser3WaitlistDialog({
                   </div>
                 </div>
 
-                {/* Question 3: Who will use */}
+                {/* Question 3: Who will use this 3fig? */}
                 <div className="teaser3-survey-group">
-                  <span className="teaser3-survey-label">Who will use this 3fig?</span>
+                  <span className="teaser3-survey-q-label">Who will use this 3fig?</span>
                   <div className="teaser3-survey-chips">
-                    {[
-                      { value: "For myself", label: "For myself" },
-                      { value: "As a gift", label: "As a gift" },
-                    ].map((opt) => (
+                    {["For myself", "Gift for someone", "Both"].map((opt) => (
                       <button
-                        key={opt.value}
+                        key={opt}
                         type="button"
-                        className={`teaser3-survey-chip ${intendedUser === opt.value ? "is-selected" : ""}`}
-                        onClick={() => setIntendedUser(opt.value)}
+                        className={`teaser3-survey-chip ${intendedUser === opt ? "is-selected" : ""}`}
+                        onClick={() => setIntendedUser(opt)}
                       >
-                        {opt.label}
+                        {opt}
                       </button>
                     ))}
                   </div>
@@ -643,155 +555,99 @@ export function Teaser3WaitlistDialog({
 
                 {/* Question 4: Primary Features */}
                 <div className="teaser3-survey-group">
-                  <div className="teaser3-survey-group-header">
-                    <span className="teaser3-survey-label">Which feature interests you most?</span>
-                    <small className="teaser3-survey-subhint">Select all that apply</small>
-                  </div>
-                  <div className="teaser3-survey-cards">
+                  <span className="teaser3-survey-q-label">Which feature interests you most? (Select all that apply)</span>
+                  <div className="teaser3-survey-chips">
                     {[
-                      {
-                        value: "Sleep analysis",
-                        label: "Sleep analysis",
-                        hint: "Circadian rhythm & overnight recovery",
-                      },
-                      {
-                        value: "Stress tracking",
-                        label: "Stress tracking",
-                        hint: "Daily load & heart rate variability",
-                      },
-                      {
-                        value: "Food & nutrition logging",
-                        label: "Food & nutrition logging",
-                        hint: "Meal patterns aligned with skin responses",
-                      },
-                    ].map((opt) => {
-                      const isSelected = primaryFeatures.includes(opt.value);
-                      return (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          className={`teaser3-survey-card ${isSelected ? "is-selected" : ""}`}
-                          onClick={() => togglePrimaryFeature(opt.value)}
-                        >
-                          <div className="teaser3-survey-card-check">
-                            <Check size={14} />
-                          </div>
-                          <div className="teaser3-survey-card-text">
-                            <strong>{opt.label}</strong>
-                            <small>{opt.hint}</small>
-                          </div>
-                        </button>
-                      );
-                    })}
+                      "Skin Balance score",
+                      "Sleep & recovery tracking",
+                      "Barrier protection guidance",
+                      "Habit & rhythm correlation",
+                    ].map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        className={`teaser3-survey-chip ${primaryFeatures.includes(opt) ? "is-selected" : ""}`}
+                        onClick={() => toggleFeature(opt)}
+                      >
+                        {opt}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                {/* Question 5: Budget / Subscription expectation */}
+                {/* Question 5: Subscription expectation */}
                 <div className="teaser3-survey-group">
-                  <span className="teaser3-survey-label">Target subscription expectation</span>
-                  <div className="teaser3-survey-cards">
-                    {[
-                      {
-                        value: "$5/mo - Basic (Sleep Analysis, Stress Tracking)",
-                        label: "$5 / month · Basic",
-                        hint: "Sleep Analysis, Stress Tracking",
-                      },
-                      {
-                        value: "$8/mo - Premium (Basic + Menstrual Cycle, Temperature Tracking)",
-                        label: "$8 / month · Premium",
-                        hint: "Basic + Menstrual Cycle, Temperature Tracking",
-                      },
-                    ].map((opt) => {
-                      const isSelected = subscriptionPreference === opt.value;
-                      return (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          className={`teaser3-survey-card ${isSelected ? "is-selected" : ""}`}
-                          onClick={() => setSubscriptionPreference(opt.value)}
-                        >
-                          <div className="teaser3-survey-card-check">
-                            <Check size={14} />
-                          </div>
-                          <div className="teaser3-survey-card-text">
-                            <strong>{opt.label}</strong>
-                            <small>{opt.hint}</small>
-                          </div>
-                        </button>
-                      );
-                    })}
+                  <span className="teaser3-survey-q-label">Target subscription expectation</span>
+                  <div className="teaser3-survey-chips">
+                    {["$0/mo (Free tier)", "$5–$10/mo", "$10–$15/mo", "Don't know yet"].map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        className={`teaser3-survey-chip ${subscriptionPreference === opt ? "is-selected" : ""}`}
+                        onClick={() => setSubscriptionPreference(opt)}
+                      >
+                        {opt}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
                 {surveyError && (
-                  <p className="teaser3-dialog-error" role="alert">
+                  <p className="teaser3-form-error" role="alert">
                     {surveyError}
                   </p>
                 )}
 
-                <div className="teaser3-survey-form-actions">
+                <div className="teaser3-survey-submit-actions">
                   <button
                     type="submit"
-                    className="teaser3-dialog-btn-primary"
-                    disabled={surveyStatus === "submitting"}
+                    className="teaser3-btn-primary-12"
+                    disabled={isSurveySubmitting}
                   >
-                    {surveyStatus === "submitting" ? (
+                    {isSurveySubmitting ? (
                       <>
-                        <Loader2 className="teaser3-dialog-spinner" size={18} />
-                        <span>Saving preferences...</span>
+                        <Loader2 size={15} className="teaser3-spinner" />
+                        <span>Saving...</span>
                       </>
                     ) : (
-                      <>
-                        <span>Save preferences</span>
-                        <ArrowRight size={16} className="teaser3-dialog-btn-arrow" />
-                      </>
+                      <span>Submit preferences</span>
                     )}
                   </button>
-
                   <button
                     type="button"
-                    className="teaser3-dialog-btn-secondary"
-                    onClick={handleCloseFinal}
+                    className="teaser3-btn-secondary-12"
+                    onClick={() => onOpenChange(false)}
                   >
-                    Skip for now
+                    Skip
                   </button>
                 </div>
               </form>
             </div>
           )}
 
-          {/* VIEW 6: SURVEY SUCCESS */}
+          {/* VIEW 5: SURVEY SUCCESS */}
           {view === "survey-success" && (
-            <div className="teaser3-dialog-inner">
-              <span className="teaser3-dialog-eyebrow">PREFERENCES RECORDED</span>
-              <DialogPrimitive.Title className="teaser3-dialog-title">
-                Thank you for your input!
+            <div className="teaser3-modal-confirmed">
+              <span className="teaser3-modal-eyebrow">THANK YOU</span>
+              <DialogPrimitive.Title asChild>
+                <h2>Preferences saved.</h2>
               </DialogPrimitive.Title>
               <DialogPrimitive.Description
                 id="t3-dialog-description"
-                className="teaser3-dialog-desc"
+                className="teaser3-confirm-lead"
               >
-                Your preferences have been saved. We’re excited to have you with us on the journey to launching 3fig.
+                We’ll use your answers to refine 3fig for your launch experience.
               </DialogPrimitive.Description>
-
-              <div className="teaser3-dialog-perks">
-                <div className="teaser3-dialog-perk-row">
-                  <Check size={18} className="teaser3-dialog-check-icon" />
-                  <span>Founding member reservation active</span>
-                </div>
-                <div className="teaser3-dialog-perk-row">
-                  <Check size={18} className="teaser3-dialog-check-icon" />
-                  <span>Product preferences recorded</span>
-                </div>
+              <div style={{ marginTop: 24 }}>
+                <button
+                  type="button"
+                  className="teaser3-btn-primary-12"
+                  onClick={() => onOpenChange(false)}
+                  style={{ width: "100%" }}
+                >
+                  Close
+                </button>
               </div>
-
-              <button
-                type="button"
-                className="teaser3-dialog-btn-primary"
-                onClick={handleCloseFinal}
-              >
-                Done
-              </button>
             </div>
           )}
         </DialogPrimitive.Content>

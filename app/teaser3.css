@@ -27,9 +27,9 @@
   --tf-color-border-dark-subtle: #dfd8cf;
   --tf-color-focus-ring: #24211f;
 
-  --tf-color-accent-brown: #c85a44;
-  --teaser3-accent-rose: #c85a44;
-  --teaser3-accent-gradient: linear-gradient(110deg, #c85a44 0%, #d96f5b 50%, #e27e6d 100%);
+  --tf-color-accent-brown: #8A7768;
+  --teaser3-accent-rose: #8A7768;
+  --teaser3-accent-gradient: #8A7768;
 
   width: 100%;
   min-height: 100vh;
@@ -61,8 +61,9 @@
   color: var(--ink);
 }
 
-.teaser3-root .teaser3-rose-accent {
-  color: var(--teaser3-accent-rose, #c85a44);
+.teaser3-root .teaser3-rose-accent,
+.teaser3-rose-accent {
+  color: #8A7768 !important;
 }
 
 /* ==========================================================================
@@ -355,10 +356,10 @@
 }
 
 .teaser3-title-brown {
-  color: var(--tf-color-accent-brown);
-  background: var(--teaser3-accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #8A7768 !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
   white-space: normal;
 }
 
@@ -1007,502 +1008,540 @@
 }
 
 /* ==========================================================================
-   7. TEASER 3 WAITLIST DIALOG & MOBILE BOTTOM SHEET
-   Completely isolated to Teaser 3. Matches visual identity with sans-serif
-   typography, solid-black pill buttons, white surface, and safe bottom sheet.
+   7. TEASER 3 WAITLIST DIALOG (2-COLUMN DESKTOP / TOP BANNER MOBILE)
+   Completely isolated to Teaser 3. Matches design in media_1790691398574.png
    ========================================================================== */
 
-/* Dark Backdrop Overlay: Restrained 45% dark, no costly blur on mobile */
+/* Dark Backdrop Overlay */
 .teaser3-dialog-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  z-index: 1000;
-  animation: teaser3DialogFadeIn 180ms ease forwards;
+  background: rgba(21, 18, 15, 0.72);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  animation: teaser3FadeIn 0.2s ease-out;
 }
 
-/* Desktop Dialog Frame: Centered, 480px max width, 32px internal padding */
 .teaser3-dialog-content {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100% - 36px);
-  max-width: 480px;
-  max-height: calc(100dvh - 56px);
-  background-color: var(--paper, #f8f5f0);
-  border: 1px solid var(--line, #dfd8cf);
-  border-radius: 24px;
-  padding: 36px 32px 32px 32px;
-  box-shadow: 0 20px 48px rgba(36, 33, 31, 0.14);
-  z-index: 1001;
-  box-sizing: border-box;
+  width: min(780px, calc(100% - 32px));
+  max-height: calc(100dvh - 36px);
+  border: 1px solid #d9cfc4;
+  padding: 0;
+  border-radius: 28px;
+  background: #f8f5f0;
+  color: var(--ink);
   overflow-y: auto;
-  outline: none;
-  font-family: var(--font) !important;
-  animation: teaser3DialogScaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow-x: hidden;
+  z-index: 1000;
+  box-shadow: 0 24px 64px rgba(21, 18, 15, 0.3);
+  animation: teaser3ScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Close Control: Minimum 44x44px accessible touch target */
+@media (max-width: 860px) {
+  .teaser3-dialog-content {
+    width: min(500px, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    border-radius: 24px;
+  }
+}
+
+.teaser3-dialog-content.is-survey-mode {
+  width: min(620px, calc(100% - 32px));
+}
+
+@keyframes teaser3FadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes teaser3ScaleIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
 .teaser3-dialog-close {
   position: absolute;
   top: 14px;
   right: 14px;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
+  border: 0;
   border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #24211f;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none !important;
-  outline: none;
-  background: transparent;
+  font-size: 18px;
+  line-height: 1;
+  z-index: 20;
   cursor: pointer;
-  color: var(--tf-color-text-secondary);
-  transition: background-color 0.15s ease, color 0.15s ease;
-  z-index: 10;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.15s, transform 0.15s;
 }
 
 .teaser3-dialog-close:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: var(--tf-color-text-primary);
+  background: #ffffff;
+  transform: scale(1.06);
 }
 
-.teaser3-dialog-close:focus-visible {
-  outline: 2px solid var(--tf-color-focus-ring) !important;
-  outline-offset: 2px;
+/* Modal Grid Structure: Desktop 2-column layout (Left aside + Right form) */
+.teaser3-modal-grid {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  min-height: 480px;
+  background: #f8f5f0;
 }
 
-/* Dialog Content Inner Container */
-.teaser3-dialog-inner {
+/* 1. Desktop Left Aside Panel */
+.teaser3-modal-aside {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  justify-content: flex-end;
+  padding: 34px 28px;
   box-sizing: border-box;
-  text-align: left;
-  padding-bottom: 4px;
 }
 
-/* Eyebrow: Small, uppercase, warm-brown accent */
-.teaser3-dialog-eyebrow {
-  font-family: var(--tf-font-sans);
-  font-size: 12.5px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--tf-color-accent-brown);
+.teaser3-modal-aside-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Semi-transparent dark overlay for high text contrast */
+.teaser3-modal-aside-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 1;
+}
+
+.teaser3-modal-aside-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.teaser3-modal-aside-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffbb98; /* Warm peach highlight */
   margin-bottom: 8px;
-  text-align: left;
-}
-
-/* Dialog Title: 32px desktop, 28px mobile, weight 500, line-height ~1.12 */
-.teaser3-dialog-title {
+  text-transform: uppercase;
   font-family: var(--font) !important;
-  font-size: 32px;
-  font-weight: 500 !important;
-  line-height: 1.12;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-  margin: 0 0 10px 0;
-  text-align: left;
 }
 
-/* Dialog Description: 15-16px, line-height ~1.5 */
-.teaser3-dialog-desc {
-  font-family: var(--tf-font-sans);
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 1.48;
-  letter-spacing: -0.01em;
-  color: var(--tf-color-text-secondary);
-  margin: 0 0 14px 0;
-  text-align: left;
-}
-
-.teaser3-dialog-desc strong {
+.teaser3-modal-aside-title {
+  font-size: 24px;
+  line-height: 1.16;
   font-weight: 600;
-  color: var(--tf-color-text-primary);
+  color: #ffffff !important;
+  margin-bottom: 24px;
+  font-family: var(--font) !important;
 }
 
-/* Material Condition Box & Benefit Summary */
-.teaser3-dialog-condition {
-  background-color: var(--tf-color-surface-muted);
-  border: 1px solid var(--tf-color-border-dark-subtle);
-  border-radius: 12px;
-  padding: 11px 13px;
-  margin-bottom: 16px;
-  box-sizing: border-box;
+.teaser3-modal-aside-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 8px;
+  font-family: var(--font) !important;
 }
 
-.teaser3-dialog-condition p {
-  font-family: var(--tf-font-sans);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.42;
-  letter-spacing: -0.008em;
-  color: var(--tf-color-text-secondary);
+.teaser3-modal-aside-list {
+  list-style: none;
+  padding: 0;
   margin: 0;
-  text-align: left;
-}
-
-/* Enhanced Perks Highlight with Polished Icons */
-.teaser3-dialog-perks-highlight {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 22px;
-  width: 100%;
+  gap: 6px;
 }
 
-.teaser3-dialog-perk-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(217, 107, 115, 0.05) 0%, rgba(248, 245, 241, 0.8) 100%);
-  border: 1px solid rgba(217, 107, 115, 0.15);
+.teaser3-modal-aside-list li {
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font) !important;
+}
+
+.teaser3-modal-aside-list strong {
+  color: #ffffff;
+}
+
+/* 2. Mobile-Only Top Banner Header (Hidden on Desktop) */
+.teaser3-modal-banner-header {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  padding: 18px 20px;
   box-sizing: border-box;
 }
 
-.teaser3-dialog-perk-card.is-highlight {
-  background: linear-gradient(135deg, rgba(217, 107, 115, 0.1) 0%, rgba(254, 243, 238, 0.9) 100%);
-  border-color: rgba(217, 107, 115, 0.28);
+.teaser3-modal-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
-.teaser3-dialog-perk-icon-wrap {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  min-height: 32px;
-  border-radius: 50%;
-  background: rgba(217, 107, 115, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #b8525b;
-  flex-shrink: 0;
-  margin-top: 2px;
+/* Semi-transparent dark overlay for high text contrast */
+.teaser3-modal-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 1;
 }
 
-.teaser3-dialog-perk-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: left;
+.teaser3-modal-banner-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  margin-top: auto;
 }
 
-.teaser3-dialog-perk-title {
-  font-family: var(--tf-font-sans);
+.teaser3-modal-banner-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffbb98;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  font-family: var(--font) !important;
+}
+
+.teaser3-modal-banner-title {
   font-size: 14px;
   font-weight: 600;
+  color: #ffffff !important;
   line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--tf-color-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font) !important;
 }
 
-.teaser3-dialog-perk-desc {
-  font-family: var(--tf-font-sans);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.4;
-  letter-spacing: -0.005em;
-  color: #6a645d;
+.teaser3-modal-banner-title span {
+  color: #ffffff !important;
+}
+
+.teaser3-modal-banner-divider {
+  display: none;
+}
+
+/* Responsive behavior at 860px */
+@media (max-width: 860px) {
+  .teaser3-modal-grid {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+  .teaser3-modal-aside {
+    display: none;
+  }
+  .teaser3-modal-banner-header {
+    display: flex;
+    align-items: flex-end;
+  }
+}
+
+/* Modal Form Body */
+.teaser3-modal-form-body {
+  padding: 38px 34px;
+  background: #f8f5f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 860px) {
+  .teaser3-modal-form-body {
+    padding: 24px 20px 28px;
+  }
+}
+
+.teaser3-modal-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: #8A7768 !important;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.teaser3-modal-title {
+  font-size: 26px;
+  line-height: 1.18;
+  color: var(--ink) !important;
+  font-family: var(--font) !important;
   margin: 0;
 }
 
-/* Form Layout */
-.teaser3-dialog-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.teaser3-dialog-field {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-bottom: 14px;
-}
-
-/* Visible Email Label */
-.teaser3-dialog-label {
-  font-family: var(--tf-font-sans);
-  font-size: 13.5px;
-  font-weight: 500;
-  color: var(--tf-color-text-primary);
-  margin-bottom: 6px;
-  text-align: left;
-}
-
-/* Email Input: 50-52px height, 16px font to prevent mobile auto-zoom */
-.teaser3-dialog-input {
-  width: 100%;
-  height: 50px;
-  box-sizing: border-box;
-  border: 1px solid var(--tf-color-border-dark-subtle);
-  border-radius: 12px;
-  padding: 0 16px;
-  font-family: var(--tf-font-sans);
-  font-size: 16px;
-  color: var(--tf-color-text-primary);
-  background-color: #ffffff;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.teaser3-dialog-input:focus {
-  border-color: var(--tf-color-focus-ring);
-  box-shadow: 0 0 0 1px var(--tf-color-focus-ring);
-}
-
-.teaser3-dialog-input.has-error {
-  border-color: #d32f2f;
-}
-
-.teaser3-dialog-input.has-error:focus {
-  border-color: #d32f2f;
-  box-shadow: 0 0 0 1px #d32f2f;
-}
-
-/* Concise Inline Error */
-.teaser3-dialog-error {
-  font-family: var(--tf-font-sans);
+.teaser3-modal-desc {
+  margin-top: 10px;
   font-size: 13px;
-  color: #d32f2f;
-  margin-top: 5px;
-  margin-bottom: 0;
-  text-align: left;
+  line-height: 1.55;
+  color: #554e48 !important;
+  margin-bottom: 20px;
 }
 
-/* Primary Action Button: Teaser4 ink pill, 50px height, full-width */
-.teaser3-dialog-btn-primary {
-  height: 50px;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: var(--ink, #24211f);
-  color: #ffffff;
-  border: none !important;
-  border-radius: 9999px;
-  font-family: var(--font) !important;
-  font-size: 16px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: background-color 0.18s ease;
-  box-shadow: 0 4px 14px rgba(36, 33, 31, 0.12);
-  flex-shrink: 0;
-}
-
-.teaser3-dialog-btn-primary:hover:not(:disabled) {
-  background-color: #42382f;
-}
-
-.teaser3-dialog-btn-primary:focus-visible {
-  outline: 2px solid var(--ink, #24211f);
-  outline-offset: 2px;
-}
-
-.teaser3-dialog-btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.teaser3-dialog-btn-arrow {
-  display: inline-flex;
-  transition: transform 0.18s ease;
-}
-
-.teaser3-dialog-btn-primary:hover:not(:disabled) .teaser3-dialog-btn-arrow {
-  transform: translateX(3px);
-}
-
-.teaser3-dialog-spinner {
-  animation: teaser3DialogSpin 1s linear infinite;
-}
-
-/* Compact Privacy Information */
-.teaser3-dialog-privacy {
-  font-family: var(--tf-font-sans);
-  font-size: 12.5px;
-  line-height: 1.4;
-  color: var(--tf-color-text-secondary);
-  text-align: left;
-  margin-top: 14px;
-  margin-bottom: 0;
-}
-
-/* Exit Offer Action Row */
-.teaser3-dialog-exit-actions {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 6px;
+.teaser3-waitlist-form {
   margin-top: 4px;
 }
 
-/* Secondary Action Button: "Not now", neutral, comfortably tappable */
-.teaser3-dialog-btn-secondary {
-  height: 44px;
+.teaser3-form-group {
+  margin-bottom: 14px;
+}
+
+.teaser3-form-label {
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.teaser3-form-input {
   width: 100%;
-  background: transparent;
-  border: none;
+  min-height: 48px;
+  border: 1px solid #cfc6ba;
+  background: #ffffff;
+  padding: 10px 16px;
   border-radius: 9999px;
-  font-family: var(--tf-font-sans);
-  font-size: 14.5px;
-  font-weight: 500;
-  color: var(--tf-color-text-secondary);
+  color: var(--ink);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+}
+
+.teaser3-form-input:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(36, 33, 31, 0.12);
+}
+
+.teaser3-form-input.has-error {
+  border-color: #d32f2f;
+  background: #fff8f8;
+}
+
+.teaser3-form-error {
+  font-size: 12px;
+  color: #d32f2f;
+  margin-top: 6px;
+}
+
+/* MODAL CTA BUTTON: Strictly dark ink (#24211f), completely round (9999px) */
+.teaser3-form-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 8px;
+  background: #24211f !important;
+  border: 1px solid #24211f !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  box-sizing: border-box;
+}
+
+.teaser3-form-submit:hover:not(:disabled) {
+  background: #42382f !important;
+  border-color: #42382f !important;
+  transform: translateY(-1px);
+}
+
+.teaser3-form-submit:disabled {
+  background: rgba(36, 33, 31, 0.45) !important;
+  border-color: transparent !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.teaser3-reassurance {
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 14px;
+  color: #706a65;
+  text-align: center;
+}
+
+/* ==========================================================================
+   MODAL CONFIRMATION & OPTIONAL SURVEY
+   ========================================================================== */
+
+.teaser3-modal-confirmed {
+  padding: 40px 32px;
+}
+
+.teaser3-modal-confirmed .teaser3-modal-eyebrow {
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-family: var(--font) !important;
+}
+
+.teaser3-modal-confirmed h2 {
+  font-size: 30px;
+  line-height: 1.15;
+  color: var(--ink);
+  font-family: var(--font) !important;
+}
+
+.teaser3-confirm-lead {
+  font-size: 14px;
+  margin-top: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.teaser3-perks-confirmed {
+  margin: 20px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.teaser3-perk-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.teaser3-check-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #24211f;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.teaser3-survey-invite-card {
+  background: #f1ede8;
+  border: 1px solid #ded6cc;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.teaser3-survey-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #8A7768;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.teaser3-survey-invite-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.teaser3-survey-invite-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.teaser3-survey-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.teaser3-btn-primary-12 {
+  flex: 1;
+  min-height: 42px;
+  border-radius: 9999px;
+  background: #24211f;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  gap: 6px;
+  transition: background 0.15s ease;
 }
 
-.teaser3-dialog-btn-secondary:hover {
-  color: var(--tf-color-text-primary);
-  background-color: rgba(0, 0, 0, 0.04);
+.teaser3-btn-primary-12:hover {
+  background: #42382f;
 }
 
-.teaser3-dialog-btn-secondary:focus-visible {
-  outline: 2px solid var(--tf-color-focus-ring);
-  outline-offset: 2px;
-}
-
-/* Perks List for Confirmed & Already Registered Views */
-.teaser3-dialog-perks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
-  width: 100%;
-}
-
-.teaser3-dialog-perk-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--tf-font-sans);
-  font-size: 14.5px;
-  color: var(--tf-color-text-primary);
-  text-align: left;
-}
-
-.teaser3-dialog-check-icon {
-  color: var(--tf-color-accent-brown);
-  flex-shrink: 0;
-}
-
-/* Optional Survey Invite Card (Confirmed & Already Registered) */
-.teaser3-survey-invite-card {
-  margin-top: 6px;
-  margin-bottom: 8px;
-  padding: 16px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(217, 107, 115, 0.06) 0%, rgba(248, 245, 240, 0.95) 100%);
-  border: 1px solid rgba(217, 107, 115, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  text-align: left;
-}
-
-.teaser3-survey-invite-badge {
-  display: inline-block;
-  font-family: var(--tf-font-sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #a84b54;
-  margin-bottom: 6px;
-}
-
-.teaser3-survey-invite-title {
-  font-family: var(--tf-font-sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1816;
-  margin: 0 0 4px 0;
-  line-height: 1.3;
-}
-
-.teaser3-survey-invite-desc {
-  font-family: var(--tf-font-sans);
+.teaser3-btn-secondary-12 {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid #d9cfc4;
+  color: var(--ink);
   font-size: 13px;
-  color: #665f58;
-  margin: 0;
-  line-height: 1.42;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.teaser3-survey-invite-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+.teaser3-survey-content {
+  padding: 40px 32px;
 }
 
-.teaser3-survey-start-btn {
-  margin: 0;
-}
-
-.teaser3-survey-done-btn {
-  height: 38px;
-}
-
-/* Survey Form & Options */
-.teaser3-dialog-content.is-survey-mode {
-  max-width: 520px;
-}
-
-.teaser3-survey-inner {
-  padding-bottom: 8px;
-}
-
-.teaser3-survey-header {
-  margin-bottom: 20px;
+.teaser3-survey-sub {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin-top: 6px;
+  margin-bottom: 24px;
 }
 
 .teaser3-survey-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%;
 }
 
 .teaser3-survey-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  text-align: left;
 }
 
-.teaser3-survey-group-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.teaser3-survey-label {
-  font-family: var(--tf-font-sans);
-  font-size: 13.5px;
+.teaser3-survey-q-label {
+  font-size: 13px;
   font-weight: 600;
-  color: #2b2723;
-  letter-spacing: -0.01em;
-}
-
-.teaser3-survey-subhint {
-  font-family: var(--tf-font-sans);
-  font-size: 12px;
-  color: #888078;
+  color: var(--ink);
 }
 
 .teaser3-survey-chips {
@@ -1514,252 +1553,41 @@
 .teaser3-survey-chip {
   padding: 8px 14px;
   border-radius: 9999px;
-  border: 1px solid #e5e0da;
-  background-color: #faf8f5;
-  color: #4b453e;
-  font-family: var(--tf-font-sans);
-  font-size: 13px;
-  font-weight: 500;
+  border: 1px solid #d9cfc4;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12.5px;
   cursor: pointer;
-  transition: all 0.16s ease;
-  outline: none;
-}
-
-.teaser3-survey-chip:hover {
-  background-color: #f1ede8;
-  border-color: #d6cfc7;
-  color: #1a1816;
+  transition: all 0.15s;
 }
 
 .teaser3-survey-chip.is-selected {
-  background-color: #1e1d1b;
-  border-color: #1e1d1b;
-  color: #ffffff;
+  background: #24211f;
+  color: #fff;
+  border-color: #24211f;
   font-weight: 600;
 }
 
-.teaser3-survey-cards {
+.teaser3-survey-submit-actions {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.teaser3-survey-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid #e5e0da;
-  background-color: #ffffff;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.16s ease;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
+.teaser3-spinner {
+  animation: teaser3Spin 1s linear infinite;
 }
 
-.teaser3-survey-card:hover {
-  border-color: #d4cdbf;
-  background-color: #faf8f6;
-}
-
-.teaser3-survey-card.is-selected {
-  border-color: #b8525b;
-  background: linear-gradient(135deg, rgba(217, 107, 115, 0.06) 0%, rgba(255, 252, 250, 0.95) 100%);
-}
-
-.teaser3-survey-card-check {
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  border-radius: 6px;
-  border: 1.5px solid #d0c9c0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: transparent;
-  margin-top: 2px;
-  transition: all 0.16s ease;
-}
-
-.teaser3-survey-card.is-selected .teaser3-survey-card-check {
-  background-color: #b8525b;
-  border-color: #b8525b;
-  color: #ffffff;
-}
-
-.teaser3-survey-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.teaser3-survey-card-text strong {
-  font-family: var(--tf-font-sans);
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #1a1816;
-}
-
-.teaser3-survey-card-text small {
-  font-family: var(--tf-font-sans);
-  font-size: 12px;
-  color: #6a645d;
-  line-height: 1.35;
-}
-
-.teaser3-survey-form-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-/* ==========================================================================
-   MOBILE FLOATING MODAL CARD (< 860px)
-   Maintains comfortable lateral margins (18px each side) with full rounded corners
-   ========================================================================== */
-@media (max-width: 860px) {
-  .teaser3-dialog-content {
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    width: calc(100% - 36px);
-    max-width: 440px;
-    max-height: calc(100dvh - 48px);
-    border-radius: 24px;
-    padding: 28px 22px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-    animation: teaser3DialogScaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .teaser3-dialog-inner {
-    padding-bottom: 0;
-  }
-
-  .teaser3-dialog-title {
-    font-size: 24px;
-    line-height: 1.15;
-  }
-
-  .teaser3-dialog-close {
-    top: 12px;
-    right: 12px;
-  }
-}
-
-/* Compact screens or landscape mobile (e.g. 360x640, short height) */
-@media (max-width: 860px) and (max-height: 720px) {
-  .teaser3-dialog-content {
-    padding-top: 22px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 10px));
-  }
-
-  .teaser3-dialog-title {
-    font-size: 23px;
-    margin-bottom: 6px;
-  }
-
-  .teaser3-dialog-desc {
-    font-size: 14px;
-    line-height: 1.42;
-    margin-bottom: 10px;
-  }
-
-  .teaser3-dialog-condition {
-    padding: 8px 12px;
-    margin-bottom: 12px;
-  }
-
-  .teaser3-dialog-condition p {
-    font-size: 12.5px;
-    line-height: 1.38;
-  }
-
-  .teaser3-dialog-field {
-    margin-bottom: 10px;
-  }
-
-  .teaser3-dialog-input {
-    height: 48px;
-  }
-
-  .teaser3-dialog-btn-primary {
-    height: 48px;
-  }
-
-  .teaser3-dialog-privacy {
-    margin-top: 10px;
-    font-size: 12px;
-  }
-}
-
-/* Narrow mobile screens (< 360px) */
-@media (max-width: 360px) {
-  .teaser3-dialog-content {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .teaser3-dialog-title {
-    font-size: 22px;
-  }
-}
-
-/* ==========================================================================
-   KEYFRAME ANIMATIONS & REDUCED MOTION
-   ========================================================================== */
-@keyframes teaser3DialogFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes teaser3DialogScaleIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -47%) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes teaser3DialogSheetSlideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes teaser3DialogSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes teaser3Spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .teaser3-dialog-overlay,
   .teaser3-dialog-content,
-  .teaser3-dialog-btn-arrow,
-  .teaser3-dialog-spinner {
+  .teaser3-form-submit,
+  .teaser3-spinner {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -2039,8 +1867,9 @@
   margin: 0 0 16px 0;
 }
 
+.teaser3-root .teaser3-title-accent,
 .teaser3-title-accent {
-  color: var(--tf-color-accent-brown);
+  color: #8A7768 !important;
 }
 
 .teaser3-section-lead {
@@ -3601,8 +3430,9 @@
   color: #141210;
 }
 
+.teaser3-root .teaser3-brand-accent,
 .teaser3-brand-accent {
-  color: #68422F;
+  color: #8A7768 !important;
 }
 
 .teaser3-brand-desc {
