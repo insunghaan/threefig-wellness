@@ -79,28 +79,34 @@
   width: 100%;
   height: 62px;
   z-index: 100;
-  background: rgba(250, 248, 245, 0.92);
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.teaser3-root .teaser3-sticky-header.is-top {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+}
+
+.teaser3-root .teaser3-sticky-header.is-scrolled {
+  background: rgba(250, 248, 245, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(20, 19, 18, 0.07);
   box-shadow: 0 4px 20px rgba(20, 19, 18, 0.03);
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-}
-
-.teaser3-root .teaser3-sticky-header.is-scrolled {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .teaser3-root .teaser3-sticky-inner {
   height: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 4vw, 36px);
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 clamp(36px, 4.2vw, 64px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -118,7 +124,7 @@
 
 .teaser3-root .teaser3-sticky-logo-img {
   display: block;
-  width: clamp(74px, 7vw, 84px);
+  width: clamp(74px, 7vw, 80px);
   height: auto;
   object-fit: contain;
 }
@@ -255,10 +261,34 @@
   cursor: pointer;
 }
 
-/* Responsive Breakpoints for Sticky Header */
+/* Responsive Breakpoints & States for Header */
+@media (min-width: 861px) {
+  .teaser3-root .teaser3-sticky-nav,
+  .teaser3-root .teaser3-sticky-cta {
+    transition: opacity 0.25s ease;
+  }
+  .teaser3-root .teaser3-sticky-header.is-top .teaser3-sticky-nav,
+  .teaser3-root .teaser3-sticky-header.is-top .teaser3-sticky-cta {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .teaser3-root .teaser3-sticky-header.is-scrolled .teaser3-sticky-nav,
+  .teaser3-root .teaser3-sticky-header.is-scrolled .teaser3-sticky-cta {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 @media (max-width: 860px) {
   .teaser3-root .teaser3-sticky-header {
-    height: 54px;
+    height: max(56px, calc(46px + env(safe-area-inset-top, 0px)));
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .teaser3-root .teaser3-sticky-inner {
+    padding: 0 clamp(20px, 5.5vw, 28px);
+  }
+  .teaser3-root .teaser3-sticky-logo-img {
+    width: clamp(76px, 20vw, 84px);
   }
   .teaser3-root .teaser3-sticky-nav {
     display: none;
@@ -268,6 +298,8 @@
   }
   .teaser3-root .teaser3-sticky-menu-btn {
     display: inline-flex;
+    width: 44px;
+    height: 44px;
   }
 }
 
@@ -295,17 +327,18 @@
   justify-content: space-between;
   box-sizing: border-box;
   position: relative;
-  /* Fluid horizontal inset */
+  /* Fluid horizontal inset: exact match with header */
   padding-left: clamp(36px, 4.2vw, 64px);
   padding-right: clamp(16px, 2vw, 32px);
-  padding-top: clamp(24px, 3.5vh, 40px);
+  padding-top: 0;
   padding-bottom: clamp(24px, 3.5vh, 40px);
   overflow: hidden;
 }
 
-/* Header & Logo Placement */
+/* Header & Logo Placement: Vertically aligns with fixed header at top */
 .teaser3-header {
   width: 100%;
+  height: 62px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -320,12 +353,13 @@
   line-height: 0;
 }
 
-/* Fluid Logo Width: clamp(100px, 9vw, 155px) */
+/* Fluid Logo Width: Matched exactly to header logo (74-80px) */
 .teaser3-desktop-logo-img {
   display: block;
-  width: clamp(100px, 9vw, 155px);
+  width: clamp(74px, 7vw, 80px);
   height: auto;
   object-fit: contain;
+  visibility: hidden; /* Retains 62px layout spacing while top transparent header displays single logo */
 }
 
 /* ==========================================================================
@@ -501,18 +535,20 @@
   margin: 0;
 }
 
-/* Right Column: 55% Hero Media Panel (Rounded Rectangle Card Matching Image 2) */
+/* Right Column: 55% Hero Media Panel (100px Margin on Top, Bottom, and Right) */
 .teaser3-video-col {
   flex: 0 0 55%;
   width: 55%;
-  min-width: 420px;
   height: 100%;
   position: relative;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: clamp(16px, 2.5vh, 28px) clamp(20px, 2.5vw, 36px);
+  justify-content: flex-end;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-right: 100px;
+  padding-left: clamp(16px, 2vw, 32px);
   background-color: var(--tf-color-surface-light);
 }
 
@@ -521,9 +557,9 @@
   align-items: center;
   justify-content: center;
   width: auto;
-  height: auto;
-  max-width: min(100%, 640px);
-  max-height: calc(100vh - clamp(36px, 5.5vh, 64px));
+  height: 100%;
+  max-height: calc(100vh - 200px);
+  max-width: 100%;
   aspect-ratio: 910 / 1024;
   border-radius: clamp(26px, 2.5vw, 34px);
   overflow: hidden;
@@ -553,25 +589,19 @@
   height: 100dvh;
   max-height: 100dvh;
   flex-direction: column;
+  justify-content: flex-end; /* 히어로이미지와 타이틀 묶음이 화면 하단에 맞춰짐 */
   background-color: var(--tf-color-surface-light);
   overflow: hidden;
   box-sizing: border-box;
-  padding: 0;
+  padding-top: max(56px, calc(46px + env(safe-area-inset-top, 0px)));
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
   margin: 0;
   position: relative;
 }
 
-/* Mobile Header Container: Logo near top, safe-area aware */
+/* Mobile Header Container: Hidden because top fixed transparent header is the active header */
 .teaser3-mobile-header-container {
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
-  padding-top: max(16px, env(safe-area-inset-top, 16px));
-  padding-left: clamp(20px, 5.5vw, 28px);
-  padding-right: clamp(20px, 5.5vw, 28px);
-  flex-shrink: 0;
-  z-index: 20;
-  position: relative;
+  display: none !important;
 }
 
 /* Header Interactive Row: Vertically Centered Logo + Menu Control */
@@ -625,8 +655,8 @@
 }
 
 .teaser3-menu-icon {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
@@ -682,14 +712,14 @@
   }
 }
 
-/* Flexible Space: Absorbs vertical space between header and copy on tall viewports */
+/* Flexible Space: Absorbs upper space so title & hero card anchor to bottom */
 .teaser3-mobile-flex-spacer {
-  flex: 0 1 clamp(16px, 3vh, 32px);
-  min-height: clamp(12px, 2vh, 24px);
+  flex: 1 1 auto;
+  min-height: 8px;
   width: 100%;
 }
 
-/* Mobile Content Group: Headline & description matching Image 1 reference proportions */
+/* Mobile Content Group: Headline & description positioned seamlessly above hero card */
 .teaser3-mobile-content-group {
   flex-shrink: 0;
   box-sizing: border-box;
@@ -697,7 +727,7 @@
   padding-left: clamp(20px, 5.5vw, 28px);
   padding-right: clamp(20px, 5.5vw, 28px);
   margin: 0;
-  margin-bottom: clamp(14px, 2.8vh, 22px);
+  margin-bottom: clamp(10px, 2vh, 16px);
 }
 
 /* Mobile Headline */
@@ -726,14 +756,14 @@
   width: 100%;
 }
 
-/* Mobile Video Container: Card with rounded rectangle, matching Image 1 4:4.96 proportions */
+/* Mobile Video Container: Card with rounded rectangle, anchored to bottom */
 .teaser3-mobile-media-col {
   position: relative;
   width: calc(100% - clamp(32px, 8vw, 44px));
   max-width: calc(100vw - 32px);
-  margin: 0 auto clamp(20px, 4vh, 36px) auto;
+  margin: 0 auto;
   aspect-ratio: 371 / 460;
-  max-height: calc(100dvh - clamp(230px, 30vh, 280px));
+  max-height: calc(100dvh - clamp(210px, 28vh, 260px));
   flex-shrink: 1;
   overflow: hidden;
   border-radius: clamp(24px, 5.5vw, 30px);
