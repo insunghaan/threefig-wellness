@@ -218,11 +218,16 @@ export function Teaser4WaitlistDialog({
             <div className="teaser4-modal-grid">
               {/* Desktop Left Aside: Background Image + Semi-transparent dark overlay + Benefits */}
               <aside className="teaser4-modal-aside" aria-hidden="true">
-                <img
-                  src="/images/teaser4/modal-aside-desktop.png"
-                  alt=""
-                  className="teaser4-modal-aside-bg"
-                />
+                <picture>
+                  <source type="image/webp" srcSet="/images/teaser4/modal-aside-desktop.webp" />
+                  <img
+                    src="/images/teaser4/modal-aside-desktop.png"
+                    alt=""
+                    className="teaser4-modal-aside-bg"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
                 {/* Semi-transparent dark overlay for high text contrast */}
                 <div className="teaser4-modal-aside-overlay" />
 
@@ -245,11 +250,16 @@ export function Teaser4WaitlistDialog({
 
               {/* Mobile-Only Top Banner Header: Swapped landscape image with dark overlay */}
               <div className="teaser4-modal-banner-header" aria-hidden="true">
-                <img
-                  src="/images/teaser4/modal-banner-mobile.png"
-                  alt=""
-                  className="teaser4-modal-banner-img"
-                />
+                <picture>
+                  <source type="image/webp" srcSet="/images/teaser4/modal-banner-mobile.webp" />
+                  <img
+                    src="/images/teaser4/modal-banner-mobile.png"
+                    alt=""
+                    className="teaser4-modal-banner-img"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </picture>
                 {/* Semi-transparent dark overlay for high text contrast */}
                 <div className="teaser4-modal-banner-overlay" />
 

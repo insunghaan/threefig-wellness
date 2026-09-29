@@ -12,7 +12,9 @@
    - Hero visual: Anchored cleanly at screen bottom (ref: 3fig.io/teaser3)
    - Mobile CTA: Floating bar over bottom image
    - Modal: No pink buttons, dark ink CTA matching page, full-width top banner
-   ========================================================================== */
+body:has(.teaser4-root) {
+  background: #f8f5f0 !important;
+}
 
 .teaser4-root {
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -131,15 +133,27 @@
 }
 
 .teaser4-root .skip {
-  position: fixed;
-  top: -80px;
-  background: white;
-  padding: 10px;
-  z-index: 100;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .teaser4-root .skip:focus {
-  top: 0;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  height: auto;
+  clip: auto;
+  white-space: normal;
+  background: white;
+  padding: 10px;
+  z-index: 9999;
 }
 
 /* ==========================================================================
@@ -1077,7 +1091,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: var(--peach);
+  background: #8a7768;
 }
 
 .teaser4-root .offer > div {
@@ -1090,7 +1104,7 @@
 }
 
 .teaser4-root .offer .eyebrow {
-  color: #824b2c;
+  color: #f4d1b7;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -1099,13 +1113,14 @@
   font-size: clamp(38px, 4vw, 58px);
   text-align: center;
   line-height: 1.08;
+  color: #ffffff;
 }
 
 .teaser4-root .offer > div > p:not(.eyebrow):not(.offer-fine) {
   max-width: 48ch;
   font-size: 15px;
   margin-top: 22px;
-  color: #77533d;
+  color: #f4eee9;
   text-align: center;
   line-height: 1.6;
 }
@@ -1116,16 +1131,28 @@
   gap: 16px;
   border-radius: 9999px !important;
   padding: 16px 36px;
+  background: #ffffff !important;
+  color: #24211f !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(36, 33, 31, 0.16);
+  transition: all 0.2s ease;
+}
+
+.teaser4-root .offer .button:hover {
+  background: #f8f5f0 !important;
+  transform: translateY(-1px);
 }
 
 .teaser4-root .offer .button span {
   font-size: 20px;
+  font-weight: 600;
+  color: #24211f !important;
 }
 
 .teaser4-root .offer .offer-fine {
   font-size: 12px !important;
   margin-top: 16px !important;
-  color: #824b2c;
+  color: #e2d7ce;
   text-align: center;
 }
 
@@ -1872,8 +1899,11 @@
   }
   .teaser4-root .site-header.is-top {
     background: transparent !important;
+    border-bottom: 1px solid transparent !important;
     border-bottom-color: transparent !important;
     box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
   .teaser4-root .site-header.is-top .header-cta-btn {
     opacity: 0 !important;
@@ -1882,6 +1912,8 @@
   .teaser4-root .site-header.is-scrolled {
     background: rgba(248, 245, 240, 0.96) !important;
     border-bottom: 1px solid var(--line) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
   }
   .teaser4-root .site-header .logo {
     width: 62px;
@@ -1905,8 +1937,8 @@
     height: auto;
     min-height: auto;
     max-height: none;
-    padding: 0;
-    margin: 56px 0 0 0;
+    padding: 56px 0 0 0;
+    margin: 0;
     overflow: visible;
     box-sizing: border-box;
   }
@@ -1932,41 +1964,7 @@
     letter-spacing: 0.12em;
     font-family: var(--font) !important;
   }
-  .teaser4-root .hero {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    height: auto;
-    min-height: auto;
-    max-height: none;
-    padding: 0;
-    margin: 56px 0 0 0;
-    overflow: visible;
-    box-sizing: border-box;
-  }
-  .teaser4-root .hero-copy {
-    padding: 12px 20px 6px;
-    text-align: left;
-    flex-shrink: 0;
-    box-sizing: border-box;
-  }
-  .teaser4-root .hero-a h1,
-  .teaser4-root .hero-a h1 *,
-  .teaser4-root .hero-subline {
-    font-size: clamp(28px, 7.8vw, 36px);
-    line-height: 1.06;
-    letter-spacing: -0.035em;
-    font-family: var(--font) !important;
-    font-style: normal !important;
-    margin-bottom: 5px;
-  }
-  .teaser4-root .hero .eyebrow {
-    font-size: 10px;
-    margin-bottom: 5px;
-    letter-spacing: 0.12em;
-    font-family: var(--font) !important;
-  }
+
   .teaser4-root .hero-lead {
     font-size: 13px;
     line-height: 1.4;
@@ -2025,9 +2023,14 @@
     padding: 12px 20px calc(18px + env(safe-area-inset-bottom, 0px));
     background: linear-gradient(to top, rgba(248, 245, 240, 0.98) 75%, rgba(248, 245, 240, 0) 100%);
     pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease;
+    transform: translateY(0);
+    opacity: 1;
   }
   .teaser4-root .teaser4-floating-dock.is-hidden {
-    display: none !important;
+    transform: translateY(120%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
   .teaser4-root .floating-dock-btn {
     pointer-events: auto;
@@ -2152,133 +2155,76 @@
   .teaser4-root .dash-bottom .arrow {
     font-size: 18px;
   }
-  /* Outcomes Mobile Carousel */
+  /* Outcomes Mobile: Vertical scroll layout matching HOW IT WORKS below */
   .teaser4-root .outcome-desktop-list {
-    display: none;
-  }
-
-  .teaser4-root .outcome-mobile-carousel {
-    display: block;
-    position: relative;
-    width: 100%;
-    margin-top: 28px;
-  }
-
-  .teaser4-root .outcome-carousel-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    gap: 16px;
-    padding: 8px 24px 16px;
-    scrollbar-width: none;
-  }
-
-  .teaser4-root .outcome-carousel-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .teaser4-root .outcome-carousel-slide {
-    flex: 0 0 86%;
-    max-width: 340px;
-    scroll-snap-align: center;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 48px;
+    margin-top: 36px;
   }
 
-  .teaser4-root .outcome-carousel-slide .outcome-copy {
+  .teaser4-root .outcome {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .teaser4-root .outcome:nth-child(2) .outcome-copy {
+    order: 0;
+  }
+
+  .teaser4-root .outcome-copy {
     text-align: left;
   }
 
-  .teaser4-root .outcome-carousel-slide .outcome-copy .number {
-    font-size: 9px;
+  .teaser4-root .outcome-copy .number {
+    font-size: 10px;
     letter-spacing: 0.12em;
     color: var(--accent);
-    font-weight: 600;
     margin-bottom: 8px;
-    display: block;
+    font-weight: 600;
   }
 
-  /* Ensure all 3 titles have natural 2-line wrap and identical height */
-  .teaser4-root .outcome-carousel-slide .outcome-title {
-    font-size: 22px;
+  .teaser4-root .outcome-copy h3,
+  .teaser4-root .outcome-title {
+    font-size: 24px;
     font-weight: 600;
-    letter-spacing: -0.025em;
     line-height: 1.25;
+    letter-spacing: -0.025em;
     color: var(--ink);
-    min-height: calc(22px * 1.25 * 2); /* Exactly 2 lines height */
     margin: 0;
   }
 
-  .teaser4-root .outcome-carousel-slide .outcome-copy p {
-    font-size: 13px;
+  .teaser4-root .outcome-copy p {
+    font-size: 14px;
     color: var(--muted);
-    line-height: 1.55;
+    line-height: 1.6;
     margin-top: 10px;
+    max-width: 42ch;
   }
 
-  .teaser4-root .outcome-carousel-slide .outcome-copy .secondary {
-    font-size: 11.5px;
+  .teaser4-root .outcome-copy .secondary {
+    font-size: 12px;
     color: #8e8a82;
     margin-top: 6px;
   }
 
-  /* Clean component card without background image */
-  .teaser4-root .outcome-carousel-slide .outcome-card-visual {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    display: flex;
-    justify-content: center;
-  }
-
-  .teaser4-root .outcome-carousel-slide .outcome-component-img {
+  .teaser4-root .outcome-card-visual {
     width: 100%;
-    max-width: 310px;
-    height: auto;
-    display: block;
-    border-radius: 20px;
-    filter: drop-shadow(0 12px 28px rgba(44, 30, 22, 0.09));
-  }
-
-  /* TIGHTLY SPACED PAGINATION DOTS */
-  .teaser4-root .outcome-carousel-dots {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 7px; /* Narrow spacing requested by user */
-    margin-top: 18px;
-    padding-bottom: 16px;
-  }
-
-  .teaser4-root .outcome-carousel-dot {
-    background: transparent;
-    border: none;
-    padding: 4px;
-    margin: 0;
-    cursor: pointer;
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    background: none !important;
   }
 
-  .teaser4-root .outcome-carousel-dot::before {
-    content: "";
-    display: block;
-    width: 6.5px;
-    height: 6.5px;
-    border-radius: 50%;
-    background-color: #d8d2c8;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .teaser4-root .outcome-carousel-dot.is-active::before {
-    width: 20px;
-    border-radius: 4px;
-    background-color: #c47b59;
+  .teaser4-root .outcome-component-img {
+    width: 100%;
+    max-width: 330px;
+    height: auto;
+    border-radius: 20px;
+    filter: drop-shadow(0 12px 28px rgba(44, 30, 22, 0.08));
   }
 
   /* Ensure all pagination dots on the page have tightened, narrow spacing */
@@ -2465,22 +2411,22 @@
     padding: 0 0 18px 0;
   }
 
-  /* Offer on Mobile: keep current version */
+  /* Offer on Mobile: Title accent color #8a7768 */
   .teaser4-root .offer {
     padding: 60px 16px;
     background: transparent;
   }
   .teaser4-root .offer > div {
-    background: var(--card-bg);
-    border: var(--card-border);
+    background: #8a7768;
+    border: none;
     border-radius: 24px;
-    box-shadow: 0 24px 64px rgba(89, 67, 45, 0.06);
+    box-shadow: 0 24px 64px rgba(89, 67, 45, 0.12);
     padding: 44px 22px;
     max-width: 100%;
     width: 100%;
   }
   .teaser4-root .offer .eyebrow {
-    color: var(--accent);
+    color: #f4d1b7;
     margin-bottom: 16px;
     text-align: center;
   }
@@ -2488,14 +2434,14 @@
     font-size: 30px;
     line-height: 1.15;
     font-weight: 600;
-    color: var(--ink);
+    color: #ffffff;
     letter-spacing: -0.03em;
     text-align: center;
   }
   .teaser4-root .offer > div > p:not(.eyebrow):not(.offer-fine) {
     font-size: 14px;
     margin-top: 14px;
-    color: var(--muted);
+    color: #f4eee9;
     line-height: 1.65;
     text-align: center;
   }
@@ -2506,19 +2452,24 @@
     justify-content: center;
     gap: 16px;
     border-radius: var(--radius-pill) !important;
-    background: var(--ink);
-    color: #ffffff;
+    background: #ffffff !important;
+    color: #24211f !important;
+    border-color: #ffffff !important;
     padding: 16px 26px;
-    box-shadow: 0 8px 24px rgba(36, 33, 31, 0.12);
+    box-shadow: 0 8px 24px rgba(36, 33, 31, 0.18);
+  }
+  .teaser4-root .offer .button:hover {
+    background: #f8f5f0 !important;
   }
   .teaser4-root .offer .button span {
     font-size: 16px;
     font-weight: 600;
+    color: #24211f !important;
   }
   .teaser4-root .offer .offer-fine {
     font-size: 11px !important;
     margin-top: 14px !important;
-    color: #8e8a82;
+    color: #e2d7ce;
     text-align: center;
   }
   .teaser4-root footer {

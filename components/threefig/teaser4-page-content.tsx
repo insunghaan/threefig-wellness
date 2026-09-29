@@ -39,80 +39,30 @@ const OUTCOMES_ITEMS = [
 export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: boolean }) {
   const [signupOpen, setSignupOpen] = useState(initialOpen);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  // What You Get Mobile Carousel state
-  const [activeOutcomeIdx, setActiveOutcomeIdx] = useState(0);
-  const outcomesTrackRef = useRef<HTMLDivElement | null>(null);
-  const touchStartXRef = useRef<number>(0);
-  const touchStartYRef = useRef<number>(0);
-  const isSwipingRef = useRef<boolean>(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
+    // Preload modal images on initial load for instant 0ms popup display
+    const p1 = new Image();
+    p1.src = "/images/teaser4/modal-aside-desktop.webp";
+    const p2 = new Image();
+    p2.src = "/images/teaser4/modal-banner-mobile.webp";
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 30);
+
+      // Hide mobile floating CTA when reaching page bottom, reveal when scrolling up
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const atBottom = windowHeight + scrollY >= documentHeight - 120;
+      setIsAtBottom(atBottom);
     };
+
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const handleOutcomesScroll = () => {
-    const el = outcomesTrackRef.current;
-    if (!el) return;
-    const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "20");
-    const scrollLeft = el.scrollLeft;
-
-    let closestIdx = 0;
-    let minDiff = Infinity;
-    for (let i = 0; i < el.children.length; i++) {
-      const child = el.children[i] as HTMLElement;
-      const target = child.offsetLeft - paddingLeft;
-      const diff = Math.abs(target - scrollLeft);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
-      }
-    }
-    if (closestIdx !== activeOutcomeIdx) {
-      setActiveOutcomeIdx(closestIdx);
-    }
-  };
-
-  const scrollToOutcomeSlide = (idx: number) => {
-    const el = outcomesTrackRef.current;
-    if (!el) return;
-    const slideEl = el.children[idx] as HTMLElement | undefined;
-    if (slideEl) {
-      const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "20");
-      const targetScroll = slideEl.offsetLeft - paddingLeft;
-      el.scrollTo({
-        left: Math.max(0, targetScroll),
-        behavior: "smooth",
-      });
-      setActiveOutcomeIdx(idx);
-    }
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchStartYRef.current = e.touches[0].clientY;
-    isSwipingRef.current = true;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isSwipingRef.current) return;
-    isSwipingRef.current = false;
-    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
-      if (deltaX < 0 && activeOutcomeIdx < OUTCOMES_ITEMS.length - 1) {
-        scrollToOutcomeSlide(activeOutcomeIdx + 1);
-      } else if (deltaX > 0 && activeOutcomeIdx > 0) {
-        scrollToOutcomeSlide(activeOutcomeIdx - 1);
-      }
-    }
-  };
 
   const openSignup = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
@@ -143,7 +93,7 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
 
   return (
     <div className="teaser4-root">
-      <a href="#main" className="skip">
+      <a href="#main" className="skip" style={{ position: "absolute", left: "-9999px", top: "-9999px" }}>
         Skip to main content
       </a>
 
@@ -393,69 +343,6 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
               </article>
             ))}
           </div>
-
-          {/* Mobile carousel with natural 2-line wrapped titles & tight pagination dots */}
-          <div className="outcome-mobile-carousel">
-            <div
-              ref={outcomesTrackRef}
-              className="outcome-carousel-track"
-              onScroll={handleOutcomesScroll}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              {OUTCOMES_ITEMS.map((item, idx) => {
-                const isActive = activeOutcomeIdx === idx;
-                return (
-                  <div
-                    key={item.num}
-                    className={`outcome-carousel-slide ${isActive ? "is-active" : ""}`}
-                  >
-                    <div className="outcome-copy">
-                      <span className="number">{item.num}</span>
-                      <h3 className="outcome-title">
-                        {item.titleLine1} <br />
-                        {item.titleLine2}
-                      </h3>
-                      <p>{item.desc}</p>
-                      <p className="secondary">{item.secondary}</p>
-                    </div>
-                    <div className="outcome-card-visual">
-                      <picture>
-                        <source type="image/webp" srcSet={item.imageWebp} />
-                        <img
-                          src={item.imagePng}
-                          alt={item.alt}
-                          className="outcome-component-img"
-                          width={400}
-                          height={400}
-                          loading="lazy"
-                        />
-                      </picture>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Mobile Pagination Dots */}
-            <div
-              className="outcome-carousel-dots"
-              role="tablist"
-              aria-label="What You Get navigation"
-            >
-              {OUTCOMES_ITEMS.map((item, idx) => (
-                <button
-                  key={item.num}
-                  type="button"
-                  role="tab"
-                  className={`outcome-carousel-dot ${activeOutcomeIdx === idx ? "is-active" : ""}`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  aria-selected={activeOutcomeIdx === idx}
-                  onClick={() => scrollToOutcomeSlide(idx)}
-                />
-              ))}
-            </div>
-          </div>
         </section>
 
         {/* HOW IT WORKS */}
@@ -682,9 +569,9 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
         <small>© 2026 3fig</small>
       </footer>
 
-      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content) */}
+      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, hides at the bottom of the page) */}
       <aside
-        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : "is-visible"}`}
+        className={`teaser4-floating-dock ${signupOpen || isAtBottom ? "is-hidden" : "is-visible"}`}
         aria-label="Waitlist registration"
       >
         <button
