@@ -475,23 +475,6 @@ export function Teaser3Hero() {
                 Get early access
               </ThreeFigButton>
             </div>
-
-            {/* Desktop Scroll-Discovery Cue: 44-48px below CTA/count row, left-aligned */}
-            {hasNextSection && (
-              <div className="teaser3-desktop-cue-wrap">
-                <button
-                  type="button"
-                  className={`teaser3-scroll-cue teaser3-scroll-cue-desktop${isDesktopCueVisible ? "" : " is-hidden"}`}
-                  onClick={handleScrollToNext}
-                  tabIndex={isDesktopCueVisible ? 0 : -1}
-                  aria-hidden={!isDesktopCueVisible}
-                  aria-label="Scroll to discover more content below"
-                >
-                  <span>A little more below</span>
-                  <ArrowDown size={16} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
-                </button>
-              </div>
-            )}
           </div>
         </section>
 
@@ -655,28 +638,10 @@ export function Teaser3Hero() {
 
       {/* ====================================================================
           COORDINATED MOBILE OVERLAYS: Fixed to Viewport Bottom
-          - Initial landing (!hasScrolled): Centered scroll cue only
-          - After scroll (hasScrolled): Floating CTA dock (slides up)
+          - Floating CTA dock (slides up after scroll)
           ==================================================================== */}
 
-      {/* 1. Mobile Initial Scroll Cue (Centered horizontally, anchored 20px above bottom safe area) */}
-      <div
-        className={`teaser3-mobile-cue-fixed${showMobileCue ? " is-visible" : " is-hidden"}`}
-        aria-hidden={!showMobileCue}
-      >
-        <button
-          type="button"
-          className="teaser3-scroll-cue teaser3-scroll-cue-mobile"
-          onClick={handleScrollToNext}
-          tabIndex={showMobileCue ? 0 : -1}
-          aria-label="Scroll to discover more content below"
-        >
-          <span>A little more below</span>
-          <ArrowDown size={16} className="teaser3-scroll-cue-arrow" aria-hidden="true" />
-        </button>
-      </div>
-
-      {/* 2. Mobile Floating CTA Dock (Slides upward after scroll) */}
+      {/* Mobile Floating CTA Dock (Slides upward after scroll) */}
       <aside
         className={`teaser3-mobile-dock${
           isLightSurface ? " is-light-surface" : " is-dark-surface"
