@@ -560,24 +560,25 @@ export function Teaser3ValueSection() {
       aria-labelledby="value-title"
     >
       <div className="teaser3-section-container">
+        {/* Section Header: Extracted to top and centered like Meet 3FIG */}
+        <div className="teaser3-value-header">
+          <p className="teaser3-eyebrow">WHAT YOU GET</p>
+          <h2 id="value-title" className="teaser3-value-header-title">
+            Your skin today. <br />
+            <span className="teaser3-rose-accent">Your patterns over time.</span>
+          </h2>
+          <p className="teaser3-value-header-desc">
+            See your Skin Balance, the signals behind it, and what to try next.
+          </p>
+        </div>
+
         {/* ============================================================
             DESKTOP LAYOUT (3 Alternating Rows in Document Flow)
             ============================================================ */}
         <div className="teaser3-value-desktop-flow">
-          {/* Row 1: Left (Head + 01 Copy), Right (Panel 01) */}
+          {/* Row 1: Left (01 Copy), Right (Panel 01) */}
           <div className="teaser3-value-row teaser3-value-row-1">
-            <div className="teaser3-value-col-left teaser3-value-intro-col">
-              <div className="teaser3-section-head">
-                <p className="teaser3-eyebrow">WHAT YOU GET</p>
-                <h2 id="value-title" className="teaser3-section-title">
-                  Your skin today. <br />
-                  <span className="teaser3-rose-accent">Your patterns over time.</span>
-                </h2>
-                <p className="teaser3-value-lead-desc">
-                  See your Skin Balance, the signals behind it, and what to try next.
-                </p>
-              </div>
-
+            <div className="teaser3-value-col-left teaser3-value-copy-col">
               <div className="teaser3-value-copy-block">
                 <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[0].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[0].title}</h3>
@@ -664,18 +665,6 @@ export function Teaser3ValueSection() {
             MOBILE LAYOUT (1 Horizontal Carousel with Peek & Dots)
             ============================================================ */}
         <div className="teaser3-value-mobile-view">
-          {/* Stationary Section Header outside carousel */}
-          <div className="teaser3-section-head">
-            <p className="teaser3-eyebrow">WHAT YOU GET</p>
-            <h2 className="teaser3-section-title">
-              Your skin today. <br />
-              <span className="teaser3-rose-accent">Your patterns over time.</span>
-            </h2>
-            <p className="teaser3-value-lead-desc">
-              See your Skin Balance, the signals behind it, and what to try next.
-            </p>
-          </div>
-
           {/* Horizontal Carousel Track with Peek */}
           <div className="teaser3-value-mobile-carousel-wrap">
             <div
