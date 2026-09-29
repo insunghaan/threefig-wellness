@@ -21,7 +21,7 @@
   --paper: #f8f5f0;
   --line: #e8e4dc;
   --accent: #e05b34;
-  --peach: #f3eee6;
+  --peach: #f4d1b7;
   --cream: #eee8df;
   --radius-pill: 9999px;
   --card-radius: 28px;
@@ -986,22 +986,13 @@
 .teaser4-root .foundation {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
-  background: transparent;
-  border-top: 1px solid var(--line);
-  padding: 100px max(5.5%, calc((100vw - 1170px) / 2));
-  gap: 64px;
-  align-items: center;
+  background: #eae5de;
 }
 
 .teaser4-root .foundation-image {
-  min-height: 0;
-  aspect-ratio: 1.25;
-  border-radius: var(--card-radius);
-  overflow: hidden;
-  border: var(--card-border);
-  box-shadow: var(--card-shadow);
+  min-height: 620px;
 }
 
 .teaser4-root .foundation-image img {
@@ -1011,16 +1002,14 @@
 }
 
 .teaser4-root .foundation-copy {
-  padding: 20px 0;
+  padding: 70px 12%;
   align-self: center;
 }
 
 .teaser4-root .foundation-copy > p:not(.eyebrow) {
-  margin-top: 18px;
+  margin-top: 20px;
   max-width: 37ch;
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.65;
+  font-size: 14px;
 }
 
 .teaser4-root .foundation-copy dl {
@@ -1028,29 +1017,23 @@
 }
 
 .teaser4-root .foundation-copy dl > div {
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
+  padding: 15px 0;
+  border-top: 1px solid #cfc7bc;
 }
 
 .teaser4-root .foundation-copy dt {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--ink);
 }
 
 .teaser4-root .foundation-copy dd {
-  font-size: 13px;
-  margin: 4px 0 0;
+  font-size: 12px;
+  margin: 5px 0 0;
   color: var(--muted);
 }
 
 .teaser4-root .foundation-copy .button {
-  border-radius: var(--radius-pill) !important;
-  background: var(--ink);
-  color: #ffffff;
-  padding: 15px 32px;
-  font-size: 14px;
-  font-weight: 500;
+  border-radius: 9999px !important;
 }
 
 /* ==========================================================================
@@ -1061,54 +1044,41 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 70px;
-  border-top: 1px solid var(--line);
-  padding-top: 90px;
+  border-bottom: 1px solid var(--line);
 }
 
 .teaser4-root .science h2 {
-  font-size: clamp(32px, 3.2vw, 44px);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-  line-height: 1.15;
+  font-size: 43px;
 }
 
 .teaser4-root .science > div > p:not(.eyebrow) {
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.75;
+  font-size: 14px;
+  line-height: 1.9;
 }
 
 .teaser4-root .method {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-radius: 18px;
-  padding: 18px 22px;
-  box-shadow: 0 4px 16px rgba(89, 67, 45, 0.02);
-  margin-top: 14px;
+  padding-top: 19px;
+  margin-top: 19px;
+  border-top: 1px solid var(--line);
   display: grid;
-  gap: 6px;
+  gap: 7px;
+  font-size: 12px;
 }
 
 .teaser4-root .method span {
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .teaser4-root .method b {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .teaser4-root .small-print {
-  font-size: 11px !important;
-  line-height: 1.65 !important;
-  color: #8e8a82;
-  margin-top: 24px;
+  font-size: 10px !important;
+  line-height: 1.7 !important;
+  color: #857a70;
+  margin-top: 23px;
 }
 
 /* ==========================================================================
@@ -1193,23 +1163,17 @@
    ========================================================================== */
 
 .teaser4-root .offer {
-  padding: 100px max(5.5%, calc((100vw - 1170px) / 2));
+  padding: 96px max(5.5%, calc((100vw - 1170px) / 2));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: transparent;
+  background: var(--peach);
 }
 
 .teaser4-root .offer > div {
-  background: var(--card-bg);
-  border: var(--card-border);
-  border-radius: 32px;
-  box-shadow: 0 24px 64px rgba(89, 67, 45, 0.06);
-  padding: 72px 48px;
-  max-width: 820px;
-  width: 100%;
+  max-width: 640px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -1218,55 +1182,42 @@
 }
 
 .teaser4-root .offer .eyebrow {
-  color: var(--accent);
-  margin-bottom: 18px;
+  color: #824b2c;
+  margin-bottom: 20px;
   text-align: center;
 }
 
 .teaser4-root .offer h2 {
-  font-size: clamp(32px, 3.8vw, 48px);
+  font-size: clamp(38px, 4vw, 58px);
   text-align: center;
-  line-height: 1.15;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.03em;
+  line-height: 1.08;
 }
 
 .teaser4-root .offer > div > p:not(.eyebrow):not(.offer-fine) {
-  max-width: 44ch;
+  max-width: 48ch;
   font-size: 15px;
-  margin-top: 18px;
-  color: var(--muted);
+  margin-top: 22px;
+  color: #77533d;
   text-align: center;
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 .teaser4-root .offer .button {
   margin-top: 32px;
   justify-content: center;
   gap: 16px;
-  border-radius: var(--radius-pill) !important;
-  background: var(--ink);
-  color: #ffffff;
-  padding: 16px 40px;
-  box-shadow: 0 8px 24px rgba(36, 33, 31, 0.12);
-  transition: all 0.2s ease;
-}
-
-.teaser4-root .offer .button:hover {
-  background: #000000;
-  transform: translateY(-1px);
+  border-radius: 9999px !important;
+  padding: 16px 36px;
 }
 
 .teaser4-root .offer .button span {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 20px;
 }
 
 .teaser4-root .offer .offer-fine {
-  font-size: 11px !important;
+  font-size: 12px !important;
   margin-top: 16px !important;
-  color: #8e8a82;
+  color: #824b2c;
   text-align: center;
 }
 
@@ -2313,40 +2264,112 @@
     max-width: 43ch;
     margin-top: 10px;
   }
+  /* Foundation on Mobile: keep current version */
   .teaser4-root .foundation {
     grid-template-columns: 1fr;
+    background: transparent;
+    border-top: 1px solid var(--line);
+    padding: 60px 20px;
+    gap: 28px;
+    max-width: 100%;
   }
   .teaser4-root .foundation-image {
     min-height: 0;
-    aspect-ratio: 1.15;
+    aspect-ratio: 1.2;
+    border-radius: var(--card-radius-sm);
+    overflow: hidden;
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
   }
   .teaser4-root .foundation-copy {
-    padding: 39px 23px 45px;
+    padding: 0;
   }
   .teaser4-root .foundation-copy > p:not(.eyebrow) {
     max-width: 43ch;
     font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-top: 16px;
   }
   .teaser4-root .foundation-copy dl {
     margin: 25px 0;
   }
+  .teaser4-root .foundation-copy dl > div {
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+  }
+  .teaser4-root .foundation-copy dt {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .teaser4-root .foundation-copy dd {
+    font-size: 12.5px;
+    margin: 4px 0 0;
+    color: var(--muted);
+  }
   .teaser4-root .foundation-copy .button {
     width: 100%;
     max-width: 380px;
+    border-radius: var(--radius-pill) !important;
+    background: var(--ink);
+    color: #ffffff;
+    padding: 15px 32px;
   }
-  .teaser4-root .science,
-  .teaser4-root .faq {
+
+  /* Science on Mobile: keep current version */
+  .teaser4-root .science {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 28px;
+    border-top: 1px solid var(--line);
+    border-bottom: none;
+    padding-top: 60px;
   }
   .teaser4-root .science h2 {
-    font-size: 35px;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    line-height: 1.15;
   }
   .teaser4-root .science > div > p:not(.eyebrow) {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .teaser4-root .method {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(89, 67, 45, 0.02);
+    margin-top: 14px;
+    display: grid;
+    gap: 6px;
+  }
+  .teaser4-root .method span {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .teaser4-root .method b {
     font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
   }
   .teaser4-root .small-print {
     font-size: 10px !important;
+    line-height: 1.65 !important;
+    color: #8e8a82;
+    margin-top: 20px;
+  }
+
+  /* FAQ on Mobile */
+  .teaser4-root .faq {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
   .teaser4-root .questions details {
     padding: 0 18px;
@@ -2360,26 +2383,62 @@
     font-size: 13px;
     padding: 0 0 18px 0;
   }
+
+  /* Offer on Mobile: keep current version */
   .teaser4-root .offer {
     padding: 60px 16px;
+    background: transparent;
   }
   .teaser4-root .offer > div {
+    background: var(--card-bg);
+    border: var(--card-border);
     border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(89, 67, 45, 0.06);
     padding: 44px 22px;
+    max-width: 100%;
+    width: 100%;
+  }
+  .teaser4-root .offer .eyebrow {
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-align: center;
   }
   .teaser4-root .offer h2 {
-    font-size: 32px;
+    font-size: 30px;
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+    text-align: center;
   }
   .teaser4-root .offer > div > p:not(.eyebrow):not(.offer-fine) {
     font-size: 14px;
     margin-top: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+    text-align: center;
   }
   .teaser4-root .offer .button {
+    margin-top: 28px;
     width: 100%;
     max-width: 380px;
+    justify-content: center;
+    gap: 16px;
+    border-radius: var(--radius-pill) !important;
+    background: var(--ink);
+    color: #ffffff;
+    padding: 16px 26px;
+    box-shadow: 0 8px 24px rgba(36, 33, 31, 0.12);
+  }
+  .teaser4-root .offer .button span {
+    font-size: 16px;
+    font-weight: 600;
   }
   .teaser4-root .offer .offer-fine {
     font-size: 11px !important;
+    margin-top: 14px !important;
+    color: #8e8a82;
+    text-align: center;
   }
   .teaser4-root footer {
     padding: 30px 23px;
