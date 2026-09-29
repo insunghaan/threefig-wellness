@@ -213,62 +213,46 @@ export function Teaser4WaitlistDialog({
             <X size={18} />
           </DialogPrimitive.Close>
 
-          {/* VIEW 1: SIGNUP FORM (Dual Panel on Desktop, Compact Stack on Mobile) */}
+          {/* VIEW 1: SIGNUP FORM (Full-size Banner Header with Benefits + Form Body) */}
           {view === "signup" && (
-            <div className="teaser4-modal-grid">
-              {/* Desktop Left Aside */}
-              <aside className="teaser4-modal-aside">
-                <p className="eyebrow">3FIG EARLY ACCESS</p>
-                <h2>No app fees.<br />For life.</h2>
-                <div className="teaser4-modal-ring-wrap">
-                  <img
-                    src="/review/assets/ring.webp"
-                    alt="3fig smart ring"
-                    width={220}
-                    height={150}
-                    loading="lazy"
+            <div className="teaser4-modal-card">
+              {/* Top Banner Header: Full-size background image with Waitlist Benefits */}
+              <div className="teaser4-modal-banner-header">
+                <picture className="teaser4-modal-banner-picture">
+                  <source
+                    media="(max-width: 640px)"
+                    srcSet="/images/teaser4/modal-banner-mobile.png"
                   />
-                </div>
-                <p>Your waitlist benefits</p>
-                <ul>
-                  <li>
-                    <strong>20% off</strong> the ring at launch
-                  </li>
-                  <li>
-                    <strong>Free lifetime</strong> app subscription
-                  </li>
-                </ul>
-              </aside>
+                  <img
+                    src="/images/teaser4/modal-banner-desktop.png"
+                    alt=""
+                    className="teaser4-modal-banner-img"
+                  />
+                </picture>
 
-              {/* Right Panel / Mobile Stack Form */}
-              <div className="teaser4-modal-form">
+                {/* Dark semi-opaque overlay for high text contrast */}
+                <div className="teaser4-modal-banner-overlay" />
+
+                {/* Header Text Overlay */}
+                <div className="teaser4-modal-banner-content">
+                  <p className="teaser4-modal-banner-eyebrow">WAITLIST BENEFITS</p>
+                  <h3 className="teaser4-modal-banner-title">
+                    <span>20% off the ring at launch</span>
+                    <span className="teaser4-modal-banner-divider">·</span>
+                    <span>Free lifetime app subscription</span>
+                  </h3>
+                </div>
+              </div>
+
+              {/* Lower Form Section */}
+              <div className="teaser4-modal-form-body">
                 <p className="eyebrow">JOIN THE WAITLIST</p>
                 <DialogPrimitive.Title asChild>
                   <h2>Join now. Never pay app subscription fees.</h2>
                 </DialogPrimitive.Title>
-                <DialogPrimitive.Description id="teaser4-dialog-desc">
+                <DialogPrimitive.Description id="teaser4-dialog-desc" className="teaser4-modal-desc">
                   Get 20% off the ring at launch + a free lifetime app subscription.
                 </DialogPrimitive.Description>
-
-                {/* Mobile-Only Compact Ring + Benefits Preview */}
-                <div className="teaser4-modal-mobile-preview" aria-hidden="true">
-                  <img
-                    src="/review/assets/ring.webp"
-                    alt=""
-                    className="teaser4-modal-mobile-ring"
-                    width={64}
-                    height={64}
-                  />
-                  <div className="teaser4-modal-mobile-benefits">
-                    <span className="teaser4-modal-mobile-benefit-title">Waitlist Benefits</span>
-                    <div className="teaser4-modal-mobile-benefit-item">
-                      • <strong>20% off</strong> ring at launch
-                    </div>
-                    <div className="teaser4-modal-mobile-benefit-item">
-                      • <strong>Free lifetime</strong> app subscription
-                    </div>
-                  </div>
-                </div>
 
                 {/* Actual Real Production Signup Form */}
                 <form

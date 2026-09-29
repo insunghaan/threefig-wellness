@@ -1,10 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Teaser4WaitlistDialog } from "./teaser4-waitlist-dialog";
 
 export function Teaser4PageContent() {
   const [signupOpen, setSignupOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const openSignup = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
@@ -17,9 +27,12 @@ export function Teaser4PageContent() {
         Skip to main content
       </a>
 
-      {/* SITE HEADER (Natural sticky header without review toolbar) */}
-      <header className="site-header" role="banner">
-        <a href="/teaser4" aria-label="3fig home">
+      {/* SITE HEADER (Initial landing: only logo visible, nav & button hidden; revealed on scroll) */}
+      <header
+        className={`site-header ${isScrolled ? "is-scrolled" : "is-top"}`}
+        role="banner"
+      >
+        <a href="/teaser4" aria-label="3fig home" className="site-logo-link">
           <img
             src="/review/assets/logo.png"
             alt="3fig"
@@ -28,7 +41,7 @@ export function Teaser4PageContent() {
             height={26}
           />
         </a>
-        <nav aria-label="Primary navigation">
+        <nav aria-label="Primary navigation" className="header-nav">
           <a href="#results">Your skin insights</a>
           <a href="#how">How it works</a>
           <a href="#ring">The ring</a>
@@ -36,7 +49,7 @@ export function Teaser4PageContent() {
         </nav>
         <button
           type="button"
-          className="button small"
+          className="button small header-cta-btn"
           onClick={openSignup}
           data-location="nav"
         >
@@ -50,7 +63,6 @@ export function Teaser4PageContent() {
         <section className="hero hero-a" aria-label="Introduction">
           <div className="hero-copy">
             <p className="eyebrow">
-              <span className="status-dot" aria-hidden="true" />
               THE SKIN WELLNESS SMART RING
             </p>
             <h1>
@@ -61,27 +73,21 @@ export function Teaser4PageContent() {
               Track sleep, stress signals, and recovery. Add a skin check-in. See
               your daily Skin Balance and the patterns behind it.
             </p>
-            <button
-              type="button"
-              className="button"
-              onClick={openSignup}
-              data-location="hero"
-            >
-              <span>Get early access</span>
-              <span>↗</span>
-            </button>
+            <div className="hero-cta-wrap">
+              <button
+                type="button"
+                className="button hero-cta-btn"
+                onClick={openSignup}
+                data-location="hero"
+              >
+                <span>Get early access</span>
+                <span>↗</span>
+              </button>
+            </div>
             <p className="hero-perks">
               20% off the ring at launch.<br />
               Free lifetime app subscription.
             </p>
-            <div className="hero-data" aria-label="Key signals measured">
-              <span>MEASURE</span>
-              <p>
-                Sleep<i>/</i>HRV<i>/</i>Temperature
-              </p>
-              <span>UNDERSTAND</span>
-              <p>Your skin patterns</p>
-            </div>
           </div>
           <div className="hero-visual" aria-hidden="true">
             <img
@@ -614,6 +620,22 @@ export function Teaser4PageContent() {
         <span>Skin wellness. Built on body signals.</span>
         <small>© 2026 3fig</small>
       </footer>
+
+      {/* MOBILE FLOATING CTA DOCK (Fixed at bottom of screen, floats above hero image & content) */}
+      <aside
+        className={`teaser4-floating-dock ${signupOpen ? "is-hidden" : "is-visible"}`}
+        aria-label="Waitlist registration"
+      >
+        <button
+          type="button"
+          className="button floating-dock-btn"
+          onClick={openSignup}
+          data-location="floating_dock"
+        >
+          <span>Get early access</span>
+          <span>↗</span>
+        </button>
+      </aside>
 
       {/* WAITLIST DIALOG (With desktop dual-panel & mobile compact stacked layout) */}
       <Teaser4WaitlistDialog

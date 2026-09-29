@@ -1,12 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import url('/review/assets/inter.css');
 
 /* ==========================================================================
-   TEASER4 SCOPED STYLESHEET (Revision Reference + Requested Refinements)
-   Font: Inter exclusively
-   Buttons: 12px rounded rectangles
-   Toolbar: completely removed
-   Waitlist Benefits: centered single column without ring image
-   Modal: desktop dual panel, mobile compact stacked with ring + benefits
+   TEASER4 SCOPED STYLESHEET (Design Refinements)
+   - Title font: Inter unified across all headings
+   - Hero margins/padding: Matched with other standard sections
+   - Status dot: Removed
+   - Initial header: Only logo visible on first landing, nav & CTA reveal on scroll
+   - Button font-size: Scaled down appropriately (no giant span text)
+   - Measure/Understand: Completely removed from hero
+   - CTA buttons: Completely round (border-radius: 9999px pill)
+   - Hero visual: Anchored cleanly at screen bottom (ref: 3fig.io/teaser3)
+   - Mobile CTA: Floating bar over bottom image
+   - Modal: No pink buttons, dark ink CTA matching page, full-width top banner
    ========================================================================== */
 
 .teaser4-root {
@@ -18,14 +24,14 @@
   --accent: #df542b;
   --peach: #f4d1b7;
   --cream: #eee6db;
-  --radius: 12px;
+  --radius-pill: 9999px;
   color-scheme: light;
 
   margin: 0;
   padding: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: var(--font);
+  font-family: var(--font) !important;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
   line-height: 1.6;
@@ -38,12 +44,13 @@
 .teaser4-root *::before,
 .teaser4-root *::after {
   box-sizing: border-box;
-  font-family: var(--font);
+  font-family: var(--font) !important;
 }
 
 .teaser4-root button,
 .teaser4-root input {
   font: inherit;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root button,
@@ -80,7 +87,8 @@
   text-wrap: balance;
   font-weight: 500;
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root p {
@@ -89,28 +97,32 @@
 }
 
 .teaser4-root h1 {
-  font-size: clamp(48px, 5.05vw, 86px);
+  font-size: clamp(44px, 4.8vw, 80px);
   line-height: 1.04;
-  letter-spacing: -0.065em;
+  letter-spacing: -0.05em;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root h2 {
-  font-size: clamp(36px, 3.8vw, 59px);
+  font-size: clamp(34px, 3.6vw, 56px);
+  font-family: var(--font) !important;
 }
 
 .teaser4-root h3 {
-  font-size: 31px;
+  font-size: 28px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root h4 {
-  font-size: 25px;
+  font-size: 22px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root button:focus-visible,
 .teaser4-root a:focus-visible,
 .teaser4-root input:focus-visible,
 .teaser4-root summary:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--ink);
   outline-offset: 4px;
 }
 
@@ -127,61 +139,102 @@
 }
 
 /* ==========================================================================
-   SITE HEADER (Natural top without review-bar)
+   SITE HEADER (Initial landing: only logo visible, nav & button hidden)
    ========================================================================== */
 
 .teaser4-root .site-header {
-  height: 84px;
-  padding: 0 5.5%;
+  height: 80px;
+  padding: 0 clamp(20px, 4vw, 55px);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  border-bottom: 1px solid var(--line);
-  background: var(--paper);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Initial landing at top of page */
+.teaser4-root .site-header.is-top {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+}
+
+.teaser4-root .site-header.is-top .header-nav,
+.teaser4-root .site-header.is-top .header-cta-btn {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* When scrolled: header smoothly appears */
+.teaser4-root .site-header.is-scrolled {
+  background: rgba(248, 245, 240, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 4px 20px rgba(36, 33, 31, 0.04);
+}
+
+.teaser4-root .site-header.is-scrolled .header-nav,
+.teaser4-root .site-header.is-scrolled .header-cta-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Logo link is always visible */
+.teaser4-root .site-logo-link {
+  display: inline-flex;
+  align-items: center;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 35;
 }
 
 .teaser4-root .logo {
-  width: 76px;
+  width: 74px;
   height: auto;
 }
 
 .teaser4-root .site-header nav {
   display: flex;
-  gap: 30px;
-  font-size: 12px;
-  font-weight: 600;
+  gap: 28px;
+  font-size: 13px;
+  font-weight: 500;
   margin-left: auto;
-  margin-right: 25px;
+  margin-right: 20px;
 }
 
 .teaser4-root .site-header nav a {
+  color: var(--ink);
   transition: color 0.15s ease;
 }
 
 .teaser4-root .site-header nav a:hover {
-  color: var(--accent);
+  color: var(--muted);
 }
 
 /* ==========================================================================
-   BUTTONS (Softly rounded rectangles - 12px)
+   BUTTONS (Completely round pill shape: border-radius: 9999px)
    ========================================================================== */
 
 .teaser4-root .button {
   border: 1px solid var(--ink);
   background: var(--ink);
   color: #fffdf9;
-  min-height: 54px;
+  min-height: 48px;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 42px;
-  padding: 16px 26px;
-  border-radius: 12px; /* Softly rounded rectangle */
-  font-size: 14px;
+  gap: 24px;
+  padding: 12px 24px;
+  border-radius: 9999px !important; /* Completely round pill */
+  font-size: 14px !important;       /* Appropriate readable size */
   font-weight: 600;
   line-height: 1.25;
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
@@ -189,15 +242,16 @@
 }
 
 .teaser4-root .button span {
-  font-size: 21px;
-  font-weight: 400;
+  font-size: 14px !important; /* Scaled down from giant 21px to appropriate 14px */
+  font-weight: 500;
   line-height: 1;
 }
 
 .teaser4-root .button:hover {
   background: #42382f;
+  border-color: #42382f;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(36, 33, 31, 0.12);
+  box-shadow: 0 4px 14px rgba(36, 33, 31, 0.14);
 }
 
 .teaser4-root .button:active {
@@ -205,29 +259,29 @@
 }
 
 .teaser4-root .button.small {
-  min-height: 43px;
-  padding: 11px 18px;
-  gap: 20px;
-  font-size: 12px;
-  border-radius: 12px;
+  min-height: 38px;
+  padding: 8px 18px;
+  gap: 14px;
+  font-size: 13px !important;
+  border-radius: 9999px !important;
+}
+
+.teaser4-root .button.small span {
+  font-size: 13px !important;
 }
 
 .teaser4-root .eyebrow {
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.5;
-  font-weight: 700;
-  letter-spacing: 0.15em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--muted);
-  margin-bottom: 22px;
+  margin-bottom: 18px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root .status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-  border-radius: 50%;
-  margin-right: 7px;
+  display: none !important; /* Circular icon removed per requirement */
 }
 
 /* ==========================================================================
@@ -236,71 +290,61 @@
 
 .teaser4-root .hero {
   display: grid;
-  grid-template-columns: 1.05fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(30px, 4vw, 60px);
 }
 
 .teaser4-root .hero-a {
-  max-width: 1800px;
-  margin: auto;
-  min-height: 710px;
+  max-width: 1280px; /* Matched with other sections */
+  margin: 0 auto;
+  padding: clamp(30px, 4vw, 60px) clamp(20px, 4vw, 55px);
+  min-height: calc(100vh - 80px);
+  align-items: center;
 }
 
 .teaser4-root .hero-copy {
-  padding: clamp(50px, 5.5vw, 100px) 9% 48px 10.5%;
+  padding: 0;
   align-self: center;
+}
+
+.teaser4-root .hero-copy h1 {
+  font-family: var(--font) !important;
 }
 
 .teaser4-root .hero-copy h1 span {
   color: #8a7768;
+  font-family: var(--font) !important;
 }
 
 .teaser4-root .hero-lead {
   font-size: 16px;
-  line-height: 1.75;
-  max-width: 41ch;
-  margin: 27px 0 28px;
+  line-height: 1.7;
+  max-width: 42ch;
+  margin: 22px 0 26px;
+}
+
+.teaser4-root .hero-cta-wrap {
+  margin-top: 4px;
 }
 
 .teaser4-root .hero-perks {
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.6;
   margin-top: 14px;
-  max-width: 39ch;
+  max-width: 40ch;
   color: var(--muted);
 }
 
 .teaser4-root .hero-data {
-  margin-top: 38px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 7px 8px;
-  max-width: 395px;
-}
-
-.teaser4-root .hero-data > span {
-  font-size: 9px;
-  letter-spacing: 0.13em;
-  color: var(--muted);
-  align-self: center;
-  font-weight: 600;
-}
-
-.teaser4-root .hero-data p {
-  font-size: 12px;
-  color: var(--ink);
-}
-
-.teaser4-root .hero-data i {
-  color: #b3a89c;
-  font-style: normal;
-  padding: 0 5px;
+  display: none !important; /* Completely removed per requirement */
 }
 
 .teaser4-root .hero-visual {
   position: relative;
   min-width: 0;
+  height: 100%;
+  max-height: 680px;
+  border-radius: 14px;
   overflow: hidden;
   background: #e6d8c5;
 }
@@ -309,29 +353,36 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 47%;
+  object-position: 50% 45%;
 }
 
 .teaser4-root .hero-a .hero-visual {
-  margin: 24px 24px 24px 0;
-  border-radius: 8px;
+  margin: 0;
 }
 
 .teaser4-root .photo-label {
   position: absolute;
-  bottom: 22px;
-  left: 24px;
-  right: 24px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
   display: flex;
   justify-content: space-between;
   gap: 10px;
   background: rgba(250, 247, 239, 0.94);
-  padding: 12px 15px;
+  padding: 11px 14px;
   border: 1px solid #d6c8b7;
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.07em;
-  border-radius: 6px;
+  border-radius: 8px;
   backdrop-filter: blur(8px);
+}
+
+/* ==========================================================================
+   MOBILE FLOATING CTA DOCK
+   ========================================================================== */
+
+.teaser4-root .teaser4-floating-dock {
+  display: none; /* Hidden on desktop */
 }
 
 /* ==========================================================================
@@ -1107,22 +1158,22 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(880px, calc(100% - 32px));
-  max-height: calc(100dvh - 40px);
+  width: min(600px, calc(100% - 32px));
+  max-height: calc(100dvh - 36px);
   border: 1px solid #d9cfc4;
   padding: 0;
-  border-radius: 16px;
-  background: #faf7f1;
+  border-radius: 18px;
+  background: #f8f5f0;
   color: var(--ink);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 1000;
-  box-shadow: 0 24px 64px rgba(21, 18, 15, 0.25);
+  box-shadow: 0 24px 64px rgba(21, 18, 15, 0.3);
   animation: teaser4ScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .teaser4-dialog-content.is-survey-mode {
-  max-width: 640px;
+  width: min(620px, calc(100% - 32px));
 }
 
 @keyframes teaser4FadeIn {
@@ -1138,133 +1189,162 @@
 .teaser4-dialog-close {
   position: absolute;
   top: 14px;
-  right: 15px;
+  right: 14px;
   border: 0;
   border-radius: 50%;
-  width: 34px;
-  height: 34px;
-  background: #e9e2d8;
-  color: var(--ink);
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #24211f;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
-  z-index: 10;
+  z-index: 20;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: background 0.15s, transform 0.15s;
 }
 
 .teaser4-dialog-close:hover {
-  background: #dcd4c9;
-  transform: scale(1.05);
+  background: #ffffff;
+  transform: scale(1.06);
 }
 
-/* Modal Desktop Grid */
-.teaser4-modal-grid {
-  display: grid;
-  grid-template-columns: 0.88fr 1.12fr;
-  min-height: 480px;
-}
-
-.teaser4-modal-aside {
-  background: #ecd0b6;
-  padding: 42px 32px;
+/* Modal Card Structure: Top Banner Header + Bottom Form Body */
+.teaser4-modal-card {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.teaser4-modal-aside .eyebrow {
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  font-weight: 700;
-  color: #824b2c;
-  margin-bottom: 12px;
-}
-
-.teaser4-modal-aside h2 {
-  font-size: 34px;
-  line-height: 1.1;
-  color: var(--ink);
-}
-
-.teaser4-modal-ring-wrap {
-  margin: 24px auto;
+/* Full-Size Top Banner Header */
+.teaser4-modal-banner-header {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-end;
+  padding: 22px 26px;
+  box-sizing: border-box;
 }
 
-.teaser4-modal-aside img {
-  height: 150px;
-  width: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 20px rgba(87, 50, 23, 0.18));
+.teaser4-modal-banner-picture,
+.teaser4-modal-banner-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
 }
 
-.teaser4-modal-aside > p:not(.eyebrow) {
-  font-size: 12px;
-  color: #5d4939;
+/* Desktop overlay: subtle high-contrast gradient */
+.teaser4-modal-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(14, 12, 11, 0.82) 0%, rgba(14, 12, 11, 0.45) 55%, rgba(14, 12, 11, 0.25) 100%);
+  z-index: 1;
+}
+
+/* Mobile overlay: semi-opaque dark background for maximum text clarity */
+@media (max-width: 640px) {
+  .teaser4-modal-banner-header {
+    height: 175px;
+    padding: 18px 20px;
+  }
+  .teaser4-modal-banner-overlay {
+    background: rgba(0, 0, 0, 0.72) !important; /* 검은 컬러배경 불투명하게 깔아 텍스트 가독성 확보 */
+  }
+}
+
+.teaser4-modal-banner-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.teaser4-modal-banner-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffbb98; /* Warm peach highlight */
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  font-family: var(--font) !important;
+}
+
+.teaser4-modal-banner-title {
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  margin-top: auto;
-}
-
-.teaser4-modal-aside ul {
-  padding: 0;
-  margin: 12px 0 0;
-  list-style: none;
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.teaser4-modal-aside li {
-  border-top: 1px solid #c8af97;
-  padding: 10px 0;
+  color: #ffffff !important;
+  line-height: 1.35;
   display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   align-items: center;
-  gap: 8px;
+  font-family: var(--font) !important;
 }
 
-.teaser4-modal-aside li strong {
+.teaser4-modal-banner-title span {
+  color: #ffffff !important;
+}
+
+.teaser4-modal-banner-divider {
+  opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  .teaser4-modal-banner-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    font-size: 14px;
+  }
+  .teaser4-modal-banner-divider {
+    display: none;
+  }
+}
+
+/* Modal Form Body */
+.teaser4-modal-form-body {
+  padding: 28px 30px 32px;
+  background: #f8f5f0;
+}
+
+@media (max-width: 640px) {
+  .teaser4-modal-form-body {
+    padding: 22px 20px 26px;
+  }
+}
+
+.teaser4-modal-form-body .eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.12em;
   font-weight: 700;
+  color: #786f66 !important;
+  margin-bottom: 8px;
 }
 
-/* Modal Form Side */
-.teaser4-modal-form {
-  padding: 42px 36px;
-  display: flex;
-  flex-direction: column;
+.teaser4-modal-form-body h2 {
+  font-size: 26px;
+  line-height: 1.18;
+  color: var(--ink) !important;
+  font-family: var(--font) !important;
 }
 
-.teaser4-modal-form .eyebrow {
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  font-weight: 700;
-  color: var(--muted);
-  margin-bottom: 12px;
-}
-
-.teaser4-modal-form h2 {
-  font-size: 33px;
-  line-height: 1.14;
-  color: var(--ink);
-}
-
-.teaser4-modal-form > p:not(.eyebrow) {
-  margin-top: 16px;
+.teaser4-modal-desc,
+.teaser4-modal-form-body > p:not(.eyebrow) {
+  margin-top: 10px;
   font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted);
-}
-
-/* Mobile-only compact benefit snippet (hidden on desktop) */
-.teaser4-modal-mobile-preview {
-  display: none;
+  line-height: 1.55;
+  color: #554e48 !important;
 }
 
 .teaser4-waitlist-form {
-  margin-top: 26px;
+  margin-top: 22px;
 }
 
 .teaser4-form-group {
@@ -1281,20 +1361,77 @@
 
 .teaser4-form-input {
   width: 100%;
-  min-height: 52px;
+  min-height: 48px;
   border: 1px solid #cfc6ba;
-  background: #fffefa;
-  padding: 12px 16px;
-  border-radius: 12px; /* 12px input radius */
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 9999px; /* Round input */
   color: var(--ink);
-  font-size: 15px;
+  font-size: 14px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .teaser4-form-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(223, 84, 43, 0.15);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(36, 33, 31, 0.12);
+}
+
+.teaser4-form-input.has-error {
+  border-color: #d32f2f;
+  background: #fff8f8;
+}
+
+.teaser4-form-error {
+  font-size: 12px;
+  color: #d32f2f;
+  margin-top: 6px;
+}
+
+/* MODAL CTA BUTTON: Strictly dark ink (#24211f), completely round (9999px), NO PINK */
+.teaser4-form-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 8px;
+  background: #24211f !important;
+  border: 1px solid #24211f !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px !important;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.teaser4-form-submit:hover:not(:disabled) {
+  background: #42382f !important;
+  border-color: #42382f !important;
+  transform: translateY(-1px);
+}
+
+.teaser4-form-submit:disabled {
+  background: rgba(36, 33, 31, 0.45) !important;
+  border-color: transparent !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.teaser4-reassurance {
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 14px;
+  color: #706a65;
+  text-align: center;
+}
+
+.teaser4-modal-small-print {
+  font-size: 10px !important;
+  color: #8e867c;
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .teaser4-form-input.has-error {
@@ -1308,62 +1445,26 @@
   margin-top: 6px;
 }
 
-.teaser4-form-submit {
-  width: 100%;
-  min-height: 52px;
-  margin-top: 8px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-  border-radius: 12px; /* 12px button radius */
-  justify-content: center;
-  gap: 12px;
-  font-size: 15px;
-}
-
-.teaser4-form-submit:hover {
-  background: #c94620;
-}
-
-.teaser4-form-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.teaser4-reassurance {
-  font-size: 11px;
-  line-height: 1.7;
-  margin-top: 15px;
-  color: #706a65;
-  text-align: center;
-}
-
-.teaser4-modal-small-print {
-  font-size: 10px !important;
-  color: #8e867c;
-  margin-top: 12px;
-  text-align: center;
-  line-height: 1.5;
-}
-
 /* ==========================================================================
    MODAL CONFIRMATION & OPTIONAL SURVEY
    ========================================================================== */
 
 .teaser4-modal-confirmed {
-  padding: 44px 36px;
+  padding: 40px 32px;
 }
 
 .teaser4-modal-confirmed .eyebrow {
-  color: var(--accent);
+  color: var(--muted);
   font-weight: 700;
   margin-bottom: 12px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-modal-confirmed h2 {
-  font-size: 32px;
+  font-size: 30px;
   line-height: 1.15;
+  color: var(--ink);
+  font-family: var(--font) !important;
 }
 
 .teaser4-modal-confirmed .teaser4-confirm-lead {
@@ -1374,7 +1475,7 @@
 }
 
 .teaser4-perks-confirmed {
-  margin: 22px 0 28px;
+  margin: 20px 0 24px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1387,7 +1488,7 @@
   padding: 12px 16px;
   background: #f2ece2;
   border: 1px solid #dfd7cc;
-  border-radius: 12px;
+  border-radius: 9999px; /* Pill */
   font-size: 13px;
   font-weight: 500;
   color: var(--ink);
@@ -1400,7 +1501,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--ink);
   color: white;
   font-size: 12px;
 }
@@ -1410,7 +1511,7 @@
   border: 1px solid #dcd4c8;
   background: #fffefa;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 14px;
   margin-top: 20px;
 }
 
@@ -1419,18 +1520,19 @@
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #824b2c;
-  background: #f4d1b7;
+  color: #5d4939;
+  background: #ecdccf;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 9999px;
   margin-bottom: 10px;
 }
 
 .teaser4-survey-invite-card h4 {
-  font-size: 19px;
+  font-size: 18px;
   line-height: 1.25;
   color: var(--ink);
   margin-bottom: 6px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-survey-invite-card p {
@@ -1447,35 +1549,37 @@
 
 .teaser4-btn-primary-12 {
   flex: 1;
-  min-height: 46px;
-  border-radius: 12px;
-  background: var(--ink);
-  color: white;
-  border: 1px solid var(--ink);
-  font-size: 13px;
+  min-height: 44px;
+  border-radius: 9999px !important; /* Pill */
+  background: var(--ink) !important;
+  color: white !important;
+  border: 1px solid var(--ink) !important;
+  font-size: 13px !important;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   transition: background 0.15s;
+  cursor: pointer;
 }
 
 .teaser4-btn-primary-12:hover {
-  background: #42382f;
+  background: #42382f !important;
 }
 
 .teaser4-btn-secondary-12 {
-  min-height: 46px;
-  border-radius: 12px;
+  min-height: 44px;
+  border-radius: 9999px !important; /* Pill */
   background: transparent;
   color: var(--ink);
   border: 1px solid #cfc6ba;
-  font-size: 13px;
+  font-size: 13px !important;
   font-weight: 500;
   padding: 10px 20px;
   transition: background 0.15s;
+  cursor: pointer;
 }
 
 .teaser4-btn-secondary-12:hover {
@@ -1484,19 +1588,21 @@
 
 /* Survey View Itself */
 .teaser4-survey-content {
-  padding: 40px 32px;
+  padding: 36px 30px;
 }
 
 .teaser4-survey-content .eyebrow {
-  color: var(--accent);
-  font-size: 9px;
+  color: var(--muted);
+  font-size: 10px;
   letter-spacing: 0.12em;
   margin-bottom: 8px;
+  font-family: var(--font) !important;
 }
 
 .teaser4-survey-content h2 {
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1.2;
+  font-family: var(--font) !important;
 }
 
 .teaser4-survey-content .survey-sub {
@@ -1506,10 +1612,10 @@
 }
 
 .teaser4-survey-form {
-  margin-top: 24px;
+  margin-top: 22px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .teaser4-survey-group {
@@ -1531,8 +1637,8 @@
 }
 
 .teaser4-survey-chip {
-  padding: 9px 14px;
-  border-radius: 12px; /* 12px radius */
+  padding: 8px 14px;
+  border-radius: 9999px !important; /* Pill */
   border: 1px solid #cfc7bc;
   background: #fffefa;
   color: var(--ink);
@@ -1548,9 +1654,9 @@
 }
 
 .teaser4-survey-chip.is-selected {
-  border-color: var(--accent);
-  background: #fef0eb;
-  color: var(--accent);
+  border-color: var(--ink) !important;
+  background: #24211f !important;
+  color: #ffffff !important;
   font-weight: 600;
 }
 
@@ -1645,91 +1751,137 @@
 
 @media (max-width: 760px) {
   .teaser4-root .site-header {
-    height: 69px;
-    padding: 0 21px;
+    height: 64px;
+    padding: 0 20px;
     gap: 10px;
   }
+  .teaser4-root .site-header.is-top {
+    background: transparent !important;
+    border-bottom-color: transparent !important;
+    box-shadow: none !important;
+  }
+  .teaser4-root .site-header.is-top .header-cta-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  .teaser4-root .site-header.is-scrolled {
+    background: rgba(248, 245, 240, 0.96) !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
   .teaser4-root .site-header .logo {
-    width: 64px;
+    width: 62px;
   }
   .teaser4-root .site-header nav {
-    display: none;
+    display: none !important;
   }
   .teaser4-root .button.small {
-    font-size: 11px;
-    gap: 18px;
-    min-height: 39px;
-    padding: 10px 15px;
+    font-size: 12px !important;
+    gap: 12px;
+    min-height: 36px;
+    padding: 7px 15px;
+    border-radius: 9999px !important;
   }
   .teaser4-root .hero {
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    justify-content: space-between;
+    min-height: calc(100vh - 64px);
+    min-height: calc(100dvh - 64px);
+    padding: 0;
+    margin: 0;
   }
   .teaser4-root .hero-copy {
-    padding: 40px 23px 34px;
+    padding: 24px 20px 16px;
+    text-align: left;
   }
   .teaser4-root .hero-a h1 {
-    font-size: clamp(43px, 10.7vw, 72px);
-    letter-spacing: -0.06em;
+    font-size: clamp(34px, 8.8vw, 44px);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-family: var(--font) !important;
   }
   .teaser4-root .hero .eyebrow {
-    font-size: 8px;
-    margin-bottom: 20px;
-  }
-  .teaser4-root .desktop-break {
-    display: none;
+    font-size: 10px;
+    margin-bottom: 12px;
+    letter-spacing: 0.12em;
+    font-family: var(--font) !important;
   }
   .teaser4-root .hero-lead {
     font-size: 14px;
-    line-height: 1.75;
-    max-width: 42ch;
-    margin-top: 22px;
-    margin-bottom: 24px;
+    line-height: 1.55;
+    max-width: 100%;
+    margin: 12px 0 14px;
   }
-  .teaser4-root .hero .button {
-    width: 100%;
-    max-width: 380px;
-    min-height: 52px;
+  .teaser4-root .hero-cta-wrap {
+    display: none; /* Mobile uses floating bottom CTA */
   }
   .teaser4-root .hero-perks {
-    font-size: 11px;
-    margin-top: 12px;
+    font-size: 12px;
+    margin-top: 8px;
+    line-height: 1.5;
     max-width: none;
-  }
-  .teaser4-root .hero-perks br {
-    display: none;
-  }
-  .teaser4-root .hero-perks br:after {
-    content: ' ';
+    color: var(--muted);
   }
   .teaser4-root .hero-data {
-    margin-top: 25px;
-    padding-top: 18px;
-    max-width: none;
-    grid-template-columns: 82px 1fr;
+    display: none !important;
   }
+
+  /* Hero image clearly visible & anchored at screen bottom (ref: 3fig.io/teaser3) */
   .teaser4-root .hero-visual,
   .teaser4-root .hero-a .hero-visual {
-    height: auto;
-    aspect-ratio: 1.15;
-    flex: none;
-    margin: 0 14px 15px;
-    border-radius: 8px;
+    width: 100%;
+    aspect-ratio: 4 / 4.6;
+    max-height: 52vh;
+    min-height: 300px;
+    margin: auto 0 0 0;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
   }
   .teaser4-root .hero-visual > img {
+    width: 100%;
     height: 100%;
-    object-position: 50% 45%;
+    object-fit: cover;
+    object-position: 50% 30%;
   }
   .teaser4-root .photo-label {
-    bottom: 13px;
-    left: 13px;
-    right: 13px;
-    padding: 9px 10px;
-    font-size: 7px;
+    display: none;
   }
+
+  /* Floating CTA Bar over bottom image */
+  .teaser4-root .teaser4-floating-dock {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    padding: 10px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(248, 245, 240, 0.98) 70%, rgba(248, 245, 240, 0) 100%);
+    pointer-events: none;
+  }
+  .teaser4-root .teaser4-floating-dock.is-hidden {
+    display: none !important;
+  }
+  .teaser4-root .floating-dock-btn {
+    pointer-events: auto;
+    width: 100%;
+    min-height: 48px;
+    border-radius: 9999px !important;
+    background: var(--ink);
+    color: #fffdf9;
+    font-size: 14px !important;
+    font-weight: 600;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(36, 33, 31, 0.22);
+  }
+  .teaser4-root .floating-dock-btn span {
+    font-size: 14px !important;
+  }
+
   .teaser4-root .section {
-    padding: 62px 23px;
+    padding: 60px 20px;
   }
   .teaser4-root .section-top {
     text-align: left;
@@ -1948,110 +2100,53 @@
   }
 
   /* ==========================================================================
-     MOBILE SIGNUP MODAL (COMPACT STACKED LAYOUT WITH RING + BENEFITS)
-     Requirement 5:
-     "On mobile, the image and benefit content must remain visible.
-      Do not hide the entire left panel at the mobile breakpoint.
-      Adapt it into a compact stacked layout:
-      1. A clear signup heading.
-      2. A compact ring image and benefit summary.
-      3. The email field and signup button.
-      4. Payment, separate ring purchase, and email-update conditions."
+     MOBILE SIGNUP MODAL (TOP BANNER HEADER WITH HIGH-CONTRAST OVERLAY)
      ========================================================================== */
 
   .teaser4-dialog-content {
     width: calc(100% - 24px);
     max-height: calc(100dvh - 24px);
-    border-radius: 14px;
-  }
-
-  .teaser4-modal-grid {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  /* Desktop aside hidden on mobile in favor of compact inline preview */
-  .teaser4-modal-aside {
-    display: none;
-  }
-
-  .teaser4-modal-form {
-    padding: 32px 20px 24px;
-  }
-
-  .teaser4-modal-form h2 {
-    font-size: 26px;
-    line-height: 1.16;
-  }
-
-  .teaser4-modal-form > p:not(.eyebrow) {
-    display: none; /* Avoid duplicate headline/subhead */
-  }
-
-  /* Mobile-only compact ring image and benefit summary */
-  .teaser4-modal-mobile-preview {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: #ecd0b6;
-    border: 1px solid #c8af97;
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-top: 16px;
-  }
-
-  .teaser4-modal-mobile-ring {
-    width: 64px;
-    height: 64px;
-    flex: 0 0 64px;
-    object-fit: contain;
-    filter: drop-shadow(0 6px 12px rgba(87, 50, 23, 0.2));
-  }
-
-  .teaser4-modal-mobile-benefits {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .teaser4-modal-mobile-benefit-title {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    font-weight: 700;
-    color: #824b2c;
-    text-transform: uppercase;
-  }
-
-  .teaser4-modal-mobile-benefit-item {
-    font-size: 12px;
-    color: var(--ink);
-    line-height: 1.35;
-  }
-
-  .teaser4-modal-mobile-benefit-item strong {
-    font-weight: 700;
-    color: #1a1715;
-  }
-
-  .teaser4-waitlist-form {
-    margin-top: 18px;
+    border-radius: 16px;
   }
 
   .teaser4-dialog-close {
     top: 10px;
     right: 10px;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .teaser4-modal-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .teaser4-modal-banner-header {
+    height: 160px;
+    padding: 16px 18px;
+  }
+
+  .teaser4-modal-form-body {
+    padding: 22px 18px 24px;
+  }
+
+  .teaser4-modal-form-body h2 {
+    font-size: 23px;
+    line-height: 1.18;
+  }
+
+  .teaser4-waitlist-form {
+    margin-top: 16px;
   }
 
   .teaser4-modal-confirmed {
-    padding: 32px 20px 24px;
+    padding: 26px 18px 22px;
   }
 
   .teaser4-modal-confirmed h2 {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .teaser4-survey-actions {
@@ -2059,7 +2154,7 @@
   }
 
   .teaser4-survey-content {
-    padding: 32px 20px 24px;
+    padding: 26px 18px 22px;
   }
 }
 
