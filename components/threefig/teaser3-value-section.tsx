@@ -454,29 +454,33 @@ interface BenefitItem {
   num: string;
   title: string;
   desc: string;
+  subDesc?: string;
   bgImage: string;
   renderPreview: (isActive?: boolean) => React.ReactNode;
 }
 
 const BENEFIT_ITEMS: BenefitItem[] = [
   {
-    num: "01",
-    title: "Know where you are.",
-    desc: "See how your daily signals and skin check-ins are coming together today.",
+    num: "01 / TODAY",
+    title: "Understand today’s Skin Balance.",
+    desc: "Every morning, 3fig pairs your sleep and recovery signals with how your skin feels to create your daily score.",
+    subDesc: "One number. Clear context behind it.",
     bgImage: "/images/teaser3-panel-bg-01.webp",
     renderPreview: (isActive) => <Teaser3SkinBalancePreview isActive={isActive} />,
   },
   {
-    num: "02",
-    title: "See what changed.",
-    desc: "Follow shifts in sleep, stress, nutrition, and your skin patterns over time.",
+    num: "02 / PATTERNS",
+    title: "See when your skin feels different.",
+    desc: "Track your Skin Balance alongside sleep consistency, late meals, and travel to see what might be affecting your skin.",
+    subDesc: "Spot connections without second-guessing.",
     bgImage: "/images/teaser3-panel-bg-02.webp",
     renderPreview: (isActive) => <Teaser3PatternsPreview isActive={isActive} />,
   },
   {
-    num: "03",
-    title: "Know what to try.",
-    desc: "Get one useful suggestion based on the patterns 3fig is helping you notice.",
+    num: "03 / NEXT STEP",
+    title: "Choose a habit. Track your skin’s response.",
+    desc: "When your score shifts, 3fig suggests a simple daily habit—like an earlier wind-down—and helps you track whether it makes a difference.",
+    subDesc: "Small adjustments. Real feedback.",
     bgImage: "/images/teaser3-panel-bg-03.webp",
     renderPreview: (isActive) => <Teaser3NextMovePreview isActive={isActive} />,
   },
@@ -566,15 +570,21 @@ export function Teaser3ValueSection() {
               <div className="teaser3-section-head">
                 <p className="teaser3-eyebrow">WHAT YOU GET</p>
                 <h2 id="value-title" className="teaser3-section-title">
-                  One clear view. <br />
-                  <span className="teaser3-rose-accent">One useful next move.</span>
+                  Your skin today. <br />
+                  <span className="teaser3-rose-accent">Your patterns over time.</span>
                 </h2>
+                <p className="teaser3-value-lead-desc">
+                  See your Skin Balance, the signals behind it, and what to try next.
+                </p>
               </div>
 
               <div className="teaser3-value-copy-block">
                 <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[0].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[0].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[0].desc}</p>
+                {BENEFIT_ITEMS[0].subDesc && (
+                  <p className="teaser3-value-desc teaser3-value-subdesc">{BENEFIT_ITEMS[0].subDesc}</p>
+                )}
               </div>
             </div>
 
@@ -614,6 +624,9 @@ export function Teaser3ValueSection() {
                 <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[1].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[1].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[1].desc}</p>
+                {BENEFIT_ITEMS[1].subDesc && (
+                  <p className="teaser3-value-desc teaser3-value-subdesc">{BENEFIT_ITEMS[1].subDesc}</p>
+                )}
               </div>
             </div>
           </div>
@@ -625,6 +638,9 @@ export function Teaser3ValueSection() {
                 <span className="teaser3-value-num teaser3-rose-accent">{BENEFIT_ITEMS[2].num}</span>
                 <h3 className="teaser3-value-title">{BENEFIT_ITEMS[2].title}</h3>
                 <p className="teaser3-value-desc">{BENEFIT_ITEMS[2].desc}</p>
+                {BENEFIT_ITEMS[2].subDesc && (
+                  <p className="teaser3-value-desc teaser3-value-subdesc">{BENEFIT_ITEMS[2].subDesc}</p>
+                )}
               </div>
             </div>
 
@@ -652,9 +668,12 @@ export function Teaser3ValueSection() {
           <div className="teaser3-section-head">
             <p className="teaser3-eyebrow">WHAT YOU GET</p>
             <h2 className="teaser3-section-title">
-              One clear view. <br />
-              <span className="teaser3-rose-accent">One useful next move.</span>
+              Your skin today. <br />
+              <span className="teaser3-rose-accent">Your patterns over time.</span>
             </h2>
+            <p className="teaser3-value-lead-desc">
+              See your Skin Balance, the signals behind it, and what to try next.
+            </p>
           </div>
 
           {/* Horizontal Carousel Track with Peek */}
@@ -685,6 +704,9 @@ export function Teaser3ValueSection() {
                       <span className="teaser3-value-num teaser3-rose-accent">{item.num}</span>
                       <h3 className="teaser3-value-title">{item.title}</h3>
                       <p className="teaser3-value-desc">{item.desc}</p>
+                      {item.subDesc && (
+                        <p className="teaser3-value-desc teaser3-value-subdesc">{item.subDesc}</p>
+                      )}
                     </div>
 
                     <div className="teaser3-visual-panel">

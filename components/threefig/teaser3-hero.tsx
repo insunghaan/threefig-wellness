@@ -456,12 +456,12 @@ export function Teaser3Hero() {
 
           <div className="teaser3-content-group">
             <h1 className="teaser3-title tf-role-hero-title">
-              <span className="teaser3-title-dark">The smart ring</span>
-              <span className="teaser3-title-brown">for skin wellness</span>
+              <span className="teaser3-title-dark">Skin Balance.</span>
+              <span className="teaser3-title-brown">Built from your body signals.</span>
             </h1>
 
             <p className="teaser3-desc tf-role-body-lead">
-              Meet 3fig, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+              Track sleep, stress signals, and recovery. Add a skin check-in. See your daily Skin Balance and the patterns behind it.
             </p>
 
             {/* Desktop CTA Row: Solid-Black Pill Button + Plain Text Waitlist Count */}
@@ -606,12 +606,12 @@ export function Teaser3Hero() {
         {/* Mobile Headline & Description in Normal Flow */}
         <div className="teaser3-mobile-content-group">
           <h1 className="teaser3-title tf-role-hero-title">
-            <span className="teaser3-title-dark">The smart ring</span>
-            <span className="teaser3-title-brown">for skin wellness</span>
+            <span className="teaser3-title-dark">Skin Balance.</span>
+            <span className="teaser3-title-brown">Built from your body signals.</span>
           </h1>
 
           <p className="teaser3-desc tf-role-body-lead">
-            Meet 3fig, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.
+            Track sleep, stress signals, and recovery. Add a skin check-in. See your daily Skin Balance and the patterns behind it.
           </p>
         </div>
 

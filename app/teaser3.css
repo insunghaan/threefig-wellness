@@ -336,21 +336,22 @@
   margin-top: calc(51vh - clamp(32px, 3.8vh, 48px) - clamp(50px, 4.5vw, 76px));
 }
 
-/* Fluid Two-Line Headline: clamp(54px, 4.9vw, 88px) */
+/* Fluid Two-Line Headline: clamp(40px, 3.8vw, 68px) */
 .teaser3-title {
   margin: 0 0 clamp(16px, 1.8vh, 26px) 0;
   font-family: var(--font) !important;
-  font-size: clamp(54px, 4.9vw, 88px);
+  font-size: clamp(40px, 3.8vw, 68px);
   font-weight: 500 !important;
-  line-height: 1.06;
+  line-height: 1.08;
   letter-spacing: -0.04em;
   display: flex;
   flex-direction: column;
+  max-width: 600px;
 }
 
 .teaser3-title-dark {
   color: var(--ink);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .teaser3-title-brown {
@@ -358,7 +359,7 @@
   background: var(--teaser3-accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 /* Fluid Description: clamp(16px, 1.4vw, 24px), line-height ~1.4, width ~36vw capped at 660px */
@@ -2230,8 +2231,19 @@
   font-family: var(--font) !important;
   font-size: clamp(15px, 1.2vw, 17px);
   line-height: 1.6;
+  max-width: 440px;
+}
+
+.teaser3-value-subdesc {
+  margin-top: 8px;
+}
+
+.teaser3-value-lead-desc {
+  font-family: var(--font) !important;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.6;
   color: var(--muted);
-  margin: 0;
+  margin: 14px 0 0 0;
   max-width: 440px;
 }
 

@@ -14,11 +14,11 @@ export function Teaser3MeetIntro() {
         <div className="teaser3-meet-header">
           <p className="teaser3-eyebrow">MEET 3FIG</p>
           <h2 id="meet-title" className="teaser3-meet-title">
-            Your Skin Balance, <br />
-            <span className="teaser3-rose-accent">made clear.</span>
+            Your Skin Balance. <br />
+            <span className="teaser3-rose-accent">The data behind it.</span>
           </h2>
           <p className="teaser3-meet-desc">
-            3fig brings sleep, stress, nutrition, and daily check-ins together in one simple Skin Balance view.
+            See your daily score alongside ring measurements and skin check-ins.
           </p>
         </div>
 

@@ -6,16 +6,16 @@ import Image from "next/image";
 export function Teaser3RingSection() {
   const benefits = [
     {
-      title: "Sleep-friendly",
-      desc: "Discreet sensors with zero screen or vibration to disturb your rest.",
+      title: "Sleep",
+      desc: "Duration and sleep patterns",
     },
     {
-      title: "Everyday-ready",
-      desc: "Water-resistant titanium built for daily showers and workouts.",
+      title: "Heart rate & HRV",
+      desc: "Signals for stress and recovery trends",
     },
     {
-      title: "Quiet by design",
-      desc: "Continuous background sensing with multi-day battery life.",
+      title: "Temperature & movement",
+      desc: "Changes from your personal baseline",
     },
   ];
 
@@ -40,13 +40,13 @@ export function Teaser3RingSection() {
 
           {/* Copy Column */}
           <div className="teaser3-ring-content">
-            <p className="teaser3-eyebrow">THE SENSING FOUNDATION</p>
+            <p className="teaser3-eyebrow">THE RING</p>
             <h2 id="ring-heading" className="teaser3-section-title">
-              Always on. <br />
-              <span className="teaser3-title-accent">Never in the way.</span>
+              Body data. <br />
+              <span className="teaser3-title-accent">Skin insight.</span>
             </h2>
             <p className="teaser3-section-lead">
-              Featherlight titanium engineered for effortless 24/7 wear.
+              Wear 3fig through sleep and daily life. See your signals in the app.
             </p>
 
             <div className="teaser3-ring-benefits" role="list">

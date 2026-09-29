@@ -4,9 +4,9 @@ import { SITE_URL } from "@/lib/threefig/site";
 import "@/app/teaser3.css";
 
 export const metadata: Metadata = {
-  title: "3fig – The Smart ring for skin wellness",
+  title: "3fig – Skin Balance. Built from your body signals.",
   description:
-    "Meet 3fig, a smart ring designed to turn sleep, stress and daily check-ins into your Skin Balance Score. Explore the patterns between your everyday habits and how your skin feels.",
+    "Track sleep, stress signals, and recovery. Add a skin check-in. See your daily Skin Balance and the patterns behind it.",
   alternates: { canonical: `${SITE_URL}/teaser3` },
   robots: { index: false, follow: false },
 };

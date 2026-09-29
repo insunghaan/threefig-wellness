@@ -249,8 +249,8 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: "wear",
     eyebrow: "BACKGROUND SENSING",
-    title: "Wear it.",
-    description: "Wear it through sleep and everyday life.",
+    title: "Track your body.",
+    description: "Sleep, heart rate, HRV, temperature trends, and movement—measured quietly while you sleep and live.",
     imageSrc: "/images/threefig-pathway-01-sleep.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-01-mobile.png",
     imageAlt: "Resting calmly during sleep wearing the 3fig smart ring.",
@@ -259,8 +259,8 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: "check-in",
     eyebrow: "DAILY LOG",
-    title: "Check in.",
-    description: "A few taps to log how your skin feels.",
+    title: "Log your skin.",
+    description: "Note how your skin feels with a quick check-in. Add meal notes when you want more context.",
     imageSrc: "/images/threefig-pathway-04-rhythm.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-02-mobile.png",
     imageAlt: "Gentle morning reflection touching clean skin while wearing the 3fig ring.",
@@ -269,8 +269,8 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: "connect",
     eyebrow: "SYNTHESIS",
-    title: "Connect it.",
-    description: "See your body signals and skin check-ins together.",
+    title: "See the connection.",
+    description: "View your Skin Balance summary, compare trends, and choose a daily action to test.",
     imageSrc: "/images/threefig-balance-now-knit.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-03-mobile.png",
     imageAlt: "Relaxing at home in soft knitwear with the 3fig ring naturally visible.",
@@ -385,11 +385,11 @@ export function Teaser3HowItWorks() {
         <div className="teaser3-section-head">
           <p className="teaser3-eyebrow">HOW IT WORKS</p>
           <h2 id="how-title" className="teaser3-section-title">
-            Wear. Check in. <br />
-            <span className="teaser3-rose-accent">Connect.</span>
+            The ring measures. <br />
+            <span className="teaser3-rose-accent">You add context.</span>
           </h2>
           <p className="teaser3-section-lead">
-            Ring data and your skin check-ins, brought together.
+            3fig brings both together to help you understand your skin.
           </p>
         </div>
 
