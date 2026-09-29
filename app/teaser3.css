@@ -465,6 +465,12 @@
   background-color: #f0ebe4;
 }
 
+.teaser3-video-col .teaser3-hero-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .teaser3-video-col .teaser3-video,
 .teaser3-video-col .teaser3-hero-image {
   width: 100%;
@@ -668,6 +674,12 @@
   background-color: #f0ebe4;
   margin: 0;
   padding: 0;
+}
+
+.teaser3-mobile-media-col .teaser3-hero-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .teaser3-mobile-media-col .teaser3-video,

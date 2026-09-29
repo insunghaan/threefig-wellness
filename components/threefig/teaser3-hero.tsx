@@ -511,14 +511,18 @@ export function Teaser3Hero() {
 
         {/* Right Column: 45% Hero Image Panel */}
         <section className="teaser3-video-col" aria-label="3fig Smart Ring Preview">
-          <img
-            src="/images/newhero0928.png?v=0928v3"
-            alt="3fig Smart Ring and Skin Balance app"
-            className="teaser3-video teaser3-hero-image"
-            width={1200}
-            height={1500}
-            fetchPriority="high"
-          />
+          <picture className="teaser3-hero-picture">
+            <source type="image/webp" srcSet="/images/teaser3/hero-ring-phone.webp" />
+            <img
+              src="/images/teaser3/hero-ring-phone.jpg"
+              alt="3fig Smart Ring and Skin Balance app"
+              className="teaser3-video teaser3-hero-image"
+              width={910}
+              height={1024}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
         </section>
       </div>
 
@@ -632,14 +636,18 @@ export function Teaser3Hero() {
           data-theme="light"
           aria-label="3fig Smart Ring Preview"
         >
-          <img
-            src="/images/newhero0928.png?v=0928v3"
-            alt="3fig Smart Ring and Skin Balance app"
-            className="teaser3-video teaser3-hero-image"
-            width={1200}
-            height={1500}
-            fetchPriority="high"
-          />
+          <picture className="teaser3-hero-picture">
+            <source type="image/webp" srcSet="/images/teaser3/hero-ring-phone.webp" />
+            <img
+              src="/images/teaser3/hero-ring-phone.jpg"
+              alt="3fig Smart Ring and Skin Balance app"
+              className="teaser3-video teaser3-hero-image"
+              width={910}
+              height={1024}
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
         </section>
       </div>
 

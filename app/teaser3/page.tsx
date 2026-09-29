@@ -22,7 +22,13 @@ export default function Teaser3Page() {
       <link
         rel="preload"
         as="image"
-        href="/images/newhero0928.png?v=0928v3"
+        href="/images/teaser3/hero-ring-phone.webp"
+        type="image/webp"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/teaser3/hero-ring-phone.jpg"
       />
       <link
         rel="preload"
