@@ -1,20 +1,123 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Teaser4WaitlistDialog } from "./teaser4-waitlist-dialog";
+
+const OUTCOMES_ITEMS = [
+  {
+    num: "01 / TODAY",
+    titleLine1: "Understand today’s",
+    titleLine2: "Skin Balance.",
+    desc: "Every morning, 3fig pairs your sleep and recovery signals with how your skin feels to create your daily score.",
+    secondary: "One number. Clear context behind it.",
+    imageWebp: "/images/teaser4/what-you-get-01.webp",
+    imagePng: "/images/teaser4/what-you-get-01.png",
+    alt: "Skin Balance daily score breakdown card",
+  },
+  {
+    num: "02 / PATTERNS",
+    titleLine1: "See when your skin",
+    titleLine2: "feels different.",
+    desc: "Track your Skin Balance alongside sleep consistency, late meals, and travel to see what might be affecting your skin.",
+    secondary: "Spot connections without second-guessing.",
+    imageWebp: "/images/teaser4/what-you-get-02.webp",
+    imagePng: "/images/teaser4/what-you-get-02.png",
+    alt: "7-day sleep consistency and skin comfort patterns card",
+  },
+  {
+    num: "03 / NEXT STEP",
+    titleLine1: "Choose a habit.",
+    titleLine2: "Track your skin’s response.",
+    desc: "When your score shifts, 3fig suggests a simple daily habit—like an earlier wind-down—and helps you track whether it makes a difference.",
+    secondary: "Small adjustments. Real feedback.",
+    imageWebp: "/images/teaser4/what-you-get-03.webp",
+    imagePng: "/images/teaser4/what-you-get-03.png",
+    alt: "Tonight wind-down recommendation card",
+  },
+];
 
 export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: boolean }) {
   const [signupOpen, setSignupOpen] = useState(initialOpen);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  // What You Get Mobile Carousel state
+  const [activeOutcomeIdx, setActiveOutcomeIdx] = useState(0);
+  const outcomesTrackRef = useRef<HTMLDivElement | null>(null);
+  const touchStartXRef = useRef<number>(0);
+  const touchStartYRef = useRef<number>(0);
+  const isSwipingRef = useRef<boolean>(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const y = window.scrollY;
+      setIsScrolled(y > 30);
+      // Smooth progress from 0 to 1 over first 360px of scroll
+      const p = Math.min(Math.max(y / 360, 0), 1);
+      setScrollProgress(p);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleOutcomesScroll = () => {
+    const el = outcomesTrackRef.current;
+    if (!el) return;
+    const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "20");
+    const scrollLeft = el.scrollLeft;
+
+    let closestIdx = 0;
+    let minDiff = Infinity;
+    for (let i = 0; i < el.children.length; i++) {
+      const child = el.children[i] as HTMLElement;
+      const target = child.offsetLeft - paddingLeft;
+      const diff = Math.abs(target - scrollLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = i;
+      }
+    }
+    if (closestIdx !== activeOutcomeIdx) {
+      setActiveOutcomeIdx(closestIdx);
+    }
+  };
+
+  const scrollToOutcomeSlide = (idx: number) => {
+    const el = outcomesTrackRef.current;
+    if (!el) return;
+    const slideEl = el.children[idx] as HTMLElement | undefined;
+    if (slideEl) {
+      const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "20");
+      const targetScroll = slideEl.offsetLeft - paddingLeft;
+      el.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: "smooth",
+      });
+      setActiveOutcomeIdx(idx);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+    isSwipingRef.current = true;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isSwipingRef.current) return;
+    isSwipingRef.current = false;
+    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
+      if (deltaX < 0 && activeOutcomeIdx < OUTCOMES_ITEMS.length - 1) {
+        scrollToOutcomeSlide(activeOutcomeIdx + 1);
+      } else if (deltaX > 0 && activeOutcomeIdx > 0) {
+        scrollToOutcomeSlide(activeOutcomeIdx - 1);
+      }
+    }
+  };
 
   const openSignup = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
@@ -128,13 +231,40 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
 
         {/* MEET 3FIG */}
         <section className="section meet" id="meet">
-          <div className="section-top">
-            <p className="eyebrow">MEET 3FIG</p>
-            <h2>Your Skin Balance. The data behind it.</h2>
-            <p>
-              See your daily score alongside ring measurements and skin
-              check-ins.
-            </p>
+          {/* Scroll Choreography Stage: Phone peeking into Hero, descends and scales down as copy appears behind it */}
+          <div className="meet-showcase-stage">
+            <div
+              className="meet-copy-reveal"
+              style={{
+                opacity: Math.min(1, 0.2 + scrollProgress * 0.8),
+                transform: `translateY(${(1 - scrollProgress) * 24}px)`,
+              }}
+            >
+              <p className="eyebrow">MEET 3FIG</p>
+              <h2>Your Skin Balance. The data behind it.</h2>
+              <p>
+                See your daily score alongside ring measurements and skin check-ins.
+              </p>
+            </div>
+
+            <div
+              className="meet-phone-stage"
+              style={{
+                transform: `translateY(${scrollProgress * 44}px) scale(${1 - scrollProgress * 0.08})`,
+              }}
+            >
+              <picture>
+                <source type="image/webp" srcSet="/images/teaser4/phone-app-mockup.webp" />
+                <img
+                  src="/images/teaser4/phone-app-mockup.png"
+                  alt="3fig app preview on smartphone displaying Skin Balance 78"
+                  className="meet-phone-img"
+                  width={384}
+                  height={512}
+                  fetchPriority="high"
+                />
+              </picture>
+            </div>
           </div>
 
           <div
@@ -266,154 +396,97 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
             </p>
           </div>
 
-          <div className="outcome-list">
-            {/* Outcome 1 */}
-            <article className="outcome">
-              <div className="outcome-copy">
-                <span className="number">01 / TODAY</span>
-                <h3>Understand today’s Skin Balance.</h3>
-                <p>
-                  Every morning, 3fig pairs your sleep and recovery signals with
-                  how your skin feels to create your daily score.
-                </p>
-                <p className="secondary">
-                  One number. Clear context behind it.
-                </p>
-              </div>
-              <div className="data-card" aria-hidden="true">
-                <div className="score-header">
-                  <span className="live-dot">TODAY’S SCORE</span>
-                  <span>8:30 AM</span>
+          {/* Desktop alternating rows */}
+          <div className="outcome-desktop-list">
+            {OUTCOMES_ITEMS.map((item, idx) => (
+              <article key={item.num} className={`outcome outcome-${idx + 1}`}>
+                <div className="outcome-copy">
+                  <span className="number">{item.num}</span>
+                  <h3 className="outcome-title">
+                    {item.titleLine1} <br className="outcome-title-br" />
+                    {item.titleLine2}
+                  </h3>
+                  <p>{item.desc}</p>
+                  <p className="secondary">{item.secondary}</p>
                 </div>
-                <div className="score-main">
-                  <div className="score-dial">
-                    <svg viewBox="0 0 142 142">
-                      <circle cx="71" cy="71" r="65" className="dial-track" />
-                      <circle cx="71" cy="71" r="65" className="dial-value" />
-                    </svg>
-                    <div>
-                      <strong>86</strong>
-                      <small>/ 100</small>
+                <div className="outcome-card-visual">
+                  <picture>
+                    <source type="image/webp" srcSet={item.imageWebp} />
+                    <img
+                      src={item.imagePng}
+                      alt={item.alt}
+                      className="outcome-component-img"
+                      width={512}
+                      height={512}
+                      loading="lazy"
+                    />
+                  </picture>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* Mobile carousel with natural 2-line wrapped titles & tight pagination dots */}
+          <div className="outcome-mobile-carousel">
+            <div
+              ref={outcomesTrackRef}
+              className="outcome-carousel-track"
+              onScroll={handleOutcomesScroll}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {OUTCOMES_ITEMS.map((item, idx) => {
+                const isActive = activeOutcomeIdx === idx;
+                return (
+                  <div
+                    key={item.num}
+                    className={`outcome-carousel-slide ${isActive ? "is-active" : ""}`}
+                  >
+                    <div className="outcome-copy">
+                      <span className="number">{item.num}</span>
+                      <h3 className="outcome-title">
+                        {item.titleLine1} <br />
+                        {item.titleLine2}
+                      </h3>
+                      <p>{item.desc}</p>
+                      <p className="secondary">{item.secondary}</p>
+                    </div>
+                    <div className="outcome-card-visual">
+                      <picture>
+                        <source type="image/webp" srcSet={item.imageWebp} />
+                        <img
+                          src={item.imagePng}
+                          alt={item.alt}
+                          className="outcome-component-img"
+                          width={400}
+                          height={400}
+                          loading="lazy"
+                        />
+                      </picture>
                     </div>
                   </div>
-                  <div className="score-caption">
-                    <strong>Steady</strong>
-                    <p>Within your normal range.</p>
-                  </div>
-                </div>
-                <div className="signal-rows">
-                  <div>
-                    <span>Sleep</span>
-                    <b>7h 42m</b>
-                  </div>
-                  <div>
-                    <span>Skin check-in</span>
-                    <b>Comfortable</b>
-                  </div>
-                </div>
-                <p className="data-footnote">
-                  Generated from ring data and your morning check-in.
-                </p>
-              </div>
-            </article>
+                );
+              })}
+            </div>
 
-            {/* Outcome 2 */}
-            <article className="outcome">
-              <div className="outcome-copy">
-                <span className="number">02 / PATTERNS</span>
-                <h3>See when your skin feels different.</h3>
-                <p>
-                  Track your Skin Balance alongside sleep consistency, late
-                  meals, and travel to see what might be affecting your skin.
-                </p>
-                <p className="secondary">
-                  Spot connections without second-guessing.
-                </p>
-              </div>
-              <div className="data-card trend-card" aria-hidden="true">
-                <div className="score-header">
-                  <span>LAST 7 DAYS</span>
-                  <span>Trend view</span>
-                </div>
-                <h4>Sleep &amp; skin comfort</h4>
-                <div className="legend">
-                  <span>
-                    <i /> Skin comfort
-                  </span>
-                  <span>
-                    <i /> Sleep consistency
-                  </span>
-                </div>
-                <div className="line-chart">
-                  <svg viewBox="0 0 440 120">
-                    <g className="gridlines">
-                      <path d="M 0 20 L 440 20" />
-                      <path d="M 0 60 L 440 60" />
-                      <path d="M 0 100 L 440 100" />
-                    </g>
-                    <path
-                      d="M 20 85 C 70 80, 110 70, 160 72 C 210 74, 250 50, 310 46 C 360 42, 390 35, 420 30"
-                      className="line-primary"
-                    />
-                    <circle cx="420" cy="30" r="4" className="endpoint" />
-                    <path
-                      d="M 20 95 C 70 92, 110 85, 160 80 C 210 75, 260 62, 310 58 C 360 54, 390 48, 420 44"
-                      className="line-secondary"
-                    />
-                  </svg>
-                  <div className="week">
-                    <span>M</span>
-                    <span>T</span>
-                    <span>W</span>
-                    <span>T</span>
-                    <span>F</span>
-                    <span>S</span>
-                    <span>S</span>
-                  </div>
-                </div>
-                <div className="comparison-note">
-                  <span>PATTERN NOTED</span>
-                  <p>Skin comfort rated higher after 7+ hours of sleep.</p>
-                </div>
-              </div>
-            </article>
-
-            {/* Outcome 3 */}
-            <article className="outcome">
-              <div className="outcome-copy">
-                <span className="number">03 / NEXT STEP</span>
-                <h3>Choose a habit. Track your skin’s response.</h3>
-                <p>
-                  When your score shifts, 3fig suggests a simple daily habit—like
-                  an earlier wind-down—and helps you track whether it makes a
-                  difference.
-                </p>
-                <p className="secondary">Small adjustments. Real feedback.</p>
-              </div>
-              <div className="data-card action-card" aria-hidden="true">
-                <div className="score-header">
-                  <span>TODAY’S FOCUS</span>
-                  <span>Recovery</span>
-                </div>
-                <div className="moon">☾</div>
-                <h4>Start winding down 20 minutes earlier.</h4>
-                <p>
-                  Your last two lower scores followed shorter sleep windows.
-                </p>
-                <div className="action-time">
-                  <span>TARGET WIND-DOWN</span>
-                  <div>
-                    <strong>10:20</strong>
-                    <small>PM</small>
-                  </div>
-                </div>
-                <div className="next-check">
-                  <span>TOMORROW</span>
-                  <p>Log your skin check-in after wake-up</p>
-                  <span>↗</span>
-                </div>
-              </div>
-            </article>
+            {/* Mobile Pagination Dots */}
+            <div
+              className="outcome-carousel-dots"
+              role="tablist"
+              aria-label="What You Get navigation"
+            >
+              {OUTCOMES_ITEMS.map((item, idx) => (
+                <button
+                  key={item.num}
+                  type="button"
+                  role="tab"
+                  className={`outcome-carousel-dot ${activeOutcomeIdx === idx ? "is-active" : ""}`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  aria-selected={activeOutcomeIdx === idx}
+                  onClick={() => scrollToOutcomeSlide(idx)}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
