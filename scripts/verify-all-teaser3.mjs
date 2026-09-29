@@ -103,7 +103,9 @@ async function main() {
     console.log(`Captured verify-${vp.name}-hero.png`);
 
     // 2. Scroll to Meet 3fig section
-    await sendSession("Runtime.evaluate", { expression: "window.scrollTo({ top: 320, behavior: 'instant' })" });
+    await sendSession("Runtime.evaluate", {
+      expression: "document.getElementById('meet-3fig').scrollIntoView({ behavior: 'instant' })"
+    });
     await sleep(400);
     const meetShot = await sendSession("Page.captureScreenshot", { format: "png" });
     await fs.writeFile(`${ARTIFACT_DIR}/verify-${vp.name}-meet.png`, Buffer.from(meetShot.data, "base64"));

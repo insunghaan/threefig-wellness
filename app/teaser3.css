@@ -511,8 +511,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Bottom padding ensures card bottom meets the peek line of the bottom phone */
-  padding: clamp(24px, 3.5vh, 40px) clamp(28px, 3.5vw, 56px) calc(clamp(88px, 13.0vh, 118px) + 16px) 16px;
+  padding: clamp(24px, 3.5vh, 44px) clamp(28px, 3.5vw, 52px) clamp(24px, 3.5vh, 44px) 16px;
   background-color: var(--tf-color-surface-light);
 }
 
@@ -723,19 +722,18 @@
   width: 100%;
 }
 
-/* Mobile Video Container: Card with rounded rectangle, sits seamlessly above bottom phone */
+/* Mobile Video Container: Card with rounded rectangle, sits in hero flow */
 .teaser3-mobile-media-col {
   position: relative;
-  width: calc(100% - clamp(32px, 8vw, 44px));
-  max-width: 440px;
-  margin: 0 auto;
-  flex: 1;
-  min-height: 220px;
-  max-height: calc(100dvh - clamp(200px, 26vh, 240px) - clamp(110px, 12.8vh, 128px) - 8px);
+  width: calc(100% - clamp(32px, 8vw, 48px));
+  max-width: calc(100vw - 32px);
+  margin: 0 auto clamp(24px, 6vw, 36px) auto;
+  aspect-ratio: 4 / 4.8;
+  flex-shrink: 0;
   overflow: hidden;
-  border-radius: 26px;
+  border-radius: 24px;
   background-color: #f0ebe4;
-  box-shadow: 0 14px 36px -8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.07);
   border: 1px solid rgba(0, 0, 0, 0.05);
   padding: 0;
 }
@@ -1631,7 +1629,30 @@
    ========================================================================== */
 
 .teaser3-scroll-cue {
-  display: none !important;
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  margin: 0;
+  font-family: var(--tf-font-sans);
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: opacity 220ms ease, visibility 220ms ease, color 150ms ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.teaser3-scroll-cue:focus-visible {
+  outline: 2px solid var(--tf-color-focus-ring);
+  outline-offset: 3px;
+}
+
+/* Hidden state: completely inaccessible and non-clickable, no layout shift */
+.teaser3-scroll-cue.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Arrow bounce: 2 cycles of 2.5px vertical movement, then stationary */
@@ -1940,15 +1961,15 @@
 }
 
 /* ==========================================================================
-   SECTION: MEET 3FIG (Single Phone with Scroll Peek & Interaction)
+   SECTION: MEET 3FIG (New Introduction)
+   Warm paper background, generous whitespace, prominent 3-phone composition
    ========================================================================== */
 .teaser3-meet-section {
   background-color: var(--paper, #f8f5f0);
-  padding: 0 0 clamp(70px, 8vw, 110px) 0;
-  margin-top: calc(-1 * clamp(88px, 13.0vh, 118px)); /* 1:1 match with user desktop ref peek */
+  padding: clamp(80px, 9vw, 130px) 0 clamp(60px, 7vw, 100px);
+  border-bottom: 1px solid var(--line, #dfd8cf);
   position: relative;
-  z-index: 5;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .teaser3-meet-container {
@@ -1959,27 +1980,10 @@
   box-sizing: border-box;
 }
 
-.teaser3-meet-stage {
-  position: relative;
-  width: 100%;
-  min-height: 840px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
 .teaser3-meet-header {
-  position: absolute;
-  top: clamp(14px, 2.5vw, 36px);
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  z-index: 1;
   text-align: center;
   max-width: 680px;
-  opacity: 0; /* Hidden by default at landing until scroll */
-  will-change: opacity, transform;
+  margin: 0 auto;
 }
 
 .teaser3-meet-title {
@@ -2002,67 +2006,53 @@
 }
 
 .teaser3-meet-visual {
-  position: relative;
-  z-index: 2;
-  margin-top: 0; /* Phone apex anchored directly to top of meet section */
+  margin-top: clamp(40px, 5vw, 68px);
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  overflow: visible;
 }
 
-.teaser3-meet-phone-wrapper {
-  max-width: clamp(285px, 28.8vw, 340px); /* Exactly 295px at 1024px viewport */
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  will-change: transform;
-  transform-origin: top center;
-}
-
-.teaser3-meet-phone-img {
-  max-width: 100%;
+.teaser3-meet-image {
+  max-width: 820px;
   width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 20px 48px rgba(0, 0, 0, 0.12));
 }
 
 @media (max-width: 860px) {
   .teaser3-meet-section {
-    padding: 0 0 40px 0;
-    margin-top: calc(-1 * clamp(110px, 12.8vh, 128px)); /* 1:1 match with user mobile ref peek */
-  }
-
-  .teaser3-meet-stage {
-    min-height: 690px;
+    padding: 56px 0 36px;
   }
 
   .teaser3-meet-header {
-    top: 6px;
-    text-align: center;
+    text-align: left;
     max-width: 100%;
-    margin: 0 auto;
-    opacity: 0;
+    margin: 0;
   }
 
   .teaser3-meet-desc {
-    margin: 0 auto;
+    margin: 0;
     max-width: 100%;
   }
 
   .teaser3-meet-visual {
-    margin-top: 0;
-    width: 100%;
+    margin-top: 32px;
+    margin-left: -24px;
+    margin-right: -24px;
+    width: calc(100% + 48px);
+    display: flex;
+    justify-content: center;
+    overflow: visible;
   }
 
-  .teaser3-meet-phone-wrapper,
-  .teaser3-meet-phone-img {
-    max-width: clamp(300px, 77.7vw, 360px); /* Exactly 342px at 440px viewport */
+  .teaser3-meet-image {
+    max-width: 460px;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
 }
 
