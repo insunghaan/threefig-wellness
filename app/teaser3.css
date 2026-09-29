@@ -285,21 +285,21 @@
   position: relative;
 }
 
-/* Left Column: 46% Content Panel */
+/* Left Column: 45% Content Panel */
 .teaser3-content-col {
-  flex: 0 0 46%;
-  width: 46%;
+  flex: 0 0 45%;
+  width: 45%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   box-sizing: border-box;
   position: relative;
   /* Fluid horizontal inset */
-  padding-left: clamp(36px, 4.4vw, 96px);
-  padding-right: clamp(20px, 2.5vw, 48px);
-  padding-top: clamp(28px, 3.5vh, 44px);
-  padding-bottom: calc(clamp(88px, 12.5vh, 115px) + 24px);
+  padding-left: clamp(36px, 4.2vw, 64px);
+  padding-right: clamp(16px, 2vw, 32px);
+  padding-top: clamp(24px, 3.5vh, 40px);
+  padding-bottom: clamp(24px, 3.5vh, 40px);
   overflow: hidden;
 }
 
@@ -329,7 +329,7 @@
 }
 
 /* ==========================================================================
-   2. DESKTOP CONTENT GROUP: RAISED HEADLINE POSITION (~51% of hero height)
+   2. DESKTOP CONTENT GROUP: LOWER POSITIONED MATCHING IMAGE 2
    ========================================================================== */
 .teaser3-content-group {
   display: flex;
@@ -337,17 +337,18 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  margin-top: calc(51vh - clamp(32px, 3.8vh, 48px) - clamp(50px, 4.5vw, 76px));
+  margin-top: auto;
+  margin-bottom: clamp(12px, 2vh, 24px);
 }
 
-/* Fluid Two-Line Headline: clamp(40px, 3.8vw, 68px) */
+/* Fluid Two-Line Headline: clamp(38px, 3.8vw, 64px) */
 .teaser3-title {
-  margin: 0 0 clamp(16px, 1.8vh, 26px) 0;
+  margin: 0 0 clamp(14px, 1.8vh, 22px) 0;
   font-family: var(--font) !important;
-  font-size: clamp(40px, 3.8vw, 68px);
+  font-size: clamp(38px, 3.8vw, 64px);
   font-weight: 500 !important;
   line-height: 1.08;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   display: flex;
   flex-direction: column;
   max-width: 600px;
@@ -366,17 +367,17 @@
   white-space: normal;
 }
 
-/* Fluid Description: clamp(16px, 1.4vw, 24px), line-height ~1.4, width ~36vw capped at 660px */
+/* Fluid Description: clamp(14px, 1.2vw, 18px), line-height ~1.48 */
 .teaser3-desc {
   margin: 0;
   font-family: var(--font) !important;
-  font-size: clamp(16px, 1.4vw, 24px);
-  line-height: 1.5;
+  font-size: clamp(14px, 1.2vw, 18px);
+  line-height: 1.48;
   color: var(--muted);
   font-weight: 400;
   letter-spacing: -0.012em;
   width: 100%;
-  max-width: 540px;
+  max-width: 500px;
 }
 
 /* ==========================================================================
@@ -500,10 +501,10 @@
   margin: 0;
 }
 
-/* Right Column: 54% Hero Media Panel (Rounded Rectangle Card) */
+/* Right Column: 55% Hero Media Panel (Rounded Rectangle Card Matching Image 2) */
 .teaser3-video-col {
-  flex: 0 0 54%;
-  width: 54%;
+  flex: 0 0 55%;
+  width: 55%;
   min-width: 440px;
   height: 100%;
   position: relative;
@@ -511,22 +512,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(24px, 3.5vh, 44px) clamp(28px, 3.5vw, 52px) clamp(24px, 3.5vh, 44px) 16px;
+  padding: clamp(20px, 3vh, 32px) clamp(24px, 2.8vw, 40px) clamp(24px, 3.5vh, 44px) 16px;
   background-color: var(--tf-color-surface-light);
 }
 
 .teaser3-video-col .teaser3-hero-picture {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: auto;
-  max-width: min(100%, 580px);
-  height: auto;
-  max-height: 100%;
+  max-width: min(100%, 640px);
+  height: 100%;
+  max-height: calc(100vh - clamp(44px, 6.5vh, 72px));
   aspect-ratio: 910 / 1024;
-  border-radius: clamp(24px, 2.4vw, 34px);
+  border-radius: clamp(26px, 2.5vw, 34px);
   overflow: hidden;
-  background: #f0ebe4;
+  background: transparent;
   box-shadow: 0 16px 44px -8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -535,9 +534,9 @@
 .teaser3-video-col .teaser3-hero-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center !important;
-  border-radius: clamp(24px, 2.4vw, 34px);
+  border-radius: clamp(26px, 2.5vw, 34px);
   display: block;
 }
 
@@ -681,14 +680,14 @@
   }
 }
 
-/* Flexible Space: Absorbs additional vertical space between header and copy on tall viewports */
+/* Flexible Space: Absorbs vertical space between header and copy on tall viewports */
 .teaser3-mobile-flex-spacer {
-  flex: 1 1 0px;
-  min-height: clamp(16px, 4vw, 32px);
+  flex: 0 1 clamp(16px, 3vh, 32px);
+  min-height: clamp(12px, 2vh, 24px);
   width: 100%;
 }
 
-/* Mobile Content Group: Headline & description matching user reference proportions */
+/* Mobile Content Group: Headline & description matching Image 1 reference proportions */
 .teaser3-mobile-content-group {
   flex-shrink: 0;
   box-sizing: border-box;
@@ -696,12 +695,12 @@
   padding-left: clamp(20px, 5.5vw, 28px);
   padding-right: clamp(20px, 5.5vw, 28px);
   margin: 0;
-  margin-bottom: clamp(12px, 3vw, 18px);
+  margin-bottom: clamp(14px, 2.8vh, 22px);
 }
 
 /* Mobile Headline */
 .teaser3-mobile-content-group .teaser3-title {
-  font-size: clamp(29px, 8.2vw, 38px);
+  font-size: clamp(30px, 8.2vw, 38px);
   line-height: 1.08;
   letter-spacing: -0.03em;
   margin-bottom: 8px;
@@ -718,26 +717,26 @@
 
 .teaser3-mobile-content-group .teaser3-desc {
   font-size: 14px;
-  line-height: 1.42;
+  line-height: 1.44;
   color: var(--tf-color-text-secondary);
   margin: 0;
   max-width: 100%;
   width: 100%;
 }
 
-/* Mobile Video Container: Card with rounded rectangle, sits in hero flow */
+/* Mobile Video Container: Card with rounded rectangle, matching Image 1 4:4.96 proportions */
 .teaser3-mobile-media-col {
   position: relative;
-  width: calc(100% - clamp(32px, 8vw, 48px));
+  width: calc(100% - clamp(32px, 8vw, 44px));
   max-width: calc(100vw - 32px);
-  margin: 0 auto clamp(20px, 5vw, 32px) auto;
-  aspect-ratio: 910 / 1024;
-  max-height: calc(100dvh - clamp(240px, 32vh, 310px));
+  margin: 0 auto clamp(20px, 4vh, 36px) auto;
+  aspect-ratio: 371 / 460;
+  max-height: calc(100dvh - clamp(230px, 30vh, 280px));
   flex-shrink: 1;
   overflow: hidden;
-  border-radius: 24px;
-  background-color: #f0ebe4;
-  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.07);
+  border-radius: clamp(24px, 5.5vw, 30px);
+  background-color: transparent;
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
   padding: 0;
 }
@@ -746,7 +745,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 24px;
+  border-radius: clamp(24px, 5.5vw, 30px);
   overflow: hidden;
 }
 
@@ -754,9 +753,9 @@
 .teaser3-mobile-media-col .teaser3-hero-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover; /* 이미지가 카드 전체를 빈틈없이 채워 박스 노출 버그 원천 차단 */
   object-position: center center !important;
-  border-radius: 24px;
+  border-radius: clamp(24px, 5.5vw, 30px);
   display: block;
 }
 
@@ -1801,11 +1800,12 @@
   }
 
   .teaser3-mobile-media-col {
-    max-height: 48vh;
+    max-height: 52vh;
+    background-color: transparent;
   }
 
   .teaser3-mobile-media-col .teaser3-hero-image {
-    object-position: center 20%;
+    object-position: center center !important;
   }
 
   .teaser3-mobile-cue-fixed {

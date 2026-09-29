@@ -80,9 +80,9 @@ async function main() {
 
   const viewports = [
     { name: "desktop-user-ref-1024x676", width: 1024, height: 676, dsf: 2 },
-    { name: "mobile-user-ref-440x938", width: 440, height: 938, dsf: 2 },
+    { name: "mobile-user-ref-440x890", width: 440, height: 890, dsf: 2 },
+    { name: "mobile-small-380x626", width: 380, height: 626, dsf: 2 },
     { name: "desktop-wide-1440x900", width: 1440, height: 900, dsf: 2 },
-    { name: "desktop-narrow-user-reported", width: 980, height: 850, dsf: 2 },
     { name: "mobile-390x844", width: 390, height: 844, dsf: 2 }
   ];
 
