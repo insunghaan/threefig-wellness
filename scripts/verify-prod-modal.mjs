@@ -109,7 +109,7 @@ async function run() {
     } catch (e) {}
   }
 
-  const port = 9226;
+  const port = 9228;
   const userDataDir = `/tmp/chrome-t4-prod-${Date.now()}`;
   const chromeProcess = runChrome([
     '--headless=new',
@@ -121,8 +121,15 @@ async function run() {
   ]);
 
   try {
-    await sleep(2000);
-    const wsUrl = await getCDPTarget(port);
+    let wsUrl = null;
+    for (let i = 0; i < 20; i++) {
+      await sleep(500);
+      try {
+        wsUrl = await getCDPTarget(port);
+        if (wsUrl) break;
+      } catch (e) {}
+    }
+    if (!wsUrl) throw new Error('Could not connect to Chrome CDP');
     const client = new CDPClient(wsUrl);
     await client.connect();
 
@@ -138,6 +145,21 @@ async function run() {
     });
     await client.send('Page.navigate', { url: 'http://127.0.0.1:3005/teaser4' });
     await sleep(2500);
+    const evalRes = await client.send('Runtime.evaluate', {
+      expression: `(() => {
+        const el = document.querySelector(".hero-copy h1 span");
+        if (!el) return "NOT FOUND";
+        const cs = window.getComputedStyle(el);
+        return JSON.stringify({
+          text: el.innerText,
+          fontFamily: cs.fontFamily,
+          fontStyle: cs.fontStyle,
+          fontWeight: cs.fontWeight
+        });
+      })()`
+    });
+    console.log('COMPUTED H1 SPAN STYLE:', evalRes.result.value);
+
     const desktopLandingFile = path.join(ARTIFACTS_DIR, 'teaser4-desktop-landing.png');
     await captureScreenshot(client, desktopLandingFile);
 
@@ -149,14 +171,22 @@ async function run() {
     const desktopModalFile = path.join(ARTIFACTS_DIR, 'teaser4-desktop-modal.png');
     await captureScreenshot(client, desktopModalFile);
 
-    // 3. Mobile Modal Test
-    console.log('Testing Mobile Modal...');
+    // 3. Mobile Landing Test
+    console.log('Testing Mobile Landing...');
     await client.send('Emulation.setDeviceMetricsOverride', {
       width: 390,
       height: 844,
       deviceScaleFactor: 3,
       mobile: true,
     });
+    await client.send('Page.navigate', { url: 'http://127.0.0.1:3005/teaser4' });
+    await sleep(2500);
+
+    const mobileLandingFile = path.join(ARTIFACTS_DIR, 'teaser4-mobile-landing.png');
+    await captureScreenshot(client, mobileLandingFile);
+
+    // 4. Mobile Modal Test
+    console.log('Testing Mobile Modal...');
     await client.send('Page.navigate', { url: 'http://127.0.0.1:3005/teaser4?signup=1' });
     await sleep(2500);
 

@@ -89,7 +89,9 @@ export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: bool
             </p>
             <h1>
               Skin Balance.<br />
-              <span>Built from your body signals.</span>
+              <span className="hero-subline" style={{ fontStyle: 'normal' }}>
+                Built from your body signals.
+              </span>
             </h1>
             <p className="hero-lead">
               Track sleep, stress signals, and recovery. Add a skin check-in. See
