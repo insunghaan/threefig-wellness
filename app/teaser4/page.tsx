@@ -11,12 +11,19 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function Teaser4Page() {
+export default async function Teaser4Page({
+  searchParams,
+}: {
+  searchParams?: Promise<{ signup?: string; join?: string }>;
+}) {
+  const sp = searchParams ? await searchParams : undefined;
+  const initialOpen = sp?.signup === "1" || sp?.join === "1";
+
   return (
     <>
       <link rel="preload" as="image" href="/review/assets/logo.png" />
-      <link rel="preload" as="image" href="/review/assets/hero.png" />
-      <Teaser4PageContent />
+      <link rel="preload" as="image" href="/images/teaser4/hero-ring-phone.jpg" />
+      <Teaser4PageContent initialOpen={initialOpen} />
     </>
   );
 }

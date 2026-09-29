@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Teaser4WaitlistDialog } from "./teaser4-waitlist-dialog";
 
-export function Teaser4PageContent() {
-  const [signupOpen, setSignupOpen] = useState(false);
+export function Teaser4PageContent({ initialOpen = false }: { initialOpen?: boolean }) {
+  const [signupOpen, setSignupOpen] = useState(initialOpen);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -20,6 +20,28 @@ export function Teaser4PageContent() {
     if (e) e.preventDefault();
     setSignupOpen(true);
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as unknown as { openTeaser4Signup?: () => void }).openTeaser4Signup = () => setSignupOpen(true);
+      const checkOpen = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (
+          params.get("signup") === "1" ||
+          params.get("join") === "1" ||
+          window.location.hash === "#signup"
+        ) {
+          setSignupOpen(true);
+        }
+      };
+      checkOpen();
+      window.addEventListener("hashchange", checkOpen);
+      return () => {
+        window.removeEventListener("hashchange", checkOpen);
+        delete (window as unknown as { openTeaser4Signup?: () => void }).openTeaser4Signup;
+      };
+    }
+  }, []);
 
   return (
     <div className="teaser4-root">
@@ -91,16 +113,12 @@ export function Teaser4PageContent() {
           </div>
           <div className="hero-visual" aria-hidden="true">
             <img
-              src="/review/assets/hero.png"
+              src="/images/teaser4/hero-ring-phone.jpg"
               alt="3fig smart ring next to the 3fig app showing Skin Balance score"
-              width={900}
-              height={790}
+              width={819}
+              height={1024}
               fetchPriority="high"
             />
-            <div className="photo-label">
-              <span>3FIG RING + APP</span>
-              <span>Body data → Skin insight</span>
-            </div>
           </div>
         </section>
 

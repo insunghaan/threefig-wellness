@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('/review/assets/inter.css');
 
 /* ==========================================================================
    TEASER4 SCOPED STYLESHEET (Design Refinements)
@@ -1158,7 +1157,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(600px, calc(100% - 32px));
+  width: min(780px, calc(100% - 32px));
   max-height: calc(100dvh - 36px);
   border: 1px solid #d9cfc4;
   padding: 0;
@@ -1170,6 +1169,12 @@
   z-index: 1000;
   box-shadow: 0 24px 64px rgba(21, 18, 15, 0.3);
   animation: teaser4ScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 760px) {
+  .teaser4-dialog-content {
+    width: min(500px, calc(100% - 28px));
+  }
 }
 
 .teaser4-dialog-content.is-survey-mode {
@@ -1212,26 +1217,108 @@
   transform: scale(1.06);
 }
 
-/* Modal Card Structure: Top Banner Header + Bottom Form Body */
-.teaser4-modal-card {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+/* Modal Grid Structure: Desktop 2-column layout (Left aside + Right form) */
+.teaser4-modal-grid {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  min-height: 480px;
+  background: #f8f5f0;
 }
 
-/* Full-Size Top Banner Header */
-.teaser4-modal-banner-header {
+/* 1. Desktop Left Aside Panel */
+.teaser4-modal-aside {
   position: relative;
-  width: 100%;
-  height: 190px;
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
-  padding: 22px 26px;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 34px 28px;
   box-sizing: border-box;
 }
 
-.teaser4-modal-banner-picture,
+.teaser4-modal-aside-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Semi-transparent dark overlay for high text contrast */
+.teaser4-modal-aside-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  z-index: 1;
+}
+
+.teaser4-modal-aside-content {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.teaser4-modal-aside-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #ffbb98; /* Warm peach highlight */
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-family: var(--font) !important;
+}
+
+.teaser4-modal-aside-title {
+  font-size: 24px;
+  line-height: 1.16;
+  font-weight: 600;
+  color: #ffffff !important;
+  margin-bottom: 24px;
+  font-family: var(--font) !important;
+}
+
+.teaser4-modal-aside-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 8px;
+  font-family: var(--font) !important;
+}
+
+.teaser4-modal-aside-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.teaser4-modal-aside-list li {
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font) !important;
+}
+
+.teaser4-modal-aside-list strong {
+  color: #ffffff;
+}
+
+/* 2. Mobile-Only Top Banner Header (Hidden on Desktop) */
+.teaser4-modal-banner-header {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  padding: 18px 20px;
+  box-sizing: border-box;
+}
+
 .teaser4-modal-banner-img {
   position: absolute;
   inset: 0;
@@ -1241,50 +1328,39 @@
   object-position: center center;
 }
 
-/* Desktop overlay: subtle high-contrast gradient */
+/* Semi-transparent dark overlay for high text contrast */
 .teaser4-modal-banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(14, 12, 11, 0.82) 0%, rgba(14, 12, 11, 0.45) 55%, rgba(14, 12, 11, 0.25) 100%);
+  background: rgba(0, 0, 0, 0.48);
   z-index: 1;
-}
-
-/* Mobile overlay: semi-opaque dark background for maximum text clarity */
-@media (max-width: 640px) {
-  .teaser4-modal-banner-header {
-    height: 175px;
-    padding: 18px 20px;
-  }
-  .teaser4-modal-banner-overlay {
-    background: rgba(0, 0, 0, 0.72) !important; /* 검은 컬러배경 불투명하게 깔아 텍스트 가독성 확보 */
-  }
 }
 
 .teaser4-modal-banner-content {
   position: relative;
   z-index: 2;
   color: #ffffff;
+  margin-top: auto;
 }
 
 .teaser4-modal-banner-eyebrow {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
-  color: #ffbb98; /* Warm peach highlight */
+  color: #ffbb98;
   margin-bottom: 6px;
   text-transform: uppercase;
   font-family: var(--font) !important;
 }
 
 .teaser4-modal-banner-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff !important;
   line-height: 1.35;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
+  flex-direction: column;
+  gap: 3px;
   font-family: var(--font) !important;
 }
 
@@ -1293,30 +1369,37 @@
 }
 
 .teaser4-modal-banner-divider {
-  opacity: 0.6;
+  display: none;
 }
 
-@media (max-width: 640px) {
-  .teaser4-modal-banner-title {
+/* Responsive behavior at 760px */
+@media (max-width: 760px) {
+  .teaser4-modal-grid {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 3px;
-    font-size: 14px;
+    min-height: auto;
   }
-  .teaser4-modal-banner-divider {
+  .teaser4-modal-aside {
     display: none;
+  }
+  .teaser4-modal-banner-header {
+    display: flex;
+    align-items: flex-end;
   }
 }
 
 /* Modal Form Body */
 .teaser4-modal-form-body {
-  padding: 28px 30px 32px;
+  padding: 38px 34px;
   background: #f8f5f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .teaser4-modal-form-body {
-    padding: 22px 20px 26px;
+    padding: 24px 20px 28px;
   }
 }
 

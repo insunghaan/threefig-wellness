@@ -213,24 +213,44 @@ export function Teaser4WaitlistDialog({
             <X size={18} />
           </DialogPrimitive.Close>
 
-          {/* VIEW 1: SIGNUP FORM (Full-size Banner Header with Benefits + Form Body) */}
+          {/* VIEW 1: SIGNUP FORM (Dual Panel on Desktop, Top Banner on Mobile) */}
           {view === "signup" && (
-            <div className="teaser4-modal-card">
-              {/* Top Banner Header: Full-size background image with Waitlist Benefits */}
-              <div className="teaser4-modal-banner-header">
-                <picture className="teaser4-modal-banner-picture">
-                  <source
-                    media="(max-width: 640px)"
-                    srcSet="/images/teaser4/modal-banner-mobile.png"
-                  />
-                  <img
-                    src="/images/teaser4/modal-banner-desktop.png"
-                    alt=""
-                    className="teaser4-modal-banner-img"
-                  />
-                </picture>
+            <div className="teaser4-modal-grid">
+              {/* Desktop Left Aside: Background Image + Semi-transparent dark overlay + Benefits */}
+              <aside className="teaser4-modal-aside" aria-hidden="true">
+                <img
+                  src="/images/teaser4/modal-aside-desktop.png"
+                  alt=""
+                  className="teaser4-modal-aside-bg"
+                />
+                {/* Semi-transparent dark overlay for high text contrast */}
+                <div className="teaser4-modal-aside-overlay" />
 
-                {/* Dark semi-opaque overlay for high text contrast */}
+                <div className="teaser4-modal-aside-content">
+                  <p className="teaser4-modal-aside-eyebrow">3FIG EARLY ACCESS</p>
+                  <h3 className="teaser4-modal-aside-title">
+                    No app fees.<br />For life.
+                  </h3>
+                  <p className="teaser4-modal-aside-subtitle">Your waitlist benefits</p>
+                  <ul className="teaser4-modal-aside-list">
+                    <li>
+                      <strong>20% off</strong> the ring at launch
+                    </li>
+                    <li>
+                      <strong>Free lifetime</strong> app subscription
+                    </li>
+                  </ul>
+                </div>
+              </aside>
+
+              {/* Mobile-Only Top Banner Header: Swapped landscape image with dark overlay */}
+              <div className="teaser4-modal-banner-header" aria-hidden="true">
+                <img
+                  src="/images/teaser4/modal-banner-mobile.png"
+                  alt=""
+                  className="teaser4-modal-banner-img"
+                />
+                {/* Semi-transparent dark overlay for high text contrast */}
                 <div className="teaser4-modal-banner-overlay" />
 
                 {/* Header Text Overlay */}
@@ -244,7 +264,7 @@ export function Teaser4WaitlistDialog({
                 </div>
               </div>
 
-              {/* Lower Form Section */}
+              {/* Lower / Right Form Section */}
               <div className="teaser4-modal-form-body">
                 <p className="eyebrow">JOIN THE WAITLIST</p>
                 <DialogPrimitive.Title asChild>
