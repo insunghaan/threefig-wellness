@@ -64,3 +64,112 @@ test('a throwing Meta SDK cannot fail a saved waitlist registration',()=>{
  const win={location:{hostname:'3fig.io',pathname:'/'},fbq(){throw Error('blocked SDK');}};
  const pixel=load('lib/threefig/meta-pixel.ts',{}, {window:win});assert.doesNotThrow(()=>pixel.trackMetaWaitlistLead());
 });
+
+test('Slack notification and waitlist record designate source as utm_campaign from Instagram ad', async () => {
+  let slackParams = null;
+  let savedArgs = null;
+  class ApiError extends Error { constructor(status,message){ super(message); this.status=status; } }
+  const route = load('app/api/waitlist/route.ts', {
+    '@/lib/threefig/records-server': {
+      ApiError,
+      boundedBody: async r => r,
+      checkWrite() {},
+      json: (data, status) => Response.json(data, { status }),
+      failure: e => Response.json({ error: e.message }, { status: e.status || 500 }),
+    },
+    '@/lib/threefig/firestore-waitlist': {
+      getFirestoreInstance: () => null,
+      saveWaitlistSignup: async (...args) => {
+        savedArgs = args;
+        return { alreadyExisted: false };
+      },
+    },
+    '@/lib/threefig/welcome-outbox': {
+      dispatchWelcome() {},
+      welcomeId() {},
+    },
+    '@/lib/threefig/geolocation': {
+      resolveGeoLocation: async () => null,
+    },
+    '@/lib/threefig/slack-notification': {
+      sendSlackWaitlistNotification: async (p) => {
+        slackParams = p;
+      },
+    },
+    '@/lib/threefig/attribution': {
+      sanitizeAttribution: v => v,
+    },
+  });
+
+  const request = body => new Request('http://localhost/api/waitlist', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+
+  // Test case matching exact user Instagram UTM parameters
+  const igAttribution = {
+    first_touch: {
+      captured_at: new Date().toISOString(),
+      landing_path: '/',
+      referrer_host: 'instagram.com',
+      utm_source: 'instagram',
+      utm_medium: 'paid_social',
+      utm_campaign: '3fig_usa_video_20260924',
+      utm_content: 'video_skin_balance_v1',
+      utm_term: 'us4_age22_55w_ig',
+    },
+    last_touch: {
+      captured_at: new Date().toISOString(),
+      landing_path: '/',
+      referrer_host: 'instagram.com',
+      utm_source: 'instagram',
+      utm_medium: 'paid_social',
+      utm_campaign: '3fig_usa_video_20260924',
+      utm_content: 'video_skin_balance_v1',
+      utm_term: 'us4_age22_55w_ig',
+    },
+  };
+
+  const response = await route.POST(request({
+    email: 'insta-lead@example.com',
+    attribution: igAttribution,
+  }));
+
+  assert.equal(response.status, 201);
+  assert.equal(slackParams.source, '3fig_usa_video_20260924');
+  assert.equal(savedArgs[1], '3fig_usa_video_20260924');
+
+  // Verify survey submission also retains utm_campaign as source
+  let surveySlackParams = null;
+  const surveyRoute = load('app/api/waitlist/route.ts', {
+    '@/lib/threefig/records-server': {
+      ApiError,
+      boundedBody: async r => r,
+      checkWrite() {},
+      json: (data, status) => Response.json(data, { status }),
+      failure: e => Response.json({ error: e.message }, { status: e.status || 500 }),
+    },
+    '@/lib/threefig/firestore-waitlist': {
+      getFirestoreInstance: () => null,
+      saveWaitlistSignup: async () => ({ alreadyExisted: true }),
+    },
+    '@/lib/threefig/welcome-outbox': { dispatchWelcome() {}, welcomeId() {} },
+    '@/lib/threefig/geolocation': { resolveGeoLocation: async () => null },
+    '@/lib/threefig/slack-notification': {
+      sendSlackWaitlistNotification: async (p) => {
+        surveySlackParams = p;
+      },
+    },
+    '@/lib/threefig/attribution': { sanitizeAttribution: v => v },
+  });
+
+  await surveyRoute.POST(request({
+    email: 'insta-lead@example.com',
+    attribution: igAttribution,
+    survey: { gender: 'female', age: '25-34' },
+  }));
+
+  assert.equal(surveySlackParams.source, '3fig_usa_video_20260924');
+  assert.equal(surveySlackParams.survey.gender, 'female');
+});
+

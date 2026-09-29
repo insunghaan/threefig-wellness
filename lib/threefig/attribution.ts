@@ -4,7 +4,12 @@ export type Attribution = { first_touch: Touch; last_touch: Touch };
 export const ATTRIBUTION_KEY = "3fig-attribution-v1";
 const MAX_AGE = 90 * 24 * 60 * 60 * 1000;
 function token(value: unknown): string | undefined {
-  return typeof value === "string" && /^[a-zA-Z0-9_.~-]{1,100}$/.test(value) ? value : undefined;
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 150 || trimmed.includes("@") || trimmed.includes("<") || trimmed.includes(">") || trimmed.includes('"')) {
+    return undefined;
+  }
+  return /^[a-zA-Z0-9_.~+\s()|:-]{1,150}$/.test(trimmed) ? trimmed : undefined;
 }
 function cleanTouch(value: unknown, now: number): Touch | null {
   if (!value || typeof value !== "object") return null;

@@ -58,7 +58,7 @@ export async function sendSlackWaitlistNotification(
     `• *Email:* \`${params.email}\``,
     `• *Location:* ${locationStr}`,
     `• *Timezone:* ${tzStr}`,
-    `• *Source:* ${params.source}`,
+    `• *Source:* \`${params.source}\``,
     `• *Signed up:* ${params.createdAt}`,
   ];
 
