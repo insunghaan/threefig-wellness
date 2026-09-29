@@ -2783,220 +2783,68 @@
     max-width: 100%;
   }
 
-  .teaser3-value-mobile-carousel-wrap {
-    position: relative;
+  /* Mobile What You Get: Vertical Sequential List (No carousel, continuous scroll) */
+  .teaser3-value-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
     width: 100%;
   }
 
-  /* Track starts precisely at container's left edge (24px) with peek on the right */
-  .teaser3-value-mobile-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: var(--tf-mobile-px, 24px);
-    scroll-padding-right: var(--tf-mobile-px, 24px);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    gap: 16px;
-    padding: 0 var(--tf-mobile-px, 24px) 8px var(--tf-mobile-px, 24px);
-    margin: 0 calc(-1 * var(--tf-mobile-px, 24px));
-    touch-action: pan-x pan-y;
-  }
-
-  .teaser3-value-mobile-track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .teaser3-value-mobile-slide {
-    flex: 0 0 calc(100% - 36px);
-    max-width: 360px;
-    scroll-snap-align: start;
+  .teaser3-value-mobile-item {
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
+    width: 100%;
   }
 
   .teaser3-value-mobile-copy {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
-  .teaser3-value-mobile-slide .teaser3-value-title {
-    font-size: 21px;
+  .teaser3-value-mobile-title {
+    font-size: 22px;
     line-height: 1.25;
+    color: var(--tf-color-ink, #141312);
+    margin-top: 6px;
     margin-bottom: 8px;
-    min-height: 52px; /* 1, 2, 3 타이틀 모두 2줄 높이 완벽 통일 */
-    display: flex;
-    align-items: flex-start;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    min-height: auto;
+    display: block;
   }
 
-  .teaser3-value-mobile-slide .teaser3-value-desc {
-    font-size: 14px;
-    line-height: 1.48;
+  .teaser3-value-mobile-desc {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--tf-color-text-secondary, #66615b);
+    margin: 0;
     max-width: 100%;
   }
 
-  .teaser3-value-mobile-slide .teaser3-visual-panel {
+  .teaser3-value-mobile-subdesc {
+    margin-top: 4px;
+    color: var(--tf-color-text-secondary, #66615b);
+  }
+
+  .teaser3-value-mobile-item .teaser3-visual-panel {
     aspect-ratio: unset;
     min-height: unset;
     max-width: 100%;
     border-radius: 0;
     background: transparent !important;
     box-shadow: none !important;
-    padding: 8px 0;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-component-picture,
-  .teaser3-value-mobile-slide .teaser3-component-img {
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-panel-content {
-    padding: 12px;
-  }
-
-  /* Compact preview card on mobile to prevent any overflow/clipping */
-  .teaser3-value-mobile-slide .teaser3-glass-card {
-    padding: 18px 16px 14px;
-    border-radius: 20px;
-    width: 100%;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-header {
-    margin-bottom: 12px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-gauge-wrap {
-    max-width: 154px;
-    margin-bottom: 10px;
-  }
-
-  .teaser3-value-mobile-slide .t3-gauge-app-style {
-    transform: translateY(2px);
-  }
-
-  .teaser3-value-mobile-slide .t3-gauge-app-score {
-    font-size: 46px;
-    line-height: 1;
-    margin: 0;
-  }
-
-  .teaser3-value-mobile-slide .t3-gauge-app-status {
-    font-size: 13px;
-    margin-top: 2px;
-    margin-bottom: 5px;
-  }
-
-  .teaser3-value-mobile-slide .t3-gauge-app-arrow {
-    width: 19px;
-    height: 19px;
-  }
-
-  .teaser3-value-mobile-slide .t3-gauge-app-arrow svg {
-    width: 10px;
-    height: 10px;
-  }
-
-  .teaser3-value-mobile-slide .t3-app-subcards-row {
-    gap: 6px;
-    margin-top: 12px;
-  }
-
-  .teaser3-value-mobile-slide .t3-app-subcard {
-    padding: 10px 4px 8px;
-    border-radius: 14px;
-  }
-
-  .teaser3-value-mobile-slide .t3-app-subcard-title {
-    font-size: 11px;
-  }
-
-  .teaser3-value-mobile-slide .t3-app-subcard-score {
-    font-size: 20px;
-  }
-
-  .teaser3-value-mobile-slide .t3-app-subcard-status {
-    font-size: 11px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-legend {
-    gap: 12px;
-    margin-bottom: 8px;
-    font-size: 11.5px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-chart-wrap {
-    margin-bottom: 6px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-move-box {
-    padding: 14px 13px;
-    margin-bottom: 8px;
-    border-radius: 14px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-move-title {
-    font-size: 15.5px;
-    margin-bottom: 4px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-move-rationale {
-    font-size: 12.5px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-explainer {
-    padding: 10px 14px;
-    border-radius: 14px;
-    margin-top: 10px;
-  }
-
-  .teaser3-value-mobile-slide .teaser3-preview-explainer p {
-    font-size: 12px;
-    line-height: 1.4;
-  }
-
-  /* Mobile Pagination Dots: Narrowed gap matching refined aesthetic */
-  .teaser3-value-mobile-dots {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* 사이 간격 좁힘 */
-    margin-top: 14px;
-    padding-bottom: 56px; /* Floating dock clearance */
-  }
-
-  .teaser3-value-mobile-dot {
-    position: relative;
-    width: 18px;
-    height: 32px;
-    min-width: 18px;
-    min-height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    cursor: pointer;
     padding: 0;
-    margin: 0;
+    margin-top: 14px;
   }
 
-  .teaser3-value-mobile-dot::before {
-    content: "";
+  .teaser3-value-mobile-item .teaser3-component-picture,
+  .teaser3-value-mobile-item .teaser3-component-img {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    margin: 0 auto;
     display: block;
-    width: 6.5px;
-    height: 6.5px;
-    border-radius: 50%;
-    background-color: #d8d2c8;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .teaser3-value-mobile-dot.is-active::before {
-    width: 18px;
-    height: 6.5px;
-    border-radius: 999px;
-    background-color: #1a1715;
+    filter: drop-shadow(0 12px 28px rgba(44, 30, 22, 0.08));
   }
 }
 
@@ -3018,6 +2866,11 @@
   position: relative;
   width: 100%;
   outline: none;
+}
+
+/* Hidden on desktop: mobile vertical grid */
+.teaser3-how-mobile-grid {
+  display: none;
 }
 
 /* Horizontal Track */
@@ -3420,141 +3273,80 @@
     touch-action: pan-x pan-y;
   }
 
-  .teaser3-how-slide-card {
-    flex: 0 0 calc(100% - 48px);
-    max-width: 380px;
-  }
-
-  .teaser3-how-photo-wrap {
-    aspect-ratio: 9 / 13.5;
-    border-radius: 26px;
-  }
-
-  .teaser3-how-desktop-photo {
+  /* Mobile How It Works: Vertical Stack Layout (Identical to Teaser4) */
+  .teaser3-how-carousel-wrap {
     display: none !important;
   }
 
-  .teaser3-how-mobile-photo {
-    display: block !important;
+  .teaser3-how-mobile-grid {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    width: 100%;
   }
 
-  .teaser3-how-gradient-scrim {
-    background: linear-gradient(
-      to bottom,
-      rgba(14, 12, 11, 0.65) 0%,
-      rgba(14, 12, 11, 0.15) 36%,
-      rgba(14, 12, 11, 0.76) 100%
-    );
-  }
-
-  /* Hide Desktop Caption on Mobile */
-  .teaser3-how-desktop-caption {
-    display: none;
-  }
-
-  /* Show Mobile Caption (Top) */
-  .teaser3-how-mobile-caption {
-    display: block;
-    position: absolute;
-    top: 26px;
-    left: 22px;
-    right: 22px;
-    z-index: 3;
-    text-align: left;
-    pointer-events: none;
-  }
-
-  .teaser3-how-mobile-eyebrow {
-    display: block;
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.75);
-    margin-bottom: 8px;
-  }
-
-  .teaser3-how-mobile-caption .teaser3-how-slide-title {
-    font-family: var(--tf-font-sans);
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 1.14;
-    letter-spacing: -0.025em;
-    color: #FFFFFF;
-    margin: 0 0 8px 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  }
-
-  .teaser3-how-mobile-caption .teaser3-how-slide-desc {
-    font-family: var(--tf-font-sans);
-    font-size: 14.5px;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.88);
-    margin: 0;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-  }
-
-  /* In-Photo UI Preview (Bottom) */
-  .teaser3-how-preview-container {
-    position: absolute;
-    bottom: 22px;
-    left: 18px;
-    right: 18px;
-    z-index: 3;
-    width: auto;
-    max-width: 100%;
-  }
-
-  .teaser3-how-glass-overlay {
-    padding: 14px 16px;
-    border-radius: 18px;
-  }
-
-  /* Hide Desktop Arrow Controls on Mobile */
-  .teaser3-how-desktop-controls {
-    display: none;
-  }
-
-  /* Show Mobile Dots on Mobile with narrowed gap */
-  .teaser3-how-mobile-dots {
+  .teaser3-how-mobile-card {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 18px;
+    flex-direction: column;
+    width: 100%;
   }
 
-  .teaser3-how-mobile-dot {
+  .teaser3-how-mobile-image-wrap {
+    aspect-ratio: 1.3;
     position: relative;
-    width: 18px;
-    height: 32px;
-    min-width: 18px;
-    min-height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
+    overflow: hidden;
+    background: #f7f4ee;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 10px 24px rgba(44, 30, 22, 0.06);
+    width: 100%;
   }
 
-  .teaser3-how-mobile-dot::before {
-    content: "";
+  .teaser3-how-mobile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    width: 6.5px;
-    height: 6.5px;
-    border-radius: 50%;
-    background: #d4cfc8;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .teaser3-how-mobile-dot.is-active::before {
-    width: 24px;
-    height: 6.5px;
+  /* 01 / RING card: Anchor right so ring and ring-wearing finger are fully visible and never cut off */
+  .teaser3-how-mobile-image-wrap.teaser3-how-mobile-image-ring .teaser3-how-mobile-img {
+    object-position: right center;
+  }
+
+  .teaser3-how-mobile-badge {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    color: #fff;
+    background: rgba(36, 33, 31, 0.82);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    padding: 7px 15px;
     border-radius: 9999px;
-    background: #1a1715;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .teaser3-how-mobile-card-title {
+    font-family: var(--tf-font-sans);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--tf-color-ink, #141312);
+    margin-top: 19px;
+    margin-bottom: 0;
+    letter-spacing: -0.03em;
+  }
+
+  .teaser3-how-mobile-card-desc {
+    font-family: var(--tf-font-sans);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--tf-color-text-secondary, #66615b);
+    margin-top: 10px;
+    margin-bottom: 0;
+    max-width: 43ch;
   }
 }
 

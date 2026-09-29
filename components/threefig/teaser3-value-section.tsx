@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React from "react";
 
 /* ------------------------------------------------------------
    MAIN SECTION: WHAT YOU GET
@@ -81,72 +81,6 @@ const BENEFIT_ITEMS: BenefitItem[] = [
 ];
 
 export function Teaser3ValueSection() {
-  const [activeMobileIdx, setActiveMobileIdx] = useState(0);
-  const mobileTrackRef = useRef<HTMLDivElement | null>(null);
-  const touchStartXRef = useRef<number>(0);
-  const touchStartYRef = useRef<number>(0);
-  const isSwipingRef = useRef<boolean>(false);
-
-  // Sync active mobile index on scroll
-  const handleMobileScroll = () => {
-    const el = mobileTrackRef.current;
-    if (!el) return;
-    const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "24");
-    const scrollLeft = el.scrollLeft;
-
-    let closestIdx = 0;
-    let minDiff = Infinity;
-    for (let i = 0; i < el.children.length; i++) {
-      const child = el.children[i] as HTMLElement;
-      const target = child.offsetLeft - paddingLeft;
-      const diff = Math.abs(target - scrollLeft);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
-      }
-    }
-    if (closestIdx !== activeMobileIdx) {
-      setActiveMobileIdx(closestIdx);
-    }
-  };
-
-  const scrollToSlide = (idx: number) => {
-    const el = mobileTrackRef.current;
-    if (!el) return;
-    const slideEl = el.children[idx] as HTMLElement | undefined;
-    if (slideEl) {
-      const paddingLeft = parseFloat(window.getComputedStyle(el).paddingLeft || "24");
-      const targetScroll = slideEl.offsetLeft - paddingLeft;
-      el.scrollTo({
-        left: Math.max(0, targetScroll),
-        behavior: "smooth",
-      });
-      setActiveMobileIdx(idx);
-    }
-  };
-
-  // Touch swipe gestures for mobile slide interaction
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchStartYRef.current = e.touches[0].clientY;
-    isSwipingRef.current = true;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isSwipingRef.current) return;
-    isSwipingRef.current = false;
-    const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
-    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35) {
-      if (deltaX < 0 && activeMobileIdx < BENEFIT_ITEMS.length - 1) {
-        scrollToSlide(activeMobileIdx + 1);
-      } else if (deltaX > 0 && activeMobileIdx > 0) {
-        scrollToSlide(activeMobileIdx - 1);
-      }
-    }
-  };
-
   return (
     <section
       id="what-you-get"
@@ -265,83 +199,40 @@ export function Teaser3ValueSection() {
         </div>
 
         {/* ============================================================
-            MOBILE LAYOUT (1 Horizontal Carousel with Peek & Dots)
+            MOBILE LAYOUT (Vertical Stack in Document Flow)
+            Scrollable list displaying copy and component sequentially
             ============================================================ */}
         <div className="teaser3-value-mobile-view">
-          {/* Horizontal Carousel Track with Peek */}
-          <div className="teaser3-value-mobile-carousel-wrap">
-            <div
-              ref={mobileTrackRef}
-              className="teaser3-value-mobile-track"
-              onScroll={handleMobileScroll}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-              role="region"
-              aria-label="What You Get product previews"
-              aria-roledescription="carousel"
-            >
-              {BENEFIT_ITEMS.map((item, idx) => {
-                const isActive = activeMobileIdx === idx;
-                return (
-                  <div
-                    key={item.num}
-                    className={`teaser3-value-mobile-slide ${
-                      isActive ? "is-active" : ""
-                    }`}
-                    role="group"
-                    aria-roledescription="slide"
-                    aria-label={`${idx + 1} of ${BENEFIT_ITEMS.length}: ${item.titleDesktop}`}
-                  >
-                    <div className="teaser3-value-mobile-copy">
-                      <span className="teaser3-value-num teaser3-rose-accent">{item.num}</span>
-                      <h3 className="teaser3-value-title teaser3-value-mobile-title">
-                        {item.titleMobile}
-                      </h3>
-                      <p className="teaser3-value-desc">{item.desc}</p>
-                      {item.subDesc && (
-                        <p className="teaser3-value-desc teaser3-value-subdesc">{item.subDesc}</p>
-                      )}
-                    </div>
+          <div className="teaser3-value-mobile-list">
+            {BENEFIT_ITEMS.map((item) => (
+              <div key={item.num} className="teaser3-value-mobile-item">
+                <div className="teaser3-value-mobile-copy">
+                  <span className="teaser3-value-num teaser3-rose-accent">{item.num}</span>
+                  <h3 className="teaser3-value-title teaser3-value-mobile-title">
+                    {item.titleMobile}
+                  </h3>
+                  <p className="teaser3-value-desc">{item.desc}</p>
+                  {item.subDesc && (
+                    <p className="teaser3-value-desc teaser3-value-subdesc">{item.subDesc}</p>
+                  )}
+                </div>
 
-                    <div className="teaser3-visual-panel teaser3-clean-component-panel">
-                      <picture className="teaser3-component-picture">
-                        <source srcSet={item.image.webp} type="image/webp" />
-                        <img
-                          src={item.image.png}
-                          alt={item.image.alt}
-                          className="teaser3-component-img"
-                          width={1024}
-                          height={1024}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </picture>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Mobile Pagination: Active Capsule + Inactive Dots with narrowed gap */}
-            <div
-              className="teaser3-value-mobile-dots"
-              role="tablist"
-              aria-label="Slide navigation"
-            >
-              {BENEFIT_ITEMS.map((item, idx) => (
-                <button
-                  key={item.num}
-                  type="button"
-                  role="tab"
-                  className={`teaser3-value-mobile-dot ${
-                    activeMobileIdx === idx ? "is-active" : ""
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}: ${item.titleDesktop}`}
-                  aria-selected={activeMobileIdx === idx}
-                  onClick={() => scrollToSlide(idx)}
-                />
-              ))}
-            </div>
+                <div className="teaser3-visual-panel teaser3-clean-component-panel">
+                  <picture className="teaser3-component-picture">
+                    <source srcSet={item.image.webp} type="image/webp" />
+                    <img
+                      src={item.image.png}
+                      alt={item.image.alt}
+                      className="teaser3-component-img"
+                      width={1024}
+                      height={1024}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

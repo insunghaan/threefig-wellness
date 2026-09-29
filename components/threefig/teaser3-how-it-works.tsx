@@ -237,10 +237,12 @@ function Teaser3ConnectOverlay({ active }: { active: boolean }) {
 interface StorySlide {
   id: string;
   eyebrow: string;
+  badge: string;
   title: string;
   description: string;
   imageSrc: string;
   mobileImageSrc?: string;
+  teaser4Image: string;
   imageAlt: string;
   renderOverlay: (active: boolean) => React.ReactNode;
 }
@@ -249,30 +251,36 @@ const STORY_SLIDES: StorySlide[] = [
   {
     id: "wear",
     eyebrow: "BACKGROUND SENSING",
+    badge: "01 / RING",
     title: "Track your body.",
     description: "Sleep, heart rate, HRV, temperature trends, and movement—measured quietly while you sleep and live.",
     imageSrc: "/images/threefig-pathway-01-sleep.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-01-mobile.png",
+    teaser4Image: "/review/assets/sleep.webp",
     imageAlt: "Resting calmly during sleep wearing the 3fig smart ring.",
     renderOverlay: (active) => <Teaser3WearOverlay active={active} />,
   },
   {
     id: "check-in",
     eyebrow: "DAILY LOG",
+    badge: "02 / YOU",
     title: "Log your skin.",
     description: "Note how your skin feels with a quick check-in. Add meal notes when you want more context.",
     imageSrc: "/images/threefig-pathway-04-rhythm.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-02-mobile.png",
+    teaser4Image: "/review/assets/skin.webp",
     imageAlt: "Gentle morning reflection touching clean skin while wearing the 3fig ring.",
     renderOverlay: (active) => <Teaser3CheckInOverlay active={active} />,
   },
   {
     id: "connect",
     eyebrow: "SYNTHESIS",
+    badge: "03 / APP",
     title: "See the connection.",
     description: "View your Skin Balance summary, compare trends, and choose a daily action to test.",
     imageSrc: "/images/threefig-balance-now-knit.webp",
     mobileImageSrc: "/images/teaser3/how-it-works-slide-03-mobile.png",
+    teaser4Image: "/review/assets/knit.webp",
     imageAlt: "Relaxing at home in soft knitwear with the 3fig ring naturally visible.",
     renderOverlay: (active) => <Teaser3ConnectOverlay active={active} />,
   },
@@ -393,7 +401,7 @@ export function Teaser3HowItWorks() {
           </p>
         </div>
 
-        {/* Carousel Region */}
+        {/* Desktop Carousel Region */}
         <div
           className="teaser3-how-carousel-wrap"
           role="region"
@@ -452,14 +460,7 @@ export function Teaser3HowItWorks() {
                       <p className="teaser3-how-slide-desc">{slide.description}</p>
                     </div>
 
-                    {/* Mobile In-Photo Text Block (Top) */}
-                    <div className="teaser3-how-mobile-caption">
-                      <span className="teaser3-how-mobile-eyebrow">{slide.eyebrow}</span>
-                      <h3 className="teaser3-how-slide-title">{slide.title}</h3>
-                      <p className="teaser3-how-slide-desc">{slide.description}</p>
-                    </div>
-
-                    {/* Compact In-Photo UI Overlay (Desktop Lower-Right / Mobile Bottom) */}
+                    {/* Compact In-Photo UI Overlay (Desktop Lower-Right) */}
                     <div className="teaser3-how-preview-container">
                       {slide.renderOverlay(isActive)}
                     </div>
@@ -491,27 +492,31 @@ export function Teaser3HowItWorks() {
               <ArrowRight size={18} />
             </button>
           </div>
+        </div>
 
-          {/* Mobile Pagination Indicators beneath carousel */}
-          <div
-            className="teaser3-how-mobile-dots"
-            role="tablist"
-            aria-label="Slide navigation"
-          >
-            {STORY_SLIDES.map((slide, idx) => (
-              <button
-                key={slide.id}
-                type="button"
-                role="tab"
-                className={`teaser3-how-mobile-dot ${
-                  activeIdx === idx ? "is-active" : ""
+        {/* Mobile View: Vertical Stack Matching Teaser4 (No carousel, no inner overlay components) */}
+        <div className="teaser3-how-mobile-grid">
+          {STORY_SLIDES.map((slide) => (
+            <article key={slide.id} className="teaser3-how-mobile-card">
+              <div
+                className={`teaser3-how-mobile-image-wrap ${
+                  slide.id === "wear" ? "teaser3-how-mobile-image-ring" : ""
                 }`}
-                aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
-                aria-selected={activeIdx === idx}
-                onClick={() => scrollToSlide(idx)}
-              />
-            ))}
-          </div>
+              >
+                <img
+                  src={slide.teaser4Image}
+                  alt={slide.imageAlt}
+                  loading="lazy"
+                  width={380}
+                  height={418}
+                  className="teaser3-how-mobile-img"
+                />
+                <span className="teaser3-how-mobile-badge">{slide.badge}</span>
+              </div>
+              <h3 className="teaser3-how-mobile-card-title">{slide.title}</h3>
+              <p className="teaser3-how-mobile-card-desc">{slide.description}</p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
