@@ -596,6 +596,18 @@ export function Teaser3Hero() {
           <p className="teaser3-desc tf-role-body-lead">
             Track sleep, stress signals, and recovery. Add a skin check-in. See your daily Skin Balance and the patterns behind it.
           </p>
+
+          {/* Mobile Hero Landing CTA: Left-aligned between copy and image */}
+          <div className="teaser3-mobile-hero-cta-wrap">
+            <ThreeFigButton
+              variant="primary"
+              className="teaser3-mobile-hero-cta-btn"
+              onClick={handleOpenWaitlist}
+              aria-label="Get early access"
+            >
+              Get early access
+            </ThreeFigButton>
+          </div>
         </div>
 
         {/* Bottom Image Section: 4:5 aspect ratio, meets viewport bottom on tall screens */}

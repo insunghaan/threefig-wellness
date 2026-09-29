@@ -4,7 +4,6 @@ import React, { forwardRef } from "react";
 import { Teaser3MeetIntro } from "./teaser3-meet-intro";
 import { Teaser3ValueSection } from "./teaser3-value-section";
 import { Teaser3HowItWorks } from "./teaser3-how-it-works";
-import { Teaser3BrandMoment } from "./teaser3-brand-moment";
 import { Teaser3RingSection } from "./teaser3-ring-section";
 import { Teaser3ScienceSection } from "./teaser3-science-section";
 import { Teaser3Testimonials } from "./teaser3-testimonials";
@@ -29,9 +28,6 @@ export const Teaser3Body = forwardRef<HTMLDivElement, Teaser3BodyProps>(
 
         {/* Section B: How It Works */}
         <Teaser3HowItWorks />
-
-        {/* Section C: Brand Reflection */}
-        <Teaser3BrandMoment onOpenWaitlist={onOpenWaitlist} />
 
         {/* Section D: The Ring */}
         <Teaser3RingSection />
