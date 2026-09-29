@@ -21,7 +21,7 @@ const testimonials: TestimonialItem[] = [
       "Most wearables give you a hundred recovery scores that mean nothing for your skin. Connecting sleep baselines to how my skin actually behaves in the morning is the first time health tracking felt genuinely relevant.",
     author: "Elena R.",
     descriptor: "Beta participant & design director, London",
-    avatarSrc: "/images/teaser3-avatar-elena.webp",
+    avatarSrc: "/images/teaser3/avatar-elena.webp",
   },
   {
     id: "marcus",
@@ -31,7 +31,7 @@ const testimonials: TestimonialItem[] = [
       "I used to guess why my skin felt sensitized some weeks and calm others. Having overnight heart rate variability and temperature shifts alongside my daily check-ins showed me patterns I'd never linked on my own.",
     author: "Marcus C.",
     descriptor: "Beta participant & runner with reactive skin, Austin",
-    avatarSrc: "/images/teaser3-avatar-marcus.webp",
+    avatarSrc: "/images/teaser3/avatar-marcus.webp",
   },
   {
     id: "sophie",
@@ -41,7 +41,7 @@ const testimonials: TestimonialItem[] = [
       "It doesn't push five new products on you. It just helps you notice what your skin is responding to, one day at a time. The calmness of the whole experience is what won me over.",
     author: "Sophie L.",
     descriptor: "Beta participant & creative director, New York",
-    avatarSrc: "/images/teaser3-avatar-sophie.webp",
+    avatarSrc: "/images/teaser3/avatar-sophie.webp",
   },
   {
     id: "julian",

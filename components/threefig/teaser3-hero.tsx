@@ -471,20 +471,6 @@ export function Teaser3Hero() {
                 className="teaser3-desktop-btn"
                 onClick={handleOpenWaitlist}
                 aria-label="Get early access"
-                ringAccessory={
-                  <span className="teaser3-btn-ring-box">
-                    <span className="teaser3-ring-float-wrapper">
-                      <img
-                        src="/images/threefig-ring-cutout-tight.webp"
-                        alt=""
-                        className="teaser3-btn-ring-img"
-                        width={64}
-                        height={45}
-                        aria-hidden="true"
-                      />
-                    </span>
-                  </span>
-                }
               >
                 Get early access
               </ThreeFigButton>
@@ -705,20 +691,6 @@ export function Teaser3Hero() {
             onClick={handleOpenWaitlist}
             tabIndex={showMobileCta ? 0 : -1}
             aria-label="Get early access"
-            ringAccessory={
-              <span className={`teaser3-mobile-ring-box${showMobileCta ? " is-active" : " is-paused"}`}>
-                <span className="teaser3-ring-float-wrapper">
-                  <img
-                    src="/images/threefig-ring-cutout-tight.webp"
-                    alt=""
-                    className="teaser3-mobile-ring-img"
-                    width={60}
-                    height={42}
-                    aria-hidden="true"
-                  />
-                </span>
-              </span>
-            }
           >
             Get early access
           </ThreeFigButton>

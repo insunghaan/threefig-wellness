@@ -30,12 +30,6 @@ export default function Teaser3Page() {
         as="image"
         href="/images/teaser3/hero-ring-phone.jpg"
       />
-      <link
-        rel="preload"
-        as="image"
-        href="/images/threefig-ring-cutout-tight.webp"
-        type="image/webp"
-      />
       <Teaser3Hero />
     </>
   );

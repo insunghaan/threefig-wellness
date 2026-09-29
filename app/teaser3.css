@@ -3,28 +3,66 @@
    Incorporates authoritative tokens and responsive layouts.
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "./threefig-tokens.css";
 
 /* Reset / Root container */
 .teaser3-root {
-  --tf-color-accent-brown: #a5475d;
-  --teaser3-accent-rose: #a5475d;
-  --teaser3-accent-gradient: linear-gradient(110deg, #a5475d 0%, #b85d70 45%, #c46d82 100%);
+  /* Teaser4 Typography & Color Palette */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --tf-font-sans: var(--font);
+
+  --paper: #f8f5f0;
+  --ink: #24211f;
+  --muted: #706a65;
+  --line: #dfd8cf;
+  --cream: #eee6db;
+  --peach: #f4d1b7;
+  --accent: #df542b;
+
+  --tf-color-surface-light: #f8f5f0;
+  --tf-color-surface-muted: #eee6db;
+  --tf-color-text-primary: #24211f;
+  --tf-color-text-secondary: #706a65;
+  --tf-color-border-dark-subtle: #dfd8cf;
+  --tf-color-focus-ring: #24211f;
+
+  --tf-color-accent-brown: #c85a44;
+  --teaser3-accent-rose: #c85a44;
+  --teaser3-accent-gradient: linear-gradient(110deg, #c85a44 0%, #d96f5b 50%, #e27e6d 100%);
+
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0;
   padding: 0;
-  background-color: var(--tf-color-surface-light);
-  color: var(--tf-color-text-primary);
-  font-family: var(--tf-font-sans);
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
   position: relative;
   overflow-x: hidden;
   box-sizing: border-box;
 }
 
+/* Global Heading Refinements in Teaser3: Lighter Font Weight (500) matching Teaser4 */
+.teaser3-root h1,
+.teaser3-root h2,
+.teaser3-root h3,
+.teaser3-root h4,
+.teaser3-root .teaser3-title,
+.teaser3-root .teaser3-section-title,
+.teaser3-root .tf-role-hero-title,
+.teaser3-root .tf-role-section-title,
+.teaser3-root .teaser3-meet-title,
+.teaser3-root .teaser3-value-title {
+  font-family: var(--font) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+
 .teaser3-root .teaser3-rose-accent {
-  color: var(--teaser3-accent-rose, #a5475d);
+  color: var(--teaser3-accent-rose, #c85a44);
 }
 
 /* ==========================================================================
@@ -301,17 +339,17 @@
 /* Fluid Two-Line Headline: clamp(54px, 4.9vw, 88px) */
 .teaser3-title {
   margin: 0 0 clamp(16px, 1.8vh, 26px) 0;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(54px, 4.9vw, 88px);
-  font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: -0.03em;
+  font-weight: 500 !important;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
   display: flex;
   flex-direction: column;
 }
 
 .teaser3-title-dark {
-  color: var(--tf-color-text-primary);
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -326,10 +364,10 @@
 /* Fluid Description: clamp(16px, 1.4vw, 24px), line-height ~1.4, width ~36vw capped at 660px */
 .teaser3-desc {
   margin: 0;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(16px, 1.4vw, 24px);
-  line-height: 1.4;
-  color: var(--tf-color-text-secondary);
+  line-height: 1.5;
+  color: var(--muted);
   font-weight: 400;
   letter-spacing: -0.012em;
   width: 100%;
@@ -348,24 +386,26 @@
   margin-top: clamp(22px, 2.8vh, 34px);
 }
 
-/* Desktop Solid-Black Pill Button */
+/* Desktop Solid Pill Button (Teaser4 Ink Style without ring) */
 .teaser3-desktop-btn.tf-btn {
-  height: clamp(46px, 3.8vw, 56px) !important;
+  height: clamp(46px, 3.8vw, 54px) !important;
   width: auto !important;
-  padding-left: clamp(14px, 1.2vw, 18px) !important;
-  padding-right: clamp(16px, 1.4vw, 22px) !important;
-  background-color: #000000 !important;
+  padding: 12px 28px !important;
+  background-color: var(--ink, #24211f) !important;
   border: none !important;
   border-radius: 9999px !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
-  box-shadow: none !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(36, 33, 31, 0.12) !important;
   flex-shrink: 0 !important;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .teaser3-desktop-btn:hover:not(:disabled) {
-  background-color: #222222 !important;
+  background-color: #42382f !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(36, 33, 31, 0.18) !important;
 }
 
 /* Desktop Ring Accessory Slot */
@@ -774,22 +814,20 @@
 .teaser3-mobile-btn.tf-btn {
   height: 50px !important;
   width: auto !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-  background-color: rgba(0, 0, 0, 0.70) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
+  padding-left: 22px !important;
+  padding-right: 22px !important;
+  background-color: var(--ink, #24211f) !important;
   border: none !important;
   border-radius: 9999px !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
-  box-shadow: none !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 16px rgba(36, 33, 31, 0.22) !important;
   flex-shrink: 0 !important;
 }
 
 .teaser3-mobile-btn:hover:not(:disabled) {
-  background-color: rgba(0, 0, 0, 0.82) !important;
+  background-color: #42382f !important;
 }
 
 /* Mobile Ring Slot & Visible Cutout: Exactly 60px visible ring */
@@ -991,15 +1029,16 @@
   width: calc(100% - 36px);
   max-width: 480px;
   max-height: calc(100dvh - 56px);
-  background-color: #ffffff;
+  background-color: var(--paper, #f8f5f0);
+  border: 1px solid var(--line, #dfd8cf);
   border-radius: 24px;
   padding: 36px 32px 32px 32px;
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 20px 48px rgba(36, 33, 31, 0.14);
   z-index: 1001;
   box-sizing: border-box;
   overflow-y: auto;
   outline: none;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   animation: teaser3DialogScaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -1060,14 +1099,14 @@
   text-align: left;
 }
 
-/* Dialog Title: 32px desktop, 28px mobile, weight 700, line-height ~1.12 */
+/* Dialog Title: 32px desktop, 28px mobile, weight 500, line-height ~1.12 */
 .teaser3-dialog-title {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 500 !important;
   line-height: 1.12;
-  letter-spacing: -0.025em;
-  color: var(--tf-color-text-primary);
+  letter-spacing: -0.035em;
+  color: var(--ink);
   margin: 0 0 10px 0;
   text-align: left;
 }
@@ -1240,16 +1279,16 @@
   text-align: left;
 }
 
-/* Primary Action Button: Solid-black pill, 50px height, full-width */
+/* Primary Action Button: Teaser4 ink pill, 50px height, full-width */
 .teaser3-dialog-btn-primary {
   height: 50px;
   width: 100%;
   box-sizing: border-box;
-  background-color: #000000;
+  background-color: var(--ink, #24211f);
   color: #ffffff;
   border: none !important;
   border-radius: 9999px;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 16px;
   font-weight: 500;
   display: flex;
@@ -1258,16 +1297,16 @@
   gap: 8px;
   cursor: pointer;
   transition: background-color 0.18s ease;
-  box-shadow: none;
+  box-shadow: 0 4px 14px rgba(36, 33, 31, 0.12);
   flex-shrink: 0;
 }
 
 .teaser3-dialog-btn-primary:hover:not(:disabled) {
-  background-color: #222222;
+  background-color: #42382f;
 }
 
 .teaser3-dialog-btn-primary:focus-visible {
-  outline: 2px solid #000000;
+  outline: 2px solid var(--ink, #24211f);
   outline-offset: 2px;
 }
 
@@ -2064,12 +2103,12 @@
 
 /* ==========================================================================
    SECTION: MEET 3FIG (New Introduction)
-   Clean white background, generous whitespace, prominent 3-phone composition
+   Warm paper background, generous whitespace, prominent 3-phone composition
    ========================================================================== */
 .teaser3-meet-section {
-  background-color: #ffffff;
+  background-color: var(--paper, #f8f5f0);
   padding: clamp(80px, 9vw, 130px) 0 clamp(60px, 7vw, 100px);
-  border-bottom: 1px solid #f2eee8;
+  border-bottom: 1px solid var(--line, #dfd8cf);
   position: relative;
   overflow: hidden;
 }
@@ -2089,20 +2128,20 @@
 }
 
 .teaser3-meet-title {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(34px, 3.8vw, 56px);
-  font-weight: 700;
+  font-weight: 500 !important;
   line-height: 1.14;
-  letter-spacing: -0.025em;
-  color: #1a1715;
+  letter-spacing: -0.035em;
+  color: var(--ink);
   margin: 14px 0 16px 0;
 }
 
 .teaser3-meet-desc {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(16px, 1.35vw, 18px);
-  line-height: 1.55;
-  color: #55514d;
+  line-height: 1.6;
+  color: var(--muted);
   margin: 0 auto;
   max-width: 540px;
 }
@@ -2162,36 +2201,36 @@
    SECTION A: WHAT YOU GET
    ========================================================================== */
 .teaser3-value-section {
-  background-color: var(--tf-color-surface-light);
-  border-bottom: 1px solid #f0ebe4;
+  background-color: var(--paper, #f8f5f0);
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 /* Typography & Copy Block */
 .teaser3-value-num {
   display: block;
-  font-family: var(--tf-font-sans);
-  font-size: 15px;
-  font-weight: 700;
+  font-family: var(--font) !important;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--tf-color-accent-brown);
   letter-spacing: 0.04em;
   margin-bottom: 10px;
 }
 
 .teaser3-value-title {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(26px, 2.6vw, 38px);
-  font-weight: 700;
+  font-weight: 500 !important;
   line-height: 1.15;
-  letter-spacing: -0.025em;
-  color: #1a1715;
+  letter-spacing: -0.035em;
+  color: var(--ink);
   margin: 0 0 12px 0;
 }
 
 .teaser3-value-desc {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
-  color: #5c5650;
+  line-height: 1.6;
+  color: var(--muted);
   margin: 0;
   max-width: 440px;
 }
@@ -2960,8 +2999,8 @@
    ========================================================================== */
 
 .teaser3-how-section {
-  background-color: #F9F7F5;
-  border-bottom: 1px solid #ede8e0;
+  background-color: #f3eee7;
+  border-bottom: 1px solid var(--line, #dfd8cf);
   overflow-x: hidden;
   padding: clamp(80px, 9vw, 130px) clamp(24px, 5.4vw, 96px);
 }
@@ -3584,8 +3623,8 @@
    SECTION D: THE RING
    ========================================================================== */
 .teaser3-ring-section {
-  background-color: var(--tf-color-surface-light);
-  border-bottom: 1px solid #f0ebe4;
+  background-color: var(--paper, #f8f5f0);
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 .teaser3-ring-split {
@@ -3627,7 +3666,7 @@
 }
 
 .teaser3-ring-benefit-item {
-  border-bottom: 1px solid #f0ebe4;
+  border-bottom: 1px solid var(--line, #dfd8cf);
   padding-bottom: 18px;
 }
 
@@ -3637,18 +3676,18 @@
 }
 
 .teaser3-benefit-title {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 17px;
-  font-weight: 600;
-  color: #1e1e1e;
+  font-weight: 500 !important;
+  color: var(--ink);
   margin: 0 0 4px 0;
 }
 
 .teaser3-benefit-desc {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 15px;
-  line-height: 1.5;
-  color: #5c5650;
+  line-height: 1.55;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -3666,8 +3705,8 @@
    SECTION E: SKIN SCIENCE
    ========================================================================== */
 .teaser3-science-section {
-  background-color: #faf9f7;
-  border-bottom: 1px solid #f0ebe4;
+  background-color: #f3eee7;
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 .teaser3-science-list {
@@ -3866,8 +3905,8 @@
    SECTION F: EARLY VOICES
    ========================================================================== */
 .teaser3-testimonials-section {
-  background-color: var(--tf-color-surface-light);
-  border-bottom: 1px solid #f0ebe4;
+  background-color: var(--paper, #f8f5f0);
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 .teaser3-testimonials-grid {
@@ -3877,20 +3916,21 @@
 }
 
 .teaser3-testimonial-card {
-  background-color: #faf9f7;
-  border: 1px solid #f0ebe4;
+  background-color: #fffefa;
+  border: 1px solid var(--line, #dfd8cf);
   border-radius: 20px;
   padding: clamp(24px, 3.2vw, 36px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(36, 33, 31, 0.03);
 }
 
 .teaser3-testimonial-quote {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(15px, 1.2vw, 17px);
-  line-height: 1.55;
-  color: #1e1e1e;
+  line-height: 1.6;
+  color: var(--ink);
   margin: 0 0 24px 0;
   padding: 0;
 }
@@ -3918,15 +3958,17 @@
 }
 
 .teaser3-testimonial-author {
+  font-family: var(--font) !important;
   font-size: 15px;
-  font-weight: 600;
-  color: #1e1e1e;
+  font-weight: 500 !important;
+  color: var(--ink);
   font-style: normal;
 }
 
 .teaser3-testimonial-descriptor {
+  font-family: var(--font) !important;
   font-size: 13px;
-  color: #767069;
+  color: var(--muted);
 }
 
 @media (max-width: 860px) {
@@ -3945,8 +3987,8 @@
    SECTION G: FAQ
    ========================================================================== */
 .teaser3-faq-section {
-  background-color: #faf9f7;
-  border-bottom: 1px solid #f0ebe4;
+  background-color: #f3eee7;
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 .teaser3-faq-section .teaser3-section-container {
@@ -3963,14 +4005,14 @@
 .teaser3-faq-list {
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #eae8e4;
+  border-top: 1px solid var(--line, #dfd8cf);
   width: 100%;
   max-width: 860px;
   margin-inline: auto;
 }
 
 .teaser3-faq-item {
-  border-bottom: 1px solid #eae8e4;
+  border-bottom: 1px solid var(--line, #dfd8cf);
 }
 
 .teaser3-faq-trigger {
@@ -3985,32 +4027,34 @@
   cursor: pointer;
   min-height: 48px;
   gap: 16px;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
 }
 
 .teaser3-faq-question {
+  font-family: var(--font) !important;
   font-size: clamp(16px, 1.5vw, 19px);
-  font-weight: 600;
-  color: #1e1e1e;
+  font-weight: 500 !important;
+  color: var(--ink);
   line-height: 1.35;
 }
 
 .teaser3-faq-arrow {
-  color: #767069;
+  color: var(--muted);
   transition: transform 0.2s ease, color 0.2s ease;
   flex-shrink: 0;
 }
 
 .teaser3-faq-arrow.is-rotated {
   transform: rotate(180deg);
-  color: #1e1e1e;
+  color: var(--ink);
 }
 
 .teaser3-faq-answer {
   padding-bottom: 22px;
+  font-family: var(--font) !important;
   font-size: 15px;
-  line-height: 1.55;
-  color: #5c5650;
+  line-height: 1.6;
+  color: var(--muted);
   max-width: 720px;
 }
 
@@ -4059,11 +4103,11 @@
 }
 
 .teaser3-benefits-title {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(38px, 4.4vw, 64px);
-  font-weight: 700;
+  font-weight: 500 !important;
   line-height: 1.1;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.035em;
   margin: 0 0 16px 0;
   color: #FFFFFF;
 }
@@ -4073,7 +4117,7 @@
 }
 
 .teaser3-benefits-lead {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: clamp(16px, 1.5vw, 20px);
   line-height: 1.5;
   color: #EFE6E0;
@@ -4090,7 +4134,7 @@
 }
 
 .teaser3-benefits-microcopy {
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 13.5px;
   color: #D8C2B8;
   margin: 0;
@@ -4107,9 +4151,9 @@
   border-radius: 999px;
   background-color: #FAF8F5;
   color: #1A1715;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500 !important;
   text-decoration: none;
   border: none;
   cursor: pointer;
@@ -4158,8 +4202,8 @@
 .teaser3-footer {
   width: 100%;
   padding: 48px clamp(24px, 5.4vw, 96px);
-  border-top: 1px solid #eae8e4;
-  background-color: #ffffff;
+  border-top: 1px solid var(--line, #dfd8cf);
+  background-color: var(--paper, #f8f5f0);
   box-sizing: border-box;
 }
 
@@ -4176,21 +4220,21 @@
   background-color: transparent;
   border: none;
   font-size: 13px;
-  color: #767069;
+  color: var(--muted);
   cursor: pointer;
   padding: 6px 0;
   transition: color 0.18s ease;
-  font-family: var(--tf-font-sans);
+  font-family: var(--font) !important;
 }
 
 .teaser3-footer-privacy-btn:hover {
-  color: #1e1e1e;
+  color: var(--ink);
 }
 
 .teaser3-footer-copyright {
   font-size: 13px;
-  color: #8c827a;
-  font-family: var(--tf-font-sans);
+  color: var(--muted);
+  font-family: var(--font) !important;
 }
 
 /* Privacy Dialog (Teaser3 Unified Modal Language) */
@@ -4200,8 +4244,9 @@
   max-height: calc(100dvh - 48px) !important;
   border-radius: 24px !important;
   padding: clamp(24px, 4vw, 36px) !important;
-  background-color: #ffffff !important;
-  color: #1e1e1e !important;
+  background-color: var(--paper, #f8f5f0) !important;
+  border: 1px solid var(--line, #dfd8cf) !important;
+  color: var(--ink) !important;
   box-sizing: border-box !important;
   overflow-y: auto !important;
 }
