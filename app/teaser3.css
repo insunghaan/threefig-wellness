@@ -2892,399 +2892,107 @@
    ========================================================================== */
 
 .teaser3-how-section {
-  background-color: #f3eee7;
+  background-color: #f7f4ee;
+  border-top: 1px solid var(--line, #dfd8cf);
   border-bottom: 1px solid var(--line, #dfd8cf);
-  overflow-x: hidden;
   padding: clamp(80px, 9vw, 130px) clamp(24px, 5.4vw, 96px);
 }
 
-.teaser3-how-carousel-wrap {
-  position: relative;
-  width: 100%;
-  outline: none;
+.teaser3-how-head {
+  text-align: center;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: clamp(40px, 5vw, 64px);
 }
 
-/* Hidden on desktop: mobile vertical grid */
-.teaser3-how-mobile-grid {
-  display: none;
-}
-
-/* Horizontal Track */
-.teaser3-how-track {
-  display: flex;
-  gap: 24px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  margin-left: 0;
-  padding-left: 0;
-  margin-right: calc(-1 * clamp(24px, 5.4vw, 96px));
-  padding-right: clamp(24px, 5.4vw, 96px);
-  padding-bottom: 8px;
-  touch-action: pan-y;
-}
-
-.teaser3-how-track::-webkit-scrollbar {
-  display: none;
-}
-
-/* Slide Cards */
-.teaser3-how-slide-card {
-  flex: 0 0 clamp(740px, 68vw, 980px);
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-.teaser3-how-photo-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9.5;
-  border-radius: 28px;
-  overflow: hidden;
-  background-color: #1e1b19;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.teaser3-how-clean-photo {
-  object-fit: cover;
-  object-position: center;
-}
-
-.teaser3-how-desktop-photo {
-  display: block;
-}
-
-.teaser3-how-desktop-photo.teaser3-how-desktop-photo-flipped {
-  transform: scaleX(-1);
-}
-
-.teaser3-how-mobile-photo {
-  display: none !important;
-}
-
-/* Gradient Scrim for Readability */
-.teaser3-how-gradient-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    to top,
-    rgba(14, 12, 11, 0.78) 0%,
-    rgba(14, 12, 11, 0.35) 42%,
-    transparent 75%
-  );
-  pointer-events: none;
-}
-
-/* Desktop In-Photo Text Block (Lower-Left) */
-.teaser3-how-desktop-caption {
-  position: absolute;
-  bottom: clamp(28px, 3.2vw, 44px);
-  left: clamp(28px, 3.2vw, 44px);
-  z-index: 3;
-  max-width: 380px;
-  text-align: left;
-  pointer-events: none;
-}
-
-.teaser3-how-desktop-caption .teaser3-how-slide-title {
-  font-family: var(--tf-font-sans);
-  font-size: clamp(32px, 3.2vw, 44px);
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: -0.025em;
-  color: #FFFFFF;
-  margin: 0 0 10px 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-
-.teaser3-how-desktop-caption .teaser3-how-slide-desc {
-  font-family: var(--tf-font-sans);
-  font-size: clamp(15px, 1.25vw, 17px);
-  line-height: 1.48;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-}
-
-/* Mobile In-Photo Text Block (Top) - hidden on desktop */
-.teaser3-how-mobile-caption {
-  display: none;
-}
-
-/* In-Photo UI Preview Container (Desktop Lower-Right) */
-.teaser3-how-preview-container {
-  position: absolute;
-  bottom: clamp(28px, 3.2vw, 44px);
-  right: clamp(28px, 3.2vw, 44px);
-  z-index: 3;
-  width: 290px;
-  max-width: 44%;
-}
-
-/* Single Restrained UI Overlay Cards (Dark Glass Panel) */
-.teaser3-how-glass-overlay {
-  background: rgba(24, 21, 20, 0.72);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 20px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-  color: #FFFFFF;
-  box-sizing: border-box;
-  padding: 16px 18px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.teaser3-how-glass-overlay.is-revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.teaser3-how-overlay-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.teaser3-how-overlay-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
-}
-
-.teaser3-how-overlay-live-dot {
-  width: 6.5px;
-  height: 6.5px;
-  border-radius: 9999px;
-  background: #FFFFFF;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
-}
-
-.teaser3-how-overlay-badge {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.14);
-  padding: 2px 7px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-/* Overnight Signals metrics */
-.teaser3-how-overlay-metrics-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.teaser3-how-overlay-metric-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.teaser3-how-overlay-metric-name {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.95);
-}
-
-.teaser3-how-overlay-metric-status {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.teaser3-how-overlay-summary-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.teaser3-how-overlay-sleep-val {
-  font-size: 13px;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-
-.teaser3-how-overlay-microcopy {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Today's Skin options */
-.teaser3-how-overlay-prompt-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.teaser3-how-overlay-prompt-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-}
-
-.teaser3-how-overlay-chips-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
-
-.teaser3-how-overlay-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 6px 10px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  font-size: 11.5px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.teaser3-how-overlay-chip.is-selected {
-  background: #FFFFFF;
-  color: #1a1715;
-  border-color: #FFFFFF;
-  font-weight: 600;
-}
-
-.teaser3-how-overlay-chip-icon {
-  stroke: #1a1715;
-}
-
-.teaser3-how-overlay-footnote {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0;
+.teaser3-how-head .teaser3-eyebrow {
   text-align: center;
 }
 
-/* 7-Day Patterns overlay */
-.teaser3-how-overlay-legend-row {
-  display: flex;
-  gap: 12px;
-  font-size: 10.5px;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 8px;
+.teaser3-how-head .teaser3-section-title {
+  text-align: center;
 }
 
-.teaser3-how-overlay-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.teaser3-how-head .teaser3-section-lead {
+  text-align: center;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.teaser3-how-overlay-chart-wrap {
+/* 3-Column Grid on Desktop */
+.teaser3-how-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   width: 100%;
-  margin-bottom: 8px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.teaser3-how-overlay-chart-svg {
+.teaser3-how-card {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: auto;
+}
+
+.teaser3-how-image-wrap {
+  aspect-ratio: 16 / 13;
+  position: relative;
+  overflow: hidden;
+  background: #f7f4ee;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(44, 30, 22, 0.06);
+  width: 100%;
+}
+
+.teaser3-how-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.teaser3-how-overlay-grid-line {
-  stroke: rgba(255, 255, 255, 0.14);
-  stroke-width: 1;
-  stroke-dasharray: 3 3;
+/* 01 / RING card: Anchor right so ring and ring-wearing finger are fully visible and never cut off */
+.teaser3-how-image-wrap.teaser3-how-image-ring .teaser3-how-img {
+  object-position: right center;
 }
 
-.teaser3-how-overlay-path-sleep {
-  fill: none;
-  stroke: #FFFFFF;
-  stroke-width: 2.2;
+.teaser3-how-badge {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  color: #fff;
+  background: rgba(36, 33, 31, 0.82);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.teaser3-how-overlay-path-skin {
-  fill: none;
-  stroke: #FFFFFF;
-  stroke-width: 2.2;
+.teaser3-how-card-title {
+  font-family: var(--tf-font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--tf-color-ink, #141312);
+  margin-top: 20px;
+  margin-bottom: 0;
+  letter-spacing: -0.03em;
 }
 
-.teaser3-how-overlay-ring-node {
-  fill: none;
-  stroke: #FFFFFF;
-  stroke-width: 2;
-}
-
-.teaser3-how-overlay-dot-node {
-  fill: #FFFFFF;
-}
-
-.teaser3-how-overlay-axis-text {
-  font-size: 9.5px;
-  fill: rgba(255, 255, 255, 0.65);
-}
-
-/* Desktop Arrow Controls beneath carousel */
-.teaser3-how-desktop-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-  margin-top: 36px;
-}
-
-.teaser3-how-arrow-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(20, 19, 18, 0.14);
-  background-color: #FFFFFF;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #1a1715;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0;
-}
-
-.teaser3-how-arrow-btn:hover:not(:disabled) {
-  background-color: #1a1715;
-  color: #FFFFFF;
-  border-color: #1a1715;
-  transform: scale(1.05);
-}
-
-.teaser3-how-arrow-btn:disabled {
-  opacity: 0.28;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Mobile Dots beneath carousel (hidden on desktop) */
-.teaser3-how-mobile-dots {
-  display: none;
+.teaser3-how-card-desc {
+  font-family: var(--tf-font-sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tf-color-text-secondary, #66615b);
+  margin-top: 8px;
+  margin-bottom: 0;
+  max-width: 35ch;
 }
 
 /* ==========================================================================
@@ -3310,24 +3018,38 @@
   }
 
   /* Mobile How It Works: Vertical Stack Layout (Identical to Teaser4) */
-  .teaser3-how-carousel-wrap {
-    display: none !important;
+  .teaser3-how-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    padding-left: var(--tf-mobile-px, 24px);
+    padding-right: var(--tf-mobile-px, 24px);
   }
 
-  .teaser3-how-mobile-grid {
-    display: grid !important;
+  .teaser3-how-head {
+    text-align: left;
+    margin-bottom: 36px;
+  }
+  .teaser3-how-head .teaser3-eyebrow,
+  .teaser3-how-head .teaser3-section-title,
+  .teaser3-how-head .teaser3-section-lead {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .teaser3-how-grid {
     grid-template-columns: 1fr;
     gap: 32px;
     width: 100%;
   }
 
-  .teaser3-how-mobile-card {
+  .teaser3-how-card {
     display: flex;
     flex-direction: column;
     width: 100%;
   }
 
-  .teaser3-how-mobile-image-wrap {
+  .teaser3-how-image-wrap {
     aspect-ratio: 1.3;
     position: relative;
     overflow: hidden;
@@ -3338,19 +3060,18 @@
     width: 100%;
   }
 
-  .teaser3-how-mobile-img {
+  .teaser3-how-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  /* 01 / RING card: Anchor right so ring and ring-wearing finger are fully visible and never cut off */
-  .teaser3-how-mobile-image-wrap.teaser3-how-mobile-image-ring .teaser3-how-mobile-img {
+  .teaser3-how-image-wrap.teaser3-how-image-ring .teaser3-how-img {
     object-position: right center;
   }
 
-  .teaser3-how-mobile-badge {
+  .teaser3-how-badge {
     position: absolute;
     bottom: 18px;
     left: 18px;
@@ -3365,7 +3086,7 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  .teaser3-how-mobile-card-title {
+  .teaser3-how-card-title {
     font-family: var(--tf-font-sans);
     font-size: 26px;
     font-weight: 600;
@@ -3375,7 +3096,7 @@
     letter-spacing: -0.03em;
   }
 
-  .teaser3-how-mobile-card-desc {
+  .teaser3-how-card-desc {
     font-family: var(--tf-font-sans);
     font-size: 14px;
     line-height: 1.65;
