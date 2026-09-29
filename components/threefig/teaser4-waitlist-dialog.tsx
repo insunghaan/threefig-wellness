@@ -112,7 +112,6 @@ export function Teaser4WaitlistDialog({
             ...currentAttribution,
             lead_source: initialSource,
           },
-          survey: { subscription_preference: "lifetime_free_and_20_off" },
           client_timezone: clientTimezone,
           client_language: clientLanguage,
         }),
@@ -156,11 +155,11 @@ export function Teaser4WaitlistDialog({
     setSurveyError("");
 
     const surveyData = {
-      gender: gender || null,
-      age: age || null,
-      intended_user: intendedUser || null,
-      primary_features: primaryFeatures.length > 0 ? primaryFeatures : null,
-      subscription_preference: subscriptionPreference || null,
+      ...(gender ? { gender } : {}),
+      ...(age ? { age } : {}),
+      ...(intendedUser ? { intended_user: intendedUser } : {}),
+      ...(primaryFeatures.length > 0 ? { primary_feature: primaryFeatures.join(", ") } : {}),
+      ...(subscriptionPreference ? { subscription_preference: subscriptionPreference } : {}),
     };
 
     const clientTimezone =

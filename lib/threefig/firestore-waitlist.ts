@@ -90,7 +90,9 @@ export function getFirestoreInstance(): Firestore | null {
 
     const databaseId = process.env.FIRESTORE_DATABASE_ID;
 
-    const config: Record<string, unknown> = {};
+    const config: Record<string, unknown> = {
+      ignoreUndefinedProperties: true,
+    };
     if (projectId) config.projectId = projectId;
     if (databaseId && databaseId !== "(default)") config.databaseId = databaseId;
 

@@ -56,11 +56,21 @@ export async function POST(request: Request) {
 
     const survey = surveyRaw
       ? {
-          gender: typeof surveyRaw.gender === "string" ? surveyRaw.gender.slice(0, 50) : undefined,
-          age: typeof surveyRaw.age === "string" ? surveyRaw.age.slice(0, 50) : undefined,
-          intended_user: typeof surveyRaw.intended_user === "string" ? surveyRaw.intended_user.slice(0, 50) : undefined,
-          primary_feature: typeof surveyRaw.primary_feature === "string" ? surveyRaw.primary_feature.slice(0, 100) : undefined,
-          subscription_preference: typeof surveyRaw.subscription_preference === "string" ? surveyRaw.subscription_preference.slice(0, 200) : undefined,
+          ...(typeof surveyRaw.gender === "string" && surveyRaw.gender.trim()
+            ? { gender: surveyRaw.gender.trim().slice(0, 50) }
+            : {}),
+          ...(typeof surveyRaw.age === "string" && surveyRaw.age.trim()
+            ? { age: surveyRaw.age.trim().slice(0, 50) }
+            : {}),
+          ...(typeof surveyRaw.intended_user === "string" && surveyRaw.intended_user.trim()
+            ? { intended_user: surveyRaw.intended_user.trim().slice(0, 50) }
+            : {}),
+          ...(typeof surveyRaw.primary_feature === "string" && surveyRaw.primary_feature.trim()
+            ? { primary_feature: surveyRaw.primary_feature.trim().slice(0, 100) }
+            : {}),
+          ...(typeof surveyRaw.subscription_preference === "string" && surveyRaw.subscription_preference.trim()
+            ? { subscription_preference: surveyRaw.subscription_preference.trim().slice(0, 200) }
+            : {}),
         }
       : null;
 
