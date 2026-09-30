@@ -25,7 +25,7 @@ const HOW_STEPS: HowStep[] = [
     title: "Track your body.",
     description:
       "Sleep, heart rate, HRV, temperature trends, and movement—measured quietly while you sleep and live.",
-    imageSrc: "/review/assets/sleep.webp",
+    imageSrc: "/images/teaser3/how-it-works-01-sleep.webp",
     imageAlt: "Sleeping with 3fig ring",
   },
   {
@@ -34,7 +34,7 @@ const HOW_STEPS: HowStep[] = [
     title: "Log your skin.",
     description:
       "Note how your skin feels with a quick check-in. Add meal notes when you want more context.",
-    imageSrc: "/review/assets/skin.webp",
+    imageSrc: "/images/teaser3/how-it-works-02-skin.webp",
     imageAlt: "Checking skin comfort in morning mirror",
   },
   {
@@ -43,7 +43,7 @@ const HOW_STEPS: HowStep[] = [
     title: "See the connection.",
     description:
       "View your Skin Balance summary, compare trends, and choose a daily action to test.",
-    imageSrc: "/review/assets/knit.webp",
+    imageSrc: "/images/teaser3/how-it-works-03-app.webp",
     imageAlt: "Checking insights on 3fig mobile app",
   },
 ];
