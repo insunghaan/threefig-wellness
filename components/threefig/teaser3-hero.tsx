@@ -9,7 +9,15 @@ import { ThreeFigButton } from "./threefig-button";
 import { Teaser3Body } from "./teaser3-body";
 import { Teaser3PrivacyDialog } from "./teaser3-privacy-dialog";
 
-export function Teaser3Hero() {
+export interface Teaser3HeroProps {
+  logoHref?: string;
+  initialSource?: string;
+}
+
+export function Teaser3Hero({
+  logoHref = "/",
+  initialSource = "teaser3_waitlist",
+}: Teaser3HeroProps = {}) {
   const [dialogOpen, setDialogOpen] = useState(() => {
     if (typeof window !== "undefined") {
       const sp = new URLSearchParams(window.location.search);
@@ -350,7 +358,7 @@ export function Teaser3Hero() {
       >
         <div className="teaser3-sticky-inner">
           <a
-            href="/teaser3"
+            href={logoHref}
             onClick={handleLogoClick}
             className="teaser3-sticky-brand"
             aria-label="3fig Home"
@@ -448,7 +456,12 @@ export function Teaser3Hero() {
         {/* Left Column: 55% Content */}
         <section className="teaser3-content-col" aria-label="3fig Introduction">
           <header className="teaser3-header">
-            <Link href="/teaser3" className="teaser3-logo" aria-label="3fig Home">
+            <Link
+              href={logoHref}
+              onClick={handleLogoClick}
+              className="teaser3-logo"
+              aria-label="3fig Home"
+            >
               <img
                 src="/images/threefig-logo.png"
                 alt="3fig"
@@ -508,7 +521,12 @@ export function Teaser3Hero() {
         {/* Mobile Header: Logo near top, all-black logo */}
         <div className="teaser3-mobile-header-container">
           <header className="teaser3-mobile-header-row">
-            <Link href="/teaser3" className="teaser3-mobile-logo" aria-label="3fig Home">
+            <Link
+              href={logoHref}
+              onClick={handleLogoClick}
+              className="teaser3-mobile-logo"
+              aria-label="3fig Home"
+            >
               <img
                 src="/images/threefig-logo.png"
                 alt="3fig"
@@ -684,6 +702,7 @@ export function Teaser3Hero() {
       <Teaser3WaitlistDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+        initialSource={initialSource}
         emailDraft={emailDraft}
         onEmailDraftChange={setEmailDraft}
         selectedOffer={selectedOffer}

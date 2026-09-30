@@ -30,7 +30,7 @@ export default function Teaser3Page() {
         as="image"
         href="/images/teaser3/hero-ring-phone.jpg"
       />
-      <Teaser3Hero />
+      <Teaser3Hero logoHref="/teaser3" initialSource="teaser3_waitlist" />
     </>
   );
 }
