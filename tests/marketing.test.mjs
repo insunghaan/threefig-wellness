@@ -32,6 +32,7 @@ test('GA config is once-only and strips personal URL data; events exclude protot
  react:{useEffect:fn=>callbacks.push(fn),useState:()=>[false,()=>{}]},'react/jsx-runtime':{},'next/script':{},
  '@/lib/threefig/attribution':{CAMPAIGN_KEYS:['utm_source']},
  '@/lib/threefig/meta-pixel':load('lib/threefig/meta-pixel.ts',{}, {window:win}),
+ '@/lib/threefig/openai-pixel':load('lib/threefig/openai-pixel.ts',{}, {window:win}),
  },{window:win,document:{referrer:'https://instagram.com/path?private=value'}});
  analytics.Analytics();callbacks[0]();callbacks[0]();
  const config=win.dataLayer.filter(r=>r[0]==='config');assert.equal(config.length,1);assert.equal(config[0][2].page_location,'https://3fig.io/?utm_source=instagram');assert.equal(config[0][2].page_referrer,'https://instagram.com/');
@@ -173,3 +174,47 @@ test('Slack notification and waitlist record designate source as utm_campaign fr
   assert.equal(surveySlackParams.survey.gender, 'female');
 });
 
+
+test('OpenAI queues init before lead, once-only init, and excludes non-production routes', () => {
+ const win={location:{hostname:'3fig.io',pathname:'/'}};
+ const pixel=load('lib/threefig/openai-pixel.ts',{}, {window:win});
+ pixel.trackOpenAIWaitlistLead();pixel.initializeOpenAIPixel();
+ assert.deepEqual(JSON.parse(JSON.stringify(win.oaiq.q)),[
+  ['init',{pixelId:'R4AXx2xC3cKDDpCqHMqkE8'}],
+  ['measure','lead_created',{type:'customer_action'}],
+ ]);
+ for (const location of [{hostname:'localhost',pathname:'/'},{hostname:'3fig.io',pathname:'/app/skin'},{hostname:'3fig.io',pathname:'/teaser3'}]) {
+  const other={location};load('lib/threefig/openai-pixel.ts',{}, {window:other}).trackOpenAIWaitlistLead();assert.equal(other.oaiq,undefined);
+ }
+ assert.doesNotThrow(()=>load('lib/threefig/openai-pixel.ts',{}).trackOpenAIWaitlistLead());
+});
+
+test('real signup handler sends OpenAI only after new success; SDK failure preserves success and GA/Meta', async () => {
+ for (const scenario of ['new','duplicate','failure','network','invalid','sdk-failure']) {
+  const win={location:{hostname:'3fig.io',pathname:'/'}};
+  if(scenario==='sdk-failure') win.oaiq=()=>{throw Error('blocked');};
+  let meta=0,success=0,requests=0;
+  const hooks={useEffect(){},useState:v=>[v,()=>{}],useRef:v=>({current:v})};
+  const jsx=(type,props)=>({type,props});
+  const analytics=load('components/threefig/analytics.tsx',{
+   react:hooks,'react/jsx-runtime':{jsx,jsxs:jsx},'next/script':{},
+   '@/lib/threefig/attribution':{CAMPAIGN_KEYS:[]},
+   '@/lib/threefig/meta-pixel':{initializeMetaPixel(){},trackMetaWaitlistLead(){meta++;}},
+   '@/lib/threefig/openai-pixel':load('lib/threefig/openai-pixel.ts',{}, {window:win}),
+  },{window:win});
+  analytics.trackEvent('cta_click');analytics.trackEvent('signup_start');assert.equal(win.oaiq?.q,undefined);
+  const dialog=load('components/threefig/teaser3-waitlist-dialog.tsx',{
+   react:hooks,'react/jsx-runtime':{jsx,jsxs:jsx},'@radix-ui/react-dialog':{},'lucide-react':{},
+   './analytics':analytics,'@/lib/threefig/attribution':{captureBrowserAttribution:()=>({})},
+  },{window:win,fetch:async()=>{requests++;if(scenario==='network')throw Error('network');return {ok:scenario!=='failure',json:async()=>({created:scenario==='new'||scenario==='sdk-failure',error:'failed'})};}});
+  const tree=dialog.Teaser3WaitlistDialog({open:true,onOpenChange(){},emailDraft:scenario==='invalid'?'bad':'test@example.com',onSuccess(){success++;}});
+  function find(node){if(!node||typeof node!=='object')return;if(node.type==='form')return node;for(const child of [node.props?.children].flat(Infinity)){const found=find(child);if(found)return found;}}
+  await find(tree).props.onSubmit({preventDefault(){}});
+  const converted=scenario==='new'||scenario==='sdk-failure';
+  assert.equal(success,Number(converted),scenario);assert.equal(meta,Number(converted),scenario);
+  assert.equal(win.dataLayer.filter(c=>c[1]==='generate_lead').length,Number(converted),scenario);
+  const events=win.oaiq?.q?.filter(c=>c[0]==='measure')||[];
+  assert.equal(events.length,Number(scenario==='new'),scenario);
+  assert.equal(requests,Number(scenario!=='invalid'),scenario);
+ }
+});
